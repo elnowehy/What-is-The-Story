@@ -28,10 +28,17 @@ class UserDataManager:ObservableObject {
         self.ref = self.db.collection("User").document(user.uid)
         // self.ref = db.collection('User').where(firebase.firestore.FieldPath.documentId(), '==', self.user.uid).get()
     }
+    
 
-    func fetchUser() {
+/*
+    func fetchUser() async {
+        do {
+            try await db.collection("User").whereField("email", isEqualTo: self.user.email).getDocuments()
+        } catch {
+            print("Error getting documents: \(err)")
+        }
         
-        db.collection("User").whereField("email", isEqualTo: self.user.email).getDocuments() { (querySnapshot, err) in
+        { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else if querySnapshot != nil {
@@ -47,29 +54,33 @@ class UserDataManager:ObservableObject {
                 print("Really!!")
             }
         }
+         
     }
+         */
   
-    /*
+
     func fetchUser() {
-        @FirestoreQuery(
-            collectionPath: "User"
-            //predicates: [.whereField("email", isEqualTo: self.user.email)]
-        ) var dataResult: Result<[User], Error>
-        
-        if case let .success(dataResult) = dataResult {
-            if dataResult.count > 0 {
-                self.user.name = dataResult[0].name
-                self.user.sponsor = dataResult[0].sponsor
-                self.user.tokens = dataResult[0].tokens
-                self.isLoading = false
-            } else {
-                print ("Nothing came back!")
+        DispatchQueue.main.async {
+            @FirestoreQuery(
+                collectionPath: "User",
+                predicates: [.whereField("email", isEqualTo: self.user.email)]
+            ) var dataResult: Result<[User], Error>
+            
+            if case let .success(dataResult) = dataResult {
+                if dataResult.count > 0 {
+                    self.user.name = dataResult[0].name
+                    self.user.sponsor = dataResult[0].sponsor
+                    self.user.tokens = dataResult[0].tokens
+                    self.isLoading = false
+                } else {
+                    self.isLoading = true
+                }
+            } else if case let .failure(failure) = dataResult {
+                print(failure.localizedDescription)
             }
-        } else if case let .failure(failure) = dataResult {
-            print(failure.localizedDescription)
         }
     }
-    */
+    
 
     
     func addUser(user: User) {

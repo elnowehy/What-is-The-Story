@@ -8,7 +8,7 @@
 import Foundation
 import CryptoKit
 
-class Utils {
+class RandomNonce {
     static func randomNonceString(length: Int = 32) -> String {
         precondition(length > 0)
          let charset: Array<Character> =

@@ -11,12 +11,13 @@ import Firebase
 struct SignInView: View {
     @State private var email = "enter your email"
     @State private var password = "123456"
-    @State private var path = NavigationPath()
+    //@State var path = NavigationPath()
+    @EnvironmentObject var pathRouter: PathRouter
     @EnvironmentObject var authManager: AuthManager
     
     var body: some View {
         
-        NavigationStack(path: $path) {
+        NavigationStack(path: $pathRouter.path) {
             VStack {
                 Group {
                     VStack {
@@ -41,7 +42,7 @@ struct SignInView: View {
                     Button(action: {
                         authManager.signIn(email: email, password: password)
                         if authManager.isLoggedIn {
-                            path.append("AccountView")
+                            pathRouter.path.append("AccountView")
                         }
                     })
                     {
@@ -50,25 +51,26 @@ struct SignInView: View {
                     .padding()
                     
                     Button(action: {
-                        path.append("SignUpView")
+                        pathRouter.path.append("SignUpView")
+                        // path.append("TestView")
                     }) {
                         Text("Sign Up")
                     }
                     .padding()
                 }
                 
-                /*
+                
                 .navigationDestination(for: String.self) { view in
                     if view == "AccountView" {
-                        AccountView(user: authManager.user)
+                        AccountView()
                     } else if view == "ProgressView" {
                         ProgressView()
                     } else if view == "SignUpView" {
                         SignUpView()
-                    }
+                    } 
                 }
-                */
-                .frame(width: 350, height: .infinity)
+                
+                .frame(width: 350, height: 400)
                 .foregroundColor(.black)
                 
             }

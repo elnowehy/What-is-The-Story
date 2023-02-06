@@ -31,14 +31,15 @@ class AuthManager: ObservableObject {
                     self.user.uid = user.uid
                     self.user.email = user.email!
                     let userDataManager = UserDataManager(user: self.user)
-                    userDataManager.fetchUser()
+                    // userDataManager.fetchUser()
                     self.isLoading = userDataManager.isLoading
+                    self.isLoggedIn = true
                     self.user = userDataManager.user
-                    if self.isLoading { // should I make the log in status dependent on isLoading?
-                        self.isLoggedIn = false
-                    } else {
-                        self.isLoggedIn = true
-                    }
+                    // if self.isLoading { // should I make the log in status dependent on isLoading?
+                    //     self.isLoggedIn = false
+                    // } else {
+                    //     self.isLoggedIn = true
+                    // }
                 } else {
                     self.isLoggedIn = false
                 }

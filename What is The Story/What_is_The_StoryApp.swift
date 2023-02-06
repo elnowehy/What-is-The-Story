@@ -34,6 +34,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct What_is_The_StoryApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var pathRouter = PathRouter()
     
     init() {
         
@@ -44,7 +45,9 @@ struct What_is_The_StoryApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(AuthManager())
+            ContentView()
+                .environmentObject(AuthManager())
+                .environmentObject(pathRouter)
         }
     }
 }
