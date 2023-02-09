@@ -19,7 +19,8 @@ class AuthManager: ObservableObject {
     
     init() {
         self.user = User(uid: "", name: "", email: "", password: "", sponsor: "", tokens: 0)
-        listenToAuthState()
+        // listenToAuthState()
+        loginInStatus()
     }
     
     
@@ -56,8 +57,10 @@ class AuthManager: ObservableObject {
                 self.alertMessage = "LOGIN ERROR: " + error!.localizedDescription
                 self.showingAlert = true
             } else if result != nil {
+                self.isLoggedIn = true
+                self.user.uid = result!.user.uid
+                self.user.email = result!.user.email!
                 let userDataManager = UserDataManager(user: self.user)
-                self.user.uid = result! .user.uid
                 userDataManager.fetchUser()
                 self.isLoading = userDataManager.isLoading
                 self.user = userDataManager.user
@@ -66,7 +69,6 @@ class AuthManager: ObservableObject {
                 self.showingAlert = true
             }
         }
-        // let's hope listenToAthState will do it's magic
     }
     
     func signUp ()  {

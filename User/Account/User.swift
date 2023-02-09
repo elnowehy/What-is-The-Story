@@ -9,11 +9,12 @@ import Foundation
 
 struct User: Encodable, Decodable, Hashable {
     var uid: String
-    var name: String
+    var name: String    // I should move this to profile
     var email: String
     var password: String
     var sponsor: String
     var tokens: Int
+    var profileId: String = ""
     
     init(uid: String, name: String, email: String, password: String, sponsor: String, tokens: Int) {
         self.uid = uid

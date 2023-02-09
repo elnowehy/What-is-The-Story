@@ -26,9 +26,24 @@ class UserDataManager:ObservableObject {
         self.db = Firestore.firestore()
         // self.uid = uid
         self.ref = self.db.collection("User").document(user.uid)
-        // self.ref = db.collection('User').where(firebase.firestore.FieldPath.documentId(), '==', self.user.uid).get()
     }
     
+    func fetchUser() {
+        let data = ref.getDocument() { document, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else if document != nil {
+                let data = document?.data()
+                if data != nil {
+                    self.user.email = data!["email"] as? String ?? ""
+                    self.user.name  = data!["name"] as? String ?? ""
+                    self.user.sponsor = data!["sponsor"] as? String ?? ""
+                    self.user.tokens = data!["tokens"] as? Int ?? 0
+                    self.isLoading = false
+                }
+            }
+        }
+    }
 
 /*
     func fetchUser() async {
@@ -56,11 +71,11 @@ class UserDataManager:ObservableObject {
         }
          
     }
-         */
+  */
   
-
+/*
     func fetchUser() {
-        DispatchQueue.main.async {
+     //   DispatchQueue.main.async {
             @FirestoreQuery(
                 collectionPath: "User",
                 predicates: [.whereField("email", isEqualTo: self.user.email)]
@@ -78,9 +93,9 @@ class UserDataManager:ObservableObject {
             } else if case let .failure(failure) = dataResult {
                 print(failure.localizedDescription)
             }
-        }
+      //  }
     }
-    
+  */
 
     
     func addUser(user: User) {
