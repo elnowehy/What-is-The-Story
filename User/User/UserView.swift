@@ -1,10 +1,10 @@
 //
-//  AccountView.swift
+//  UserView.swift
 //  What is The Story
 //
 //  Created by Amr El-Nowehy on 2023-01-19.
 //
-//  This view will show the user's account information, such as their name, email, tokens, sponsor
+//  This view will show the user's private information, such as their name, email, tokens, sponsor
 //  and referral code.
 //
 //  User can sign out from this view?
@@ -19,7 +19,7 @@ import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
 
-struct AccountView: View {
+struct UserView: View {
     @EnvironmentObject var authManager: AuthManager
     
     var body: some View {

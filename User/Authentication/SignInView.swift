@@ -46,7 +46,7 @@ struct SignInView: View {
                             }
                             /*
                              if !authManager.isLoading {
-                             pathRouter.path.append("AccountView")
+                             pathRouter.path.append("UserView")
                              } else {
                              pathRouter.path.append("ProgressView")
                              }
@@ -71,7 +71,7 @@ struct SignInView: View {
                         if view == "SignUpView" {
                             SignUpView()
                         } else if !authManager.isLoading {
-                            AccountView()
+                            UserView()
                         } else if authManager.isLoading {
                             ProgressView()
                         }
@@ -83,14 +83,14 @@ struct SignInView: View {
                 }
                 /*            .onAppear {
                  if !authManager.isLoading {
-                 path.append("AccountView")
+                 path.append("UserView")
                  }
                  */
             }.alert(authManager.alertMessage, isPresented: $authManager.showingAlert) {
                 Button("OK", role: .cancel) {}
             }
         } else {
-            AccountView()
+            UserView()
         }
     }
     

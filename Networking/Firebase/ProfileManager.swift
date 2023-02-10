@@ -24,9 +24,9 @@ class ProfileManager:ObservableObject {
             "name": profile.name,
             "title": profile.title,
             "bio": profile.bio,
-            "bgcolor": profile.backgroundColor,
+            "bgcolor": profile.bgColor,
             "image": profile.image,
-            "thumbnail": profile.thumbNail,
+            "thumbnail": profile.thumbnail,
             "serieseIds": profile.serieseIds,
             "videoIds": profile.videoIds,
             "ideaIds": profile.ideaIds,
@@ -36,15 +36,15 @@ class ProfileManager:ObservableObject {
             "viewIds": profile.viewIds
             ]
         
-        if profile.id != nil {
-            self.ref = self.db.collection("Profile").document(profile.id)
+        if profile.id.isEmpty {
+            self.ref = self.db.collection("Profile").document()
         } else {
-            self.ref = self.db.collection("Profile").document() // will return a Document reference for a unsaved one
+            self.ref = self.db.collection("Profile").document(profile.id) // will return a Document reference for a unsaved one
         }
     }
     
     func fetchProfile() {
-        let data = ref.getDocument() { document, error in
+        ref.getDocument() { document, error in
             if let error = error {
                 print(error.localizedDescription)
             } else if document != nil {

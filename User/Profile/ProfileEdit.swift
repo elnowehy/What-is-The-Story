@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfileEdit: View {
     var profileId: String
-    @State var profile = Profile
+    @State var profile: Profile
     
     init(profileId: String) {
         self.profileId = profileId
@@ -23,6 +23,6 @@ struct ProfileEdit: View {
 
 struct ProfileEdit_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileEdit()
+        ProfileEdit(profileId: "")
     }
 }

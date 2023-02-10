@@ -14,6 +14,7 @@ struct SignUpView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var pathRouter: PathRouter
     
+    
     var body: some View {
         NavigationStack(path: $pathRouter.path) {
             VStack  {
@@ -49,12 +50,20 @@ struct SignUpView: View {
                 
                 HStack {
                     Button (action: {
+                        
                         authManager.user = user
                         authManager.signUp()
+                        if(authManager.isLoggedIn) {
+                            let userMV = UserVM(user: user)
+                            userMV.create()
+                        } else {
+                            print("we have a problem")
+                        }
+                        
                         if(authManager.isLoading) {
                             pathRouter.path.append("ProgressView")
                         } else {
-                            pathRouter.path.append("AccountView")
+                            pathRouter.path.append("UserView")
                         }
                     }) {
                         Text("Save")
@@ -70,8 +79,8 @@ struct SignUpView: View {
                 }
                 
                 .navigationDestination(for: String.self) { view in
-                    if view == "AccountView" {
-                        AccountView()
+                    if view == "UserView" {
+                        UserView()
                     }  else if view == "ProgressView" {
                         ProgressView()
                     } else {

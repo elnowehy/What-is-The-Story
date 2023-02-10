@@ -14,22 +14,38 @@ import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
 
-class UserDataManager:ObservableObject {
+class UserManager:ObservableObject {
     @Published var user: User
     @Published var isLoading = true
     private var db: Firestore
     // private var uid: String
     private var ref: DocumentReference
+    private var data: [String: Any] // dictionary
     
     init(user: User) {
         self.user = user
         self.db = Firestore.firestore()
-        // self.uid = uid
-        self.ref = self.db.collection("User").document(user.uid)
+        if user.uid.isEmpty {
+            self.ref = self.db.collection("User").document()
+        } else {
+            self.ref = self.db.collection("User").document(user.uid)
+        }
+        self.data = [:] // to be populated
+    }
+
+    
+    func populateData() {
+        self.data = [
+            "id": user.email,
+            "name": user.name,
+            "sponsor": user.sponsor,
+            "tokens": user.tokens,
+            "profile": user.profileId
+        ]
     }
     
     func fetchUser() {
-        let data = ref.getDocument() { document, error in
+        ref.getDocument() { document, error in
             if let error = error {
                 print(error.localizedDescription)
             } else if document != nil {
@@ -39,67 +55,18 @@ class UserDataManager:ObservableObject {
                     self.user.name  = data!["name"] as? String ?? ""
                     self.user.sponsor = data!["sponsor"] as? String ?? ""
                     self.user.tokens = data!["tokens"] as? Int ?? 0
+                    self.user.profileId =  data!["profileId"] as? String ?? ""
                     self.isLoading = false
+                    self.populateData()  // why? Just in case
                 }
             }
         }
     }
 
-/*
-    func fetchUser() async {
-        do {
-            try await db.collection("User").whereField("email", isEqualTo: self.user.email).getDocuments()
-        } catch {
-            print("Error getting documents: \(err)")
-        }
-        
-        { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else if querySnapshot != nil {
-                for document in querySnapshot!.documents {
-                    let data = document.data()
-                    self.user.email = data["email"] as? String ?? ""
-                    self.user.name  = data["name"] as? String ?? ""
-                    self.user.sponsor = data["sponsor"] as? String ?? ""
-                    self.user.tokens = data["tokens"] as? Int ?? 0
-                    self.isLoading = false
-                }
-            } else {
-                print("Really!!")
-            }
-        }
-         
-    }
-  */
-  
-/*
-    func fetchUser() {
-     //   DispatchQueue.main.async {
-            @FirestoreQuery(
-                collectionPath: "User",
-                predicates: [.whereField("email", isEqualTo: self.user.email)]
-            ) var dataResult: Result<[User], Error>
-            
-            if case let .success(dataResult) = dataResult {
-                if dataResult.count > 0 {
-                    self.user.name = dataResult[0].name
-                    self.user.sponsor = dataResult[0].sponsor
-                    self.user.tokens = dataResult[0].tokens
-                    self.isLoading = false
-                } else {
-                    self.isLoading = true
-                }
-            } else if case let .failure(failure) = dataResult {
-                print(failure.localizedDescription)
-            }
-      //  }
-    }
-  */
-
-    
-    func addUser(user: User) {
-        ref.setData(["email": user.email, "name": user.name, "sponsor": user.sponsor, "tokens": 0, ]) { error in
+   
+    func setUser() {
+        self.populateData()
+        ref.setData(self.data) { error in
             if let error = error {
                 print(error.localizedDescription)
             }
@@ -113,11 +80,66 @@ class UserDataManager:ObservableObject {
             fetchUser()
         }
     }
+    
+    func removeUser() {
+        ref = db.collection("User").document(user.uid)
+        ref.delete()
+    }
 }
 
 /*
 
  
+
+     func fetchUser() async {
+         do {
+             try await db.collection("User").whereField("email", isEqualTo: self.user.email).getDocuments()
+         } catch {
+             print("Error getting documents: \(err)")
+         }
+         
+         { (querySnapshot, err) in
+             if let err = err {
+                 print("Error getting documents: \(err)")
+             } else if querySnapshot != nil {
+                 for document in querySnapshot!.documents {
+                     let data = document.data()
+                     self.user.email = data["email"] as? String ?? ""
+                     self.user.name  = data["name"] as? String ?? ""
+                     self.user.sponsor = data["sponsor"] as? String ?? ""
+                     self.user.tokens = data["tokens"] as? Int ?? 0
+                     self.isLoading = false
+                 }
+             } else {
+                 print("Really!!")
+             }
+         }
+          
+     }
+
+        func fetchUser() {
+      //   DispatchQueue.main.async {
+             @FirestoreQuery(
+                 collectionPath: "User",
+                 predicates: [.whereField("email", isEqualTo: self.user.email)]
+             ) var dataResult: Result<[User], Error>
+             
+             if case let .success(dataResult) = dataResult {
+                 if dataResult.count > 0 {
+                     self.user.name = dataResult[0].name
+                     self.user.sponsor = dataResult[0].sponsor
+                     self.user.tokens = dataResult[0].tokens
+                     self.isLoading = false
+                 } else {
+                     self.isLoading = true
+                 }
+             } else if case let .failure(failure) = dataResult {
+                 print(failure.localizedDescription)
+             }
+       //  }
+     }
+
+
  func test() {
      let test = self.db.collection("User").document("a55yXrgdsmSRZCKhNmci8Xqlmh93")
      test.getDocument() { document, error in print(error!.localizedDescription) }

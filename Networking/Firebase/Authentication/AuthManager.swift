@@ -31,7 +31,7 @@ class AuthManager: ObservableObject {
                 if let user = Auth.auth().currentUser {
                     self.user.uid = user.uid
                     self.user.email = user.email!
-                    let userDataManager = UserDataManager(user: self.user)
+                    let userDataManager = UserManager(user: self.user)
                     // userDataManager.fetchUser()
                     self.isLoading = userDataManager.isLoading
                     self.isLoggedIn = true
@@ -60,7 +60,7 @@ class AuthManager: ObservableObject {
                 self.isLoggedIn = true
                 self.user.uid = result!.user.uid
                 self.user.email = result!.user.email!
-                let userDataManager = UserDataManager(user: self.user)
+                let userDataManager = UserManager(user: self.user)
                 userDataManager.fetchUser()
                 self.isLoading = userDataManager.isLoading
                 self.user = userDataManager.user
@@ -79,11 +79,12 @@ class AuthManager: ObservableObject {
                 self.alertMessage = "SIGN UP ERROR: " + error!.localizedDescription
                 self.showingAlert = true
             } else {
-                // get the UID
+                // get the UID ** should I do this here? Or leave populating userManager logic somewhere else?
+                // I mean how about the portoflio id? Should this be handled by UserManager?
                 self.user.uid = result!.user.uid
-                let userDataManager = UserDataManager(user: self.user)
-                userDataManager.addUser(user: self.user)
-                // self.isLoggedIn = true // no need for this it's being set by listenToAuthState
+                let userManager = UserManager(user: self.user)
+                userManager.setUser()
+                self.isLoggedIn = true // no need for this it's being set by listenToAuthStat 
             }
         }
     }

@@ -50,5 +50,6 @@ class ProfileVM: ObservableObject{
     // retrun: Void
     func remove() {
         profileManager.removeProfile()
+        profileManager.removeProfile()
     }
 }
