@@ -44,40 +44,48 @@ class UserManager:ObservableObject {
         ]
     }
     
-    func fetchUser() {
-        ref.getDocument() { document, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else if document != nil {
-                let data = document?.data()
-                if data != nil {
-                    self.user.email = data!["email"] as? String ?? ""
-                    self.user.name  = data!["name"] as? String ?? ""
-                    self.user.sponsor = data!["sponsor"] as? String ?? ""
-                    self.user.tokens = data!["tokens"] as? Int ?? 0
-                    self.user.profileId =  data!["profileId"] as? String ?? ""
-                    self.isLoading = false
-                    self.populateData()  // why? Just in case
-                }
+    @MainActor
+    func fetchUser() async {
+        do {
+            let document = try await ref.getDocument()
+            let data = document.data()
+            if data != nil {
+                self.user.email = data!["email"] as? String ?? ""
+                self.user.name  = data!["name"] as? String ?? ""
+                self.user.sponsor = data!["sponsor"] as? String ?? ""
+                self.user.tokens = data!["tokens"] as? Int ?? 0
+                self.user.profileId =  data!["profileId"] as? String ?? ""
+                self.isLoading = false
+                self.populateData()  // why? Just in case
+                
+                
             }
+        } catch {
+            print(error.localizedDescription)
         }
     }
 
-   
-    func setUser() {
+    @MainActor
+    func setUser() async {
         self.populateData()
-        ref.setData(self.data) { error in
-            if let error = error {
-                print(error.localizedDescription)
-            }
+        do {
+            try await ref.setData(self.data)
+        } catch {
+            print(error.localizedDescription)
         }
     }
-    
-    func currentUserData() {
-        if let user = Auth.auth().currentUser {
-            self.user.uid = user.uid
-            self.user.email = user.email!
-            fetchUser()
+
+    @MainActor
+    func currentUserData() async {
+        do {
+            let user = try await Auth.auth().currentUser
+            self.user.uid = user!.uid
+            self.user.email = user!.email!
+            Task {
+                await fetchUser()
+            }
+        } catch {
+            print(error.localizedDescription)
         }
     }
     

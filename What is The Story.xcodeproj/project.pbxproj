@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C502DD72298C5311002930B4 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502DD71298C5311002930B4 /* TestView.swift */; };
 		C502DD74298D92E3002930B4 /* PathRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502DD73298D92E3002930B4 /* PathRouter.swift */; };
+		C51FC3FB2996B2FE00D7D0C6 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = C51FC3FA2996B2FE00D7D0C6 /* Algorithms */; };
 		C56004EA29888E8D0044A9AB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */; };
 		C5660F2C29929B530079CBF1 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5660F2B29929B530079CBF1 /* Profile.swift */; };
 		C5660F302992ADB10079CBF1 /* ProfileEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5660F2F2992ADB10079CBF1 /* ProfileEdit.swift */; };
@@ -113,6 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C51FC3FB2996B2FE00D7D0C6 /* Algorithms in Frameworks */,
 				C59404DE296DCA88003F0FB7 /* FirebaseDatabaseSwift in Frameworks */,
 				C59404EE296E35B5003F0FB7 /* FirebaseAuth in Frameworks */,
 				C59404DC296DCA88003F0FB7 /* FirebaseDatabase in Frameworks */,
@@ -379,6 +381,7 @@
 				C59404ED296E35B5003F0FB7 /* FirebaseAuth */,
 				C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */,
 				C5A31655298B0DAA00D98972 /* FirebaseStorage */,
+				C51FC3FA2996B2FE00D7D0C6 /* Algorithms */,
 			);
 			productName = "What is The Story";
 			productReference = C59404B5296DC575003F0FB7 /* What is The Story.app */;
@@ -410,6 +413,7 @@
 			mainGroup = C59404AC296DC575003F0FB7;
 			packageReferences = (
 				C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				C51FC3F92996B2FE00D7D0C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
 			productRefGroup = C59404B6296DC575003F0FB7 /* Products */;
 			projectDirPath = "";
@@ -772,6 +776,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C51FC3F92996B2FE00D7D0C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -783,6 +795,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C51FC3FA2996B2FE00D7D0C6 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C51FC3F92996B2FE00D7D0C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
 		C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

@@ -50,21 +50,24 @@ struct SignUpView: View {
                 
                 HStack {
                     Button (action: {
-                        
-                        authManager.user = user
-                        authManager.signUp()
-                        if(authManager.isLoggedIn) {
-                            let userMV = UserVM(user: user)
-                            userMV.create()
-                        } else {
-                            print("we have a problem")
+                        Task {
+                            await user.uid = authManager.signUp(emailAddress: user.email, password: user.password)
+                            
+                            
+                            if(!user.uid.isEmpty) {
+                                let userMV = UserVM(user: user)
+                                userMV.create()
+                                user.uid = userMV.user.uid
+                            } else {
+                                print("we have a problem")
+                            }
                         }
                         
-                        if(authManager.isLoading) {
-                            pathRouter.path.append("ProgressView")
-                        } else {
-                            pathRouter.path.append("UserView")
-                        }
+                       // if(authManager.isLoading) {
+                       //     pathRouter.path.append("ProgressView")
+                       // } else {
+                       //     pathRouter.path.append("UserView")
+                       //  }
                     }) {
                         Text("Save")
                     }
@@ -80,7 +83,7 @@ struct SignUpView: View {
                 
                 .navigationDestination(for: String.self) { view in
                     if view == "UserView" {
-                        UserView()
+                        UserView(user: user)
                     }  else if view == "ProgressView" {
                         ProgressView()
                     } else {

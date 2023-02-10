@@ -43,17 +43,17 @@ class ProfileManager:ObservableObject {
         }
     }
     
-    func fetchProfile() {
-        ref.getDocument() { document, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else if document != nil {
-                let data = document?.data()
-                if data != nil {
-                    self.data = data!
-                    self.populateProfile()
-                }
+    @MainActor
+    func fetchProfile() async {
+        do {
+            let document = try await ref.getDocument()
+            let data = document.data()
+            if data != nil {
+                self.data = data!
+                self.populateProfile()
             }
+        } catch {
+                print(error.localizedDescription)
         }
     }
 
@@ -73,17 +73,24 @@ class ProfileManager:ObservableObject {
         self.profile.viewIds = self.data["viewIds"] as? [String] ?? []
     }
   
-    func updateProfile() {
-        ref.setData(self.data) { error in
-            if let error = error {
-                print(error.localizedDescription)
-            }
+    @MainActor
+    func updateProfile() async {
+        do {
+            try await ref.setData(self.data)
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
-    func addProfile() -> String {
-        self.ref = db.collection("Profile").addDocument(data: self.data)
-        return ref.documentID
+    @MainActor
+    func addProfile() async -> String {
+        do {
+            self.ref = try await db.collection("Profile").addDocument(data: self.data)
+            return ref.documentID
+        } catch {
+            print(error.localizedDescription)
+            return ""
+        }
     }
     
     func removeProfile() {

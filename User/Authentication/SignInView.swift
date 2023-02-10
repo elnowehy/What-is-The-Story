@@ -17,7 +17,7 @@ struct SignInView: View {
     
     
     var body: some View {
-        if authManager.isLoading {
+        if !authManager.isLoggedIn {
             NavigationStack(path: $pathRouter.path) {
                 VStack {
                     Group {
@@ -41,9 +41,11 @@ struct SignInView: View {
                     .padding()
                     HStack {
                         Button(action: {
-                            DispatchQueue.main.async {
-                                authManager.signIn(email: email, password: password)
-                            }
+                            // DispatchQueue.main.async {
+                               //  authManager.signIn(email: email, password: password)
+                            // }
+                            
+                            print("Just let me be")
                             /*
                              if !authManager.isLoading {
                              pathRouter.path.append("UserView")
@@ -70,10 +72,9 @@ struct SignInView: View {
                     .navigationDestination(for: String.self) { view in
                         if view == "SignUpView" {
                             SignUpView()
-                        } else if !authManager.isLoading {
-                            UserView()
-                        } else if authManager.isLoading {
-                            ProgressView()
+                        } else if !authManager.isLoggedIn {
+                            // UserView()
+                            Text("look into this later")
                         }
                     }
                     
@@ -86,11 +87,13 @@ struct SignInView: View {
                  path.append("UserView")
                  }
                  */
-            }.alert(authManager.alertMessage, isPresented: $authManager.showingAlert) {
-                Button("OK", role: .cancel) {}
             }
+            /*.alert(authManager.alertMessage, isPresented: $authManager.showingAlert) {
+                Button("OK", role: .cancel) {}
+            }*/
         } else {
-            UserView()
+            // UserView(user: )
+            Text("will look into this later")
         }
     }
     

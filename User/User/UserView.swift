@@ -20,18 +20,18 @@ import Firebase
 import FirebaseFirestoreSwift
 
 struct UserView: View {
-    @EnvironmentObject var authManager: AuthManager
+    var user: User
     
     var body: some View {
         
         VStack {
-            Text("Welcome, \(authManager.user.name)")
+            Text("Welcome, \(user.name)")
                 .font(.title)
-            Text("Email: \(authManager.user.email)")
+            Text("Email: \(user.email)")
                 .font(.subheadline)
-            Text("Sponsor: \(authManager.user.sponsor)")
+            Text("Sponsor: \(user.sponsor)")
                 .font(.subheadline)
-            Text("Tokens: \(authManager.user.tokens)")
+            Text("Tokens: \(user.tokens)")
                 .font(.subheadline)
         }.navigationBarHidden(true)
         // A button to logout?

@@ -22,17 +22,20 @@ class ProfileVM: ObservableObject{
     // output: profile struc is populated
     // return: Void
     func fetch() {
-        profileManager.fetchProfile()
-        profile = profileManager.profile
+        Task {
+            await profileManager.fetchProfile()
+            profile = profileManager.profile
+        }
     }
     
     // create Profile document in Firebase and
     // input: empty Profile struct
     // output: profile strucct is populated
     // return: Profile Id
-    func create() -> String {
-        profile.id = profileManager.addProfile()
-        return profile.id
+    func create() {
+        Task {
+            profile.id = await profileManager.addProfile()
+        }
     }
     
     // updates a profile with the profile data
@@ -40,8 +43,10 @@ class ProfileVM: ObservableObject{
     // output: an updaetd Profile struct
     // return: Void
     func update() {
-        profileManager.updateProfile()
-        profile = profileManager.profile // in case something happens during the update to the data
+        Task {
+            await profileManager.updateProfile()
+            profile = profileManager.profile // in case something happens during the update to the data
+        }
     }
     
     // remove a profile from Firebase
@@ -50,6 +55,6 @@ class ProfileVM: ObservableObject{
     // retrun: Void
     func remove() {
         profileManager.removeProfile()
-        profileManager.removeProfile()
+        // I'm sure much more needs to be done
     }
 }

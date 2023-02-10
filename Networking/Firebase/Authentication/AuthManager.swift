@@ -9,6 +9,7 @@
 import SwiftUI
 import FirebaseAuth
 
+/*
 class AuthManager: ObservableObject {
     @Published var isLoggedIn: Bool = false
     @Published var isLoading: Bool = true
@@ -105,5 +106,74 @@ class AuthManager: ObservableObject {
             self.isLoggedIn = true
         }
         
+    }
+}
+*/
+
+import SwiftUI
+import FirebaseAuth
+
+typealias FireBaseUser = FirebaseAuth.User
+
+final class AuthManager: ObservableObject {
+    var fbUser: FireBaseUser? {
+        didSet {
+            objectWillChange.send()
+        }
+    }
+    
+    @Published var isLoggedIn: Bool = false
+    // @Published var isLoading: Bool = true
+
+    
+    func listenToAuthState() {
+        Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            guard let self = self else {
+                return
+            }
+            self.fbUser = user
+            self.isLoggedIn = true
+        }
+    }
+    
+    @MainActor
+    func signUp (emailAddress: String, password: String) async -> String {
+        var userId: String = ""
+        do {
+            let result = try await Auth.auth().createUser(withEmail: emailAddress, password: password)
+            let user = result.user
+            self.isLoggedIn = true
+            userId  = user.uid
+        }
+        catch {
+            print("an error occured: \(error.localizedDescription)")
+        }
+        return userId
+    }
+    
+    /*
+    func signUp (
+        emailAddress: String,
+        password: String
+    ) -> String {
+        var userId: String = ""
+        Auth.auth().createUser(withEmail: emailAddress, password: password) { result, error in
+            if let error = error {
+                print("an error occured: \(error.localizedDescription)")
+            }
+            self.isLoggedIn = true
+            userId  = result!.user.uid
+        }
+        return userId
+    }
+    */
+    
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
+        self.isLoggedIn = false
     }
 }

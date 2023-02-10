@@ -21,23 +21,25 @@ class UserVM: ObservableObject{
     // output: User struc is populated
     // return: Void
     func fetch() {
-        userManager.fetchUser()
-        user = userManager.user
+        Task {
+            await userManager.fetchUser()
+            user = userManager.user
+        }
     }
     
     // create User document in Firebase. ** the document id should be the same as the authentication one **
     // input: empty User struct with User.uid populated from the authentication id
     // output: user struct is populated
-    // return: user Id
-    func create() -> String {
+    func create()  {
         let profileVM = ProfileVM(profile: Profile(id: ""))
-        let profileId = profileVM.create()
-        user.profileId = profileId
-        userManager.user.profileId = profileId
-        userManager.setUser()
-        user = userManager.user
-        
-        return self.user.uid
+        Task {
+            profileVM.create()
+            user.profileId = profileVM.profile.id
+            userManager.user.profileId = user.profileId
+            
+            await userManager.setUser()
+            user = userManager.user
+        }
     }
     
     // updates a user with the user data. ** this ideally shouldn't happen, but maybe if they want to change their email?
@@ -45,8 +47,10 @@ class UserVM: ObservableObject{
     // output: an updaetd User struct
     // return: Void
     func update() {
-        userManager.setUser()
-        user = userManager.user // in case something happens during the update to the data
+        Task {
+            await userManager.setUser()
+            user = userManager.user // in case something happens during the update to the data
+        }
     }
     
     // remove a user from Firebase
@@ -54,7 +58,9 @@ class UserVM: ObservableObject{
     // output: no ouput
     // retrun: Void
     func remove() {
+        
         userManager.removeUser()
+    
         // there is more to this, all related data in Firebase. I'm not sure if I'll even allow it.
     }
 }
