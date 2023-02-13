@@ -52,12 +52,11 @@ struct SignUpView: View {
                     Button (action: {
                         Task {
                             await user.uid = authManager.signUp(emailAddress: user.email, password: user.password)
-                            
-                            
                             if(!user.uid.isEmpty) {
                                 let userMV = UserVM(user: user)
                                 userMV.create()
                                 user.uid = userMV.user.uid
+                                pathRouter.path.append("UserView")
                             } else {
                                 print("we have a problem")
                             }

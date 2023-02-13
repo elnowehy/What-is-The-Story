@@ -21,7 +21,7 @@ class ProfileVM: ObservableObject{
     // input: Profile struct with the profile id populated
     // output: profile struc is populated
     // return: Void
-    func fetch() {
+    func fetch() async {
         Task {
             await profileManager.fetchProfile()
             profile = profileManager.profile
@@ -32,17 +32,19 @@ class ProfileVM: ObservableObject{
     // input: empty Profile struct
     // output: profile strucct is populated
     // return: Profile Id
-    func create() {
-        Task {
-            profile.id = await profileManager.addProfile()
-        }
+    @MainActor
+    func create() async -> String {
+        async let profileId = profileManager.addProfile()
+        profile.id = await profileId
+        return profile.id
+        
     }
     
     // updates a profile with the profile data
     // input: a populated Profile struct
     // output: an updaetd Profile struct
     // return: Void
-    func update() {
+    func update() async {
         Task {
             await profileManager.updateProfile()
             profile = profileManager.profile // in case something happens during the update to the data

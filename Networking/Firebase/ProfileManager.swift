@@ -50,6 +50,7 @@ class ProfileManager:ObservableObject {
             let data = document.data()
             if data != nil {
                 self.data = data!
+                self.data["id"] = document.documentID
                 self.populateProfile()
             }
         } catch {
@@ -58,6 +59,7 @@ class ProfileManager:ObservableObject {
     }
 
     func populateProfile() {
+        self.profile.id = self.data["id"] as? String ?? ""
         self.profile.name = self.data["name"] as? String ?? ""
         self.profile.title = self.data["title"] as? String ?? ""
         self.profile.bio = self.data["bio"] as? String ?? ""
@@ -86,6 +88,8 @@ class ProfileManager:ObservableObject {
     func addProfile() async -> String {
         do {
             self.ref = try await db.collection("Profile").addDocument(data: self.data)
+            self.data["id"] = ref.documentID
+            try await self.ref.updateData(["id": ref.documentID])
             return ref.documentID
         } catch {
             print(error.localizedDescription)

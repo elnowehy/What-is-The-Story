@@ -40,7 +40,7 @@ class UserManager:ObservableObject {
             "name": user.name,
             "sponsor": user.sponsor,
             "tokens": user.tokens,
-            "profile": user.profileId
+            "profileId": user.profileId
         ]
     }
     
@@ -78,12 +78,10 @@ class UserManager:ObservableObject {
     @MainActor
     func currentUserData() async {
         do {
-            let user = try await Auth.auth().currentUser
-            self.user.uid = user!.uid
-            self.user.email = user!.email!
-            Task {
-                await fetchUser()
-            }
+            async let user = try Auth.auth().currentUser
+            self.user.uid = await user!.uid
+            self.user.email = await user!.email!
+            await fetchUser()
         } catch {
             print(error.localizedDescription)
         }

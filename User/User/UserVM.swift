@@ -33,8 +33,8 @@ class UserVM: ObservableObject{
     func create()  {
         let profileVM = ProfileVM(profile: Profile(id: ""))
         Task {
-            profileVM.create()
-            user.profileId = profileVM.profile.id
+            async let profileId = profileVM.create() // ** Problem **: for some reason the following code doesn't wait for this line
+            user.profileId = await profileId
             userManager.user.profileId = user.profileId
             
             await userManager.setUser()
