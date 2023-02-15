@@ -9,8 +9,8 @@ import SwiftUI
 import Firebase
 
 struct SignInView: View {
-    @State private var email = "enter your email"
-    @State private var password = "123456"
+    @State private var email = "email"
+    @State private var password = ""
     //@State var path = NavigationPath()
     @EnvironmentObject var pathRouter: PathRouter
     @EnvironmentObject var authManager: AuthManager
@@ -41,18 +41,9 @@ struct SignInView: View {
                     .padding()
                     HStack {
                         Button(action: {
-                            // DispatchQueue.main.async {
-                               //  authManager.signIn(email: email, password: password)
-                            // }
-                            
-                            print("Just let me be")
-                            /*
-                             if !authManager.isLoading {
-                             pathRouter.path.append("UserView")
-                             } else {
-                             pathRouter.path.append("ProgressView")
-                             }
-                             */
+                            Task {
+                                await authManager.signIn(emailAddress: email, password: password)
+                            }
                         })
                         {
                             Text("Sign In")
@@ -92,8 +83,7 @@ struct SignInView: View {
                 Button("OK", role: .cancel) {}
             }*/
         } else {
-            // UserView(user: )
-            Text("will look into this later")
+            UserView()
         }
     }
     

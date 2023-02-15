@@ -82,7 +82,7 @@ struct SignUpView: View {
                 
                 .navigationDestination(for: String.self) { view in
                     if view == "UserView" {
-                        UserView(user: user)
+                        UserView()
                     }  else if view == "ProgressView" {
                         ProgressView()
                     } else {

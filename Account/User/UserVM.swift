@@ -10,10 +10,16 @@ import Foundation
 class UserVM: ObservableObject{
     @Published var user: User
     private var userManager: UserManager
+    // @EnvironmentObject var authManager: AuthManager
     
     init(user: User) {
         self.user = user
         self.userManager = UserManager(user: user)
+    }
+    
+    init() {
+        userManager = UserManager() // current user
+        self.user =  userManager.user
     }
     
     // fetch data from Firebase and populate User

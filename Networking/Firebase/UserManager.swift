@@ -14,13 +14,14 @@ import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
 
-class UserManager:ObservableObject {
+class UserManager: ObservableObject {
     @Published var user: User
     @Published var isLoading = true
     private var db: Firestore
     // private var uid: String
     private var ref: DocumentReference
     private var data: [String: Any] // dictionary
+  
     
     init(user: User) {
         self.user = user
@@ -31,6 +32,20 @@ class UserManager:ObservableObject {
             self.ref = self.db.collection("User").document(user.uid)
         }
         self.data = [:] // to be populated
+    }
+    
+    
+    init() {
+        self.user = User()
+        self.db = Firestore.firestore()
+        self.data = [:] // to be populated
+        let fbUser = Auth.auth().currentUser
+        self.ref = self.db.collection("User").document(fbUser!.uid)
+        self.user.uid = fbUser!.uid
+        self.user.email = fbUser!.email!
+        Task {
+            await fetchUser()
+        }
     }
 
     
@@ -76,15 +91,13 @@ class UserManager:ObservableObject {
     }
 
     @MainActor
-    func currentUserData() async {
-        do {
-            async let user = try Auth.auth().currentUser
-            self.user.uid = await user!.uid
-            self.user.email = await user!.email!
-            await fetchUser()
-        } catch {
-            print(error.localizedDescription)
-        }
+    func currentUserData() async -> User {
+        async let user = Auth.auth().currentUser
+        self.user.uid = await user!.uid
+        self.user.email = await user!.email!
+        await fetchUser()
+        return self.user
+        
     }
     
     func removeUser() {
@@ -92,91 +105,3 @@ class UserManager:ObservableObject {
         ref.delete()
     }
 }
-
-/*
-
- 
-
-     func fetchUser() async {
-         do {
-             try await db.collection("User").whereField("email", isEqualTo: self.user.email).getDocuments()
-         } catch {
-             print("Error getting documents: \(err)")
-         }
-         
-         { (querySnapshot, err) in
-             if let err = err {
-                 print("Error getting documents: \(err)")
-             } else if querySnapshot != nil {
-                 for document in querySnapshot!.documents {
-                     let data = document.data()
-                     self.user.email = data["email"] as? String ?? ""
-                     self.user.name  = data["name"] as? String ?? ""
-                     self.user.sponsor = data["sponsor"] as? String ?? ""
-                     self.user.tokens = data["tokens"] as? Int ?? 0
-                     self.isLoading = false
-                 }
-             } else {
-                 print("Really!!")
-             }
-         }
-          
-     }
-
-        func fetchUser() {
-      //   DispatchQueue.main.async {
-             @FirestoreQuery(
-                 collectionPath: "User",
-                 predicates: [.whereField("email", isEqualTo: self.user.email)]
-             ) var dataResult: Result<[User], Error>
-             
-             if case let .success(dataResult) = dataResult {
-                 if dataResult.count > 0 {
-                     self.user.name = dataResult[0].name
-                     self.user.sponsor = dataResult[0].sponsor
-                     self.user.tokens = dataResult[0].tokens
-                     self.isLoading = false
-                 } else {
-                     self.isLoading = true
-                 }
-             } else if case let .failure(failure) = dataResult {
-                 print(failure.localizedDescription)
-             }
-       //  }
-     }
-
-
- func test() {
-     let test = self.db.collection("User").document("a55yXrgdsmSRZCKhNmci8Xqlmh93")
-     test.getDocument() { document, error in print(error!.localizedDescription) }
-     // self.db.collection("User")  { collection, error in
-     // let test = self.db.collection("User").whereField("email", isEqualTo: self.user.email)
-     db.collection("User").whereField("email", isEqualTo: self.user.email).getDocuments() { (querySnapshot, err) in
-             if let err = err {
-                 print("Error getting documents: \(err)")
-             } else {
-                 for document in querySnapshot!.documents {
-                     print("\(document.documentID) => \(document.data())")
-                     let data = document.data()
-                     print(data["name"])
-                 }
-             }
-     }
-     // Firebase.Analytics.logEvent("Error_Creating_Collection_Reference", parameters: ["error": "help me"])
-     print("Error creating reference: help him")
-       test.getDocument() { document, error in
-         if let document = document, document.exists {
-             guard let data = document.data() else {
-                 return
-             }
-             if let error = error {
-                 Firebase.Analytics.logEvent("Error_Creating_Collection_Reference", parameters: ["error": error.localizedDescription])
-                 print("Error creating reference: \(error.localizedDescription)")
-             }
-         }
-         print("I don't know what do")
-     }
-
- }
- 
-*/

@@ -151,22 +151,20 @@ final class AuthManager: ObservableObject {
         return userId
     }
     
-    /*
-    func signUp (
-        emailAddress: String,
-        password: String
-    ) -> String {
+    @MainActor
+    func signIn (emailAddress: String, password: String) async -> String {
         var userId: String = ""
-        Auth.auth().createUser(withEmail: emailAddress, password: password) { result, error in
-            if let error = error {
-                print("an error occured: \(error.localizedDescription)")
-            }
+        do {
+            let result = try await Auth.auth().signIn(withEmail: emailAddress, password: password)
+            let user = result.user
             self.isLoggedIn = true
-            userId  = result!.user.uid
+            userId  = user.uid
+        }
+        catch {
+            print("an error occured: \(error.localizedDescription)")
         }
         return userId
     }
-    */
     
     func signOut() {
         do {

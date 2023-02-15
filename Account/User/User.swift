@@ -28,5 +28,14 @@ struct User: Encodable, Decodable, Hashable {
         self.sponsor = sponsor // should be public?
         self.tokens = tokens   // should be public?
     }
+    
+    init() {
+        self.uid = ""
+        self.name = ""
+        self.email = ""
+        self.password = ""
+        self.sponsor = "" // should be public?
+        self.tokens = 0   // should be public?
+    }
 }
 
