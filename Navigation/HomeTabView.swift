@@ -9,47 +9,53 @@ import SwiftUI
 
 struct HomeTabView: View {
     @State private var selection: Tab = .home
-    @Binding var isShowingAccountTab: Bool
     
     enum Tab {
         case home
+        case find
         case community
+        case bookmarks
         case account
     }
     
     var body: some View {
-        TabView(selection: $selection){
+        TabView(selection: $selection) {
             VideoListView()
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }
                 .tag(Tab.home)
             
+            FindView()
+            .tabItem {
+                Label("Find", systemImage: "magnifyingglass")
+            }
+            .tag(Tab.find)
+            
             CommunityView()
                 .tabItem {
                     Label("Community", systemImage: "person.3")
                 }
                 .tag(Tab.community)
-            /*
-            UserView()
+
+            BookmarksView()
                 .tabItem{
-                    Label("Account", systemImage: "person.circle")
+                    Label("Bookmarks", systemImage: "bookmark")
                 }
-                .tag(Tab.account)
-             */
-            
-            Button(action: {
-                isShowingAccountTab = true // Set the `isShowingAccountTab` state to true when the button is clicked
-            }) {
-                Label("Account", systemImage: "person.circle")
-            }
-            .tag(Tab.account)
+
+            AccountView()
+                .tabItem {
+                    Label("Account", systemImage: "person")
+                }
         }
     }
 }
 
+/*
 struct HomeTabView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeTabView()
+        @Binding var isShowingAccountTab: Bool
+        HomeTabView(isShowingAccountTab: $isShowingAccountTab)
     }
 }
+*/

@@ -37,7 +37,7 @@ struct UserView: View {
             }.navigationBarHidden(true)
             // A bubtton to logout
             
-            AccountTabView()
+            // AccountTabView(isShowingAccountTab: true)
             
         } else {
             SignInView()
