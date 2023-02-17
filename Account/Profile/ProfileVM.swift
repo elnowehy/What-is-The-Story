@@ -7,8 +7,8 @@
 
 import Foundation
 
+@MainActor
 class ProfileVM: ObservableObject{
-    // private var profileId: String
     @Published var profile: Profile
     private var profileManager: ProfileManager
     
@@ -32,7 +32,6 @@ class ProfileVM: ObservableObject{
     // input: empty Profile struct
     // output: profile strucct is populated
     // return: Profile Id
-    @MainActor
     func create() async -> String {
         async let profileId = profileManager.addProfile()
         profile.id = await profileId

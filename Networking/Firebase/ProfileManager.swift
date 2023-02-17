@@ -60,19 +60,21 @@ class ProfileManager:ObservableObject {
 
     func populateProfile() {
         self.profile.id = self.data["id"] as? String ?? ""
-        self.profile.name = self.data["name"] as? String ?? ""
-        self.profile.title = self.data["title"] as? String ?? ""
-        self.profile.bio = self.data["bio"] as? String ?? ""
-        self.profile.bgColor = self.data["bgcolor"] as? String ?? ""
-        self.profile.image = self.data["image"] as? String ?? ""
-        self.profile.thumbnail = self.data["thumbnail"] as? String ?? ""
-        self.profile.serieseIds = self.data["serieseIds"] as? [String] ?? []
+        self.profile.page.name = self.data["name"] as? String ?? ""
+        self.profile.page = self.data["page"].documentID as? String ?? ""
+        self.profile.page.bio = self.data["bio"] as? String ?? ""
+        self.profile.page.bgColor = self.data["bgcolor"] as? String ?? ""
+        self.profile.page.image = self.data["image"] as? String ?? ""
+        self.profile.page.avatar = self.data["thumbnail"] as? String ?? ""
+        /* we need to talk
+        self.profile.series.serieseIds = self.data["serieseIds"] as? [String] ?? []
         self.profile.videoIds = self.data["videoIds"] as? [String] ?? []
         self.profile.ideaIds = self.data["ideaIds"] as? [String] ?? []
         self.profile.voteIds = self.data["voteIds"] as? [String] ?? []
         self.profile.commentIds = self.data["commentIds"] as? [String] ?? []
         self.profile.likeIds = self.data["likeIds"] as? [String] ?? []
         self.profile.viewIds = self.data["viewIds"] as? [String] ?? []
+         */
     }
   
     @MainActor

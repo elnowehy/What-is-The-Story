@@ -114,7 +114,7 @@ import SwiftUI
 import FirebaseAuth
 
 typealias FireBaseUser = FirebaseAuth.User
-
+@MainActor
 final class AuthManager: ObservableObject {
     var fbUser: FireBaseUser? {
         didSet {
@@ -124,7 +124,9 @@ final class AuthManager: ObservableObject {
     
     @Published var isLoggedIn: Bool = false
     // @Published var isLoading: Bool = true
-
+    init() async {
+        self.listenToAuthState()
+    }
     
     func listenToAuthState() {
         Auth.auth().addStateDidChangeListener { [weak self] _, user in
@@ -136,7 +138,6 @@ final class AuthManager: ObservableObject {
         }
     }
     
-    @MainActor
     func signUp (emailAddress: String, password: String) async -> String {
         var userId: String = ""
         do {
@@ -151,7 +152,6 @@ final class AuthManager: ObservableObject {
         return userId
     }
     
-    @MainActor
     func signIn (emailAddress: String, password: String) async -> String {
         var userId: String = ""
         do {

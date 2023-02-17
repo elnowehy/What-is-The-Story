@@ -15,27 +15,37 @@
 import SwiftUI
 
 struct ProfileUpdate: View {
-    @ObservedObject var profileManager: ProfileManager
+    @ObservedObject var profileVM: ProfileVM
+    @Binding var bgColor: Color
+    @Binding var presentationMode: Bool
     
     var body: some View {
-       
-        Form {
-            TextField("Name", text: $profileManager.profile.ProfilePage.name)
+        
+        VStack {
+            TextField("User Name", text: $profileVM.profile.page.name)
+            TextField("You in one sentence", text: $profileVM.profile.page.statement)
+            Text("Tell us more:")
+            TextEditor(text: $profileVM.profile.page.bio)
+            Divider()
+            SingleImagePickerView(label: "Avatar", image: "person.badge.plus.fill")
+            SingleImagePickerView(label: "Photo", image: "person.crop.artframe")
+            ColorPicker("Background Color", selection: $bgColor)
         }
         
-        /* Form {
-                TextField("Name", text: $profileManager.profile.landingPage.name)
-                TextField("Title", text: $profileManager.profile.landingPage.title)
-                // Add more fields as needed
-            
-            
+        HStack {
+            Spacer()
+            Button("Cancel") {
+                presentationMode = false
+            }
+            Spacer()
+            Button("Save") {
+                Task {
+                    await profileVM.update()
+                    presentationMode = false
+                }
+            }
+            Spacer()
         }
-        .navigationBarTitle("Profile")
-        .navigationBarItems(trailing: Button("Save") {
-            // Handle save action here
-        })
-        */
-         
     }
     
 }
