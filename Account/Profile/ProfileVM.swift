@@ -9,11 +9,11 @@ import Foundation
 
 @MainActor
 class ProfileVM: ObservableObject{
-    @Published var profile: Profile
+    // @Published var profile: Profile
+    @Injected private var profile: Profile
     private var profileManager: ProfileManager
     
     init(profile: Profile) {
-        self.profile = profile
         self.profileManager = ProfileManager(profile: profile)
     }
     

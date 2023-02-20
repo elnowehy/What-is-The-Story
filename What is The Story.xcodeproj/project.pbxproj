@@ -14,6 +14,8 @@
 		C51FC401299AF02500D7D0C6 /* HomeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC400299AF02500D7D0C6 /* HomeTabView.swift */; };
 		C51FC403299AF03B00D7D0C6 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC402299AF03B00D7D0C6 /* AccountView.swift */; };
 		C51FC405299AF2DC00D7D0C6 /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC404299AF2DC00D7D0C6 /* CommunityView.swift */; };
+		C5379EB929A4078E009C0DD8 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = C5379EB829A4078E009C0DD8 /* Swinject */; };
+		C5379EBB29A407D8009C0DD8 /* Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5379EBA29A407D8009C0DD8 /* Injection.swift */; };
 		C56004EA29888E8D0044A9AB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */; };
 		C5660F2C29929B530079CBF1 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5660F2B29929B530079CBF1 /* Profile.swift */; };
 		C5660F322992BB870079CBF1 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5660F312992BB870079CBF1 /* ProfileVM.swift */; };
@@ -79,6 +81,7 @@
 		C51FC400299AF02500D7D0C6 /* HomeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabView.swift; sourceTree = "<group>"; };
 		C51FC402299AF03B00D7D0C6 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		C51FC404299AF2DC00D7D0C6 /* CommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
+		C5379EBA29A407D8009C0DD8 /* Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Injection.swift; sourceTree = "<group>"; };
 		C5660F2B29929B530079CBF1 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		C5660F312992BB870079CBF1 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
 		C5660F332992C21C0079CBF1 /* ProfileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
@@ -137,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C51FC3FB2996B2FE00D7D0C6 /* Algorithms in Frameworks */,
+				C5379EB929A4078E009C0DD8 /* Swinject in Frameworks */,
 				C59404DE296DCA88003F0FB7 /* FirebaseDatabaseSwift in Frameworks */,
 				C59404EE296E35B5003F0FB7 /* FirebaseAuth in Frameworks */,
 				C59404DC296DCA88003F0FB7 /* FirebaseDatabase in Frameworks */,
@@ -388,6 +392,7 @@
 		C5E9FBBD2975CF4600121C45 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				C5379EBA29A407D8009C0DD8 /* Injection.swift */,
 				C58F239D299EB569009DA4BF /* Colors.swift */,
 				C502DD73298D92E3002930B4 /* PathRouter.swift */,
 				C5E9FBBE2975CF6A00121C45 /* Encryption.swift */,
@@ -471,6 +476,7 @@
 				C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */,
 				C5A31655298B0DAA00D98972 /* FirebaseStorage */,
 				C51FC3FA2996B2FE00D7D0C6 /* Algorithms */,
+				C5379EB829A4078E009C0DD8 /* Swinject */,
 			);
 			productName = "What is The Story";
 			productReference = C59404B5296DC575003F0FB7 /* What is The Story.app */;
@@ -503,6 +509,7 @@
 			packageReferences = (
 				C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				C51FC3F92996B2FE00D7D0C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+				C5379EB729A4078E009C0DD8 /* XCRemoteSwiftPackageReference "Swinject" */,
 			);
 			productRefGroup = C59404B6296DC575003F0FB7 /* Products */;
 			projectDirPath = "";
@@ -544,6 +551,7 @@
 				C5B7577E297EF9B200186852 /* AuthManager.swift in Sources */,
 				C51FC405299AF2DC00D7D0C6 /* CommunityView.swift in Sources */,
 				C502DD72298C5311002930B4 /* TestView.swift in Sources */,
+				C5379EBB29A407D8009C0DD8 /* Injection.swift in Sources */,
 				C5660F342992C21C0079CBF1 /* ProfileManager.swift in Sources */,
 				C5E9FBF6297A077800121C45 /* VotingResultsView.swift in Sources */,
 				C58F2394299D4B4A009DA4BF /* FindView.swift in Sources */,
@@ -884,6 +892,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		C5379EB729A4078E009C0DD8 /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -899,6 +915,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C51FC3F92996B2FE00D7D0C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
 			productName = Algorithms;
+		};
+		C5379EB829A4078E009C0DD8 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C5379EB729A4078E009C0DD8 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
 		};
 		C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */ = {
 			isa = XCSwiftPackageProductDependency;

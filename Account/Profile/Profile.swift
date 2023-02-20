@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Swinject
 
 struct Page {
     var id: String = ""
@@ -42,5 +43,9 @@ struct Profile {
     var creations = Creations()
     var contributions = Contributions()
     var history = History()
+    
+    public static func makeService(for container: Container) -> Self {
+        return Profile()
+    }
 }
 

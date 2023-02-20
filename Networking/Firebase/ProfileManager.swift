@@ -10,25 +10,25 @@ import Firebase
 import FirebaseFirestoreSwift
 
 class ProfileManager:ObservableObject {
-    @Published var profile: Profile
+    @Injected var profile: Profile
     @Published var isLoading = true
     private var db: Firestore
     private var ref: DocumentReference
     private var data: [String: Any] // dictionary
     
-    init(profile: Profile) {
+    init(profile: Injected<Profile>) {
         self.db = Firestore.firestore()
-        self.profile = profile
+        // self.profile = profile.wrappedValue
         self.data = [
-            "id": profile.id,
-            "name": profile.name,
-            "title": profile.title,
-            "bio": profile.bio,
-            "bgcolor": profile.bgColor,
-            "image": profile.image,
-            "thumbnail": profile.thumbnail,
-            "serieseIds": profile.serieseIds,
-            "videoIds": profile.videoIds,
+            "id": profile.wrappedValue.id,
+            "name": profile.wrappedValue.page.name,
+            "title": profile.wrappedValue.page.statement,
+            "bio": profile.wrappedValue.page.bio,
+            "bgcolor": profile.wrappedValue.bgColor,
+            "image": profile.wrappedValue.image,
+            "thumbnail": profile.wrappedValue.thumbnail,
+            "serieseIds": profile.wrappedValue.serieseIds,
+            "videoIds": profile.wrappedValue.videoIds,
             "ideaIds": profile.ideaIds,
             "voteIds": profile.voteIds,
             "commentIds": profile.commentIds,
