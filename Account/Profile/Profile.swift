@@ -24,25 +24,10 @@ struct Creations {
     var videoIds = [String]()
 }
 
-struct Contributions {
-    var id: String = ""
-    var ideaIds = [String]()
-    var voteIds = [String]()
-    var commentIds = [String]()
-}
-
-struct History {
-    var id: String = ""
-    var likeIds = [String]()
-    var viewIds = [String]()
-}
-
-struct Profile {
+struct Profile: ServiceType {
     var id: String = ""
     var page = Page()
     var creations = Creations()
-    var contributions = Contributions()
-    var history = History()
     
     public static func makeService(for container: Container) -> Self {
         return Profile()

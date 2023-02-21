@@ -16,6 +16,8 @@
 		C51FC405299AF2DC00D7D0C6 /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC404299AF2DC00D7D0C6 /* CommunityView.swift */; };
 		C5379EB929A4078E009C0DD8 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = C5379EB829A4078E009C0DD8 /* Swinject */; };
 		C5379EBB29A407D8009C0DD8 /* Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5379EBA29A407D8009C0DD8 /* Injection.swift */; };
+		C538449129A5093900171A17 /* SwinjectAutoregistration in Frameworks */ = {isa = PBXBuildFile; productRef = C538449029A5093900171A17 /* SwinjectAutoregistration */; };
+		C538449429A50B3200171A17 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538449329A50B3200171A17 /* Services.swift */; };
 		C56004EA29888E8D0044A9AB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */; };
 		C5660F2C29929B530079CBF1 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5660F2B29929B530079CBF1 /* Profile.swift */; };
 		C5660F322992BB870079CBF1 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5660F312992BB870079CBF1 /* ProfileVM.swift */; };
@@ -82,6 +84,7 @@
 		C51FC402299AF03B00D7D0C6 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		C51FC404299AF2DC00D7D0C6 /* CommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
 		C5379EBA29A407D8009C0DD8 /* Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Injection.swift; sourceTree = "<group>"; };
+		C538449329A50B3200171A17 /* Services.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
 		C5660F2B29929B530079CBF1 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		C5660F312992BB870079CBF1 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
 		C5660F332992C21C0079CBF1 /* ProfileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
@@ -139,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C538449129A5093900171A17 /* SwinjectAutoregistration in Frameworks */,
 				C51FC3FB2996B2FE00D7D0C6 /* Algorithms in Frameworks */,
 				C5379EB929A4078E009C0DD8 /* Swinject in Frameworks */,
 				C59404DE296DCA88003F0FB7 /* FirebaseDatabaseSwift in Frameworks */,
@@ -171,6 +175,15 @@
 				C51FC404299AF2DC00D7D0C6 /* CommunityView.swift */,
 			);
 			path = Community;
+			sourceTree = "<group>";
+		};
+		C538449229A50B1200171A17 /* Dependency Injection */ = {
+			isa = PBXGroup;
+			children = (
+				C5379EBA29A407D8009C0DD8 /* Injection.swift */,
+				C538449329A50B3200171A17 /* Services.swift */,
+			);
+			path = "Dependency Injection";
 			sourceTree = "<group>";
 		};
 		C5660F272992997D0079CBF1 /* User */ = {
@@ -254,8 +267,8 @@
 			isa = PBXGroup;
 			children = (
 				C5822A0E298AFFF6009BFD92 /* GoogleService-Info.plist */,
-				C51FC3FC299AED8000D7D0C6 /* Navigation */,
 				C59404B7296DC575003F0FB7 /* What is The Story */,
+				C51FC3FC299AED8000D7D0C6 /* Navigation */,
 				C58F238D299C66D2009DA4BF /* Create */,
 				C51FC3FD299AEDDB00D7D0C6 /* Community */,
 				C59404E5296DD2AD003F0FB7 /* Account */,
@@ -392,7 +405,7 @@
 		C5E9FBBD2975CF4600121C45 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				C5379EBA29A407D8009C0DD8 /* Injection.swift */,
+				C538449229A50B1200171A17 /* Dependency Injection */,
 				C58F239D299EB569009DA4BF /* Colors.swift */,
 				C502DD73298D92E3002930B4 /* PathRouter.swift */,
 				C5E9FBBE2975CF6A00121C45 /* Encryption.swift */,
@@ -477,6 +490,7 @@
 				C5A31655298B0DAA00D98972 /* FirebaseStorage */,
 				C51FC3FA2996B2FE00D7D0C6 /* Algorithms */,
 				C5379EB829A4078E009C0DD8 /* Swinject */,
+				C538449029A5093900171A17 /* SwinjectAutoregistration */,
 			);
 			productName = "What is The Story";
 			productReference = C59404B5296DC575003F0FB7 /* What is The Story.app */;
@@ -510,6 +524,7 @@
 				C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				C51FC3F92996B2FE00D7D0C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 				C5379EB729A4078E009C0DD8 /* XCRemoteSwiftPackageReference "Swinject" */,
+				C538448F29A5093900171A17 /* XCRemoteSwiftPackageReference "SwinjectAutoregistration" */,
 			);
 			productRefGroup = C59404B6296DC575003F0FB7 /* Products */;
 			projectDirPath = "";
@@ -589,6 +604,7 @@
 				C5E9FBC129770FC300121C45 /* SignInView.swift in Sources */,
 				C5E9FBF4297A075400121C45 /* ManageVideoView.swift in Sources */,
 				C5E9FBE8297A062100121C45 /* ProfileUpdate.swift in Sources */,
+				C538449429A50B3200171A17 /* Services.swift in Sources */,
 				C5E9FBE6297A060700121C45 /* VideoPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -900,6 +916,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		C538448F29A5093900171A17 /* XCRemoteSwiftPackageReference "SwinjectAutoregistration" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/SwinjectAutoregistration";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -920,6 +944,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C5379EB729A4078E009C0DD8 /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
+		};
+		C538449029A5093900171A17 /* SwinjectAutoregistration */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C538448F29A5093900171A17 /* XCRemoteSwiftPackageReference "SwinjectAutoregistration" */;
+			productName = SwinjectAutoregistration;
 		};
 		C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -7,10 +7,12 @@
 
 import Foundation
 import Swinject
+import SwinjectAutoregistration
 
 // Singilton
 final class Injection {
     static let shared = Injection()
+    
     var container: Container {
         get {
             if _container == nil {
@@ -22,12 +24,14 @@ final class Injection {
             _container = newValue
         }
     }
+    
     private var _container: Container?
     
     private func buildContainer() -> Container {
         let container = Container()
-        container.register(Profile.self) { _ in
-            return Profile()
+        
+        for serviceType in registeredServices {
+            container.autoregister(serviceType, initializer: serviceType.init)
         }
         return container
     }
@@ -38,4 +42,8 @@ final class Injection {
     init(wrappedValue: Dependency) {
         self.wrappedValue = Injection.shared.container.resolve(Dependency.self)!
     }
+}
+
+protocol ServiceType {
+    static func makeService(for container: Container) -> Self
 }
