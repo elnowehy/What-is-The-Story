@@ -30,10 +30,6 @@ struct UserView: View {
                     .font(.title)
                 Text("Email: \(userVM.user.email)")
                     .font(.subheadline)
-                Text("Sponsor: \(userVM.user.sponsor)")
-                    .font(.subheadline)
-                Text("Tokens: \(userVM.user.tokens)")
-                    .font(.subheadline)
             }.navigationBarHidden(true)
             // A bubtton to logout
             

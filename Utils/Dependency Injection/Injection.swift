@@ -30,20 +30,42 @@ final class Injection {
     private func buildContainer() -> Container {
         let container = Container()
         
+        container.autoregister(Profile.self, initializer: Profile.init)
+        /* // one day
         for serviceType in registeredServices {
             container.autoregister(serviceType, initializer: serviceType.init)
         }
+         */
         return container
     }
 }
 
 @propertyWrapper struct Injected<Dependency> {
-    let wrappedValue: Dependency
-    init(wrappedValue: Dependency) {
-        self.wrappedValue = Injection.shared.container.resolve(Dependency.self)!
+    var wrappedValue: Dependency
+
+    init() {
+        guard let resolvedDependency = Injection.shared.container.resolve(Dependency.self) else {
+            fatalError("Failed to resolve \(Dependency.self)")
+        }
+        self.wrappedValue = resolvedDependency
     }
 }
 
+/*
 protocol ServiceType {
     static func makeService(for container: Container) -> Self
+}
+*/
+protocol RegistrationType {
+    init()
+}
+
+protocol ServiceType: RegistrationType {
+    static func makeService(for container: Container) -> Self
+}
+
+extension ServiceType {
+    init() {
+        self = Self.makeService(for: Container())
+    }
 }

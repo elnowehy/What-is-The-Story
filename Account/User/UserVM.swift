@@ -7,8 +7,10 @@
 
 import Foundation
 
+@MainActor
 class UserVM: ObservableObject{
     @Published var user: User
+    @Injected private var profile: Profile
     private var userManager: UserManager
     // @EnvironmentObject var authManager: AuthManager
     
@@ -37,11 +39,11 @@ class UserVM: ObservableObject{
     // input: empty User struct with User.uid populated from the authentication id
     // output: user struct is populated
     func create()  {
-        let profileVM = ProfileVM(profile: Profile(id: ""))
+        let profileVM = ProfileVM()
         Task {
             async let profileId = profileVM.create() // ** Problem **: for some reason the following code doesn't wait for this line
-            user.profileId = await profileId
-            userManager.user.profileId = user.profileId
+            user.profileIds.append(await profileId)
+            userManager.user.profileIds = user.profileIds
             
             await userManager.setUser()
             user = userManager.user

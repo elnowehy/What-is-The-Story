@@ -26,10 +26,10 @@ class UserManager: ObservableObject {
     init(user: User) {
         self.user = user
         self.db = Firestore.firestore()
-        if user.uid.isEmpty {
+        if user.id.isEmpty {
             self.ref = self.db.collection("User").document()
         } else {
-            self.ref = self.db.collection("User").document(user.uid)
+            self.ref = self.db.collection("User").document(user.id)
         }
         self.data = [:] // to be populated
     }
@@ -41,7 +41,7 @@ class UserManager: ObservableObject {
         self.data = [:] // to be populated
         let fbUser = Auth.auth().currentUser
         self.ref = self.db.collection("User").document(fbUser!.uid)
-        self.user.uid = fbUser!.uid
+        self.user.id = fbUser!.uid
         self.user.email = fbUser!.email!
         Task {
             await fetchUser()
@@ -53,9 +53,8 @@ class UserManager: ObservableObject {
         self.data = [
             "id": user.email,
             "name": user.name,
-            "sponsor": user.sponsor,
-            "tokens": user.tokens,
-            "profileId": user.profileId
+            "profileIds": user.profileIds,
+            "InvitationCode": user.invitationCode,
         ]
     }
     
@@ -67,9 +66,9 @@ class UserManager: ObservableObject {
             if data != nil {
                 self.user.email = data!["email"] as? String ?? ""
                 self.user.name  = data!["name"] as? String ?? ""
-                self.user.sponsor = data!["sponsor"] as? String ?? ""
-                self.user.tokens = data!["tokens"] as? Int ?? 0
-                self.user.profileId =  data!["profileId"] as? String ?? ""
+                self.user.profileIds =  data!["profileId"] as? [String] ?? []
+                self.user.invitationCode =  data!["invitationCode"] as? String ?? ""
+                
                 self.isLoading = false
                 self.populateData()  // why? Just in case
                 
@@ -93,7 +92,7 @@ class UserManager: ObservableObject {
     @MainActor
     func currentUserData() async -> User {
         async let user = Auth.auth().currentUser
-        self.user.uid = await user!.uid
+        self.user.id = await user!.uid
         self.user.email = await user!.email!
         await fetchUser()
         return self.user
@@ -101,7 +100,7 @@ class UserManager: ObservableObject {
     }
     
     func removeUser() {
-        ref = db.collection("User").document(user.uid)
+        ref = db.collection("User").document(user.id)
         ref.delete()
     }
 }

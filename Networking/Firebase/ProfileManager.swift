@@ -8,7 +8,9 @@
 import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
+import Swinject
 
+@MainActor
 class ProfileManager:ObservableObject {
     @Injected var profile: Profile
     @Published var isLoading = true
@@ -16,34 +18,45 @@ class ProfileManager:ObservableObject {
     private var ref: DocumentReference
     private var data: [String: Any] // dictionary
     
-    init(profile: Injected<Profile>) {
+    init() {
+        @Injected var profile: Profile! // I had to do this again, I'm running into compiler errors because I'm using the first one in the initializer
+        guard let profile = profile else {
+             fatalError("Profile not injected")
+        }
+        let id = profile.id
         self.db = Firestore.firestore()
-        // self.profile = profile.wrappedValue
-        self.data = [
-            "id": profile.wrappedValue.id,
-            "name": profile.wrappedValue.page.name,
-            "title": profile.wrappedValue.page.statement,
-            "bio": profile.wrappedValue.page.bio,
-            "bgcolor": profile.wrappedValue.bgColor,
-            "image": profile.wrappedValue.image,
-            "thumbnail": profile.wrappedValue.thumbnail,
-            "serieseIds": profile.wrappedValue.serieseIds,
-            "videoIds": profile.wrappedValue.videoIds,
-            "ideaIds": profile.ideaIds,
-            "voteIds": profile.voteIds,
-            "commentIds": profile.commentIds,
-            "likeIds": profile.likeIds,
-            "viewIds": profile.viewIds
-            ]
+        self.data = [:]
         
         if profile.id.isEmpty {
             self.ref = self.db.collection("Profile").document()
         } else {
             self.ref = self.db.collection("Profile").document(profile.id) // will return a Document reference for a unsaved one
         }
+        
+    }
+        
+
+
+    func populateData() {
+        self.data = [
+            "id": profile.id,
+            "name": profile.name,
+            "statement": profile.statement,
+            "bio": profile.bio,
+            "image": profile.image,
+            "avatar": profile.avatar,
+            "bgcolor": profile.bgColor,
+            ]
     }
     
-    @MainActor
+    func populateProfile() {
+        profile.id = self.data["id"] as? String ?? ""
+        profile.name = self.data["name"] as? String ?? ""
+        profile.bio = self.data["bio"] as? String ?? ""
+        profile.image = self.data["image"] as? String ?? ""
+        profile.avatar = self.data["avatar"] as? String ?? ""
+        profile.bgColor = self.data["bgcolor"] as? String ?? ""
+    }
     func fetchProfile() async {
         do {
             let document = try await ref.getDocument()
@@ -57,28 +70,9 @@ class ProfileManager:ObservableObject {
                 print(error.localizedDescription)
         }
     }
-
-    func populateProfile() {
-        self.profile.id = self.data["id"] as? String ?? ""
-        self.profile.page.name = self.data["name"] as? String ?? ""
-        self.profile.page = self.data["page"].documentID as? String ?? ""
-        self.profile.page.bio = self.data["bio"] as? String ?? ""
-        self.profile.page.bgColor = self.data["bgcolor"] as? String ?? ""
-        self.profile.page.image = self.data["image"] as? String ?? ""
-        self.profile.page.avatar = self.data["thumbnail"] as? String ?? ""
-        /* we need to talk
-        self.profile.series.serieseIds = self.data["serieseIds"] as? [String] ?? []
-        self.profile.videoIds = self.data["videoIds"] as? [String] ?? []
-        self.profile.ideaIds = self.data["ideaIds"] as? [String] ?? []
-        self.profile.voteIds = self.data["voteIds"] as? [String] ?? []
-        self.profile.commentIds = self.data["commentIds"] as? [String] ?? []
-        self.profile.likeIds = self.data["likeIds"] as? [String] ?? []
-        self.profile.viewIds = self.data["viewIds"] as? [String] ?? []
-         */
-    }
-  
-    @MainActor
+    
     func updateProfile() async {
+        populateData()
         do {
             try await ref.setData(self.data)
         } catch {
@@ -86,8 +80,8 @@ class ProfileManager:ObservableObject {
         }
     }
     
-    @MainActor
     func addProfile() async -> String {
+        populateData()
         do {
             self.ref = try await db.collection("Profile").addDocument(data: self.data)
             self.data["id"] = ref.documentID

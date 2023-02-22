@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct ProfileView: View {
-    let profileId: String
+    @Injected private var profile: Profile
     @StateObject var profileVM: ProfileVM
     @State private var isPresentingProfileEdit = false
     @State private var bgColor = Color.white
     
-    init(profileId: String) {
-        self.profileId = profileId
-        self._profileVM = StateObject(wrappedValue: ProfileVM(profile: Profile(id: profileId)))
-        self._bgColor = State(initialValue: Color(hex: profileVM.profile.page.bgColor))
+    init() {
+        self._profileVM = StateObject(wrappedValue: ProfileVM())
+        self._bgColor = State(initialValue: Color(hex: profile.bgColor))
     }
     
     var body: some View {
@@ -25,13 +24,13 @@ struct ProfileView: View {
                 bgColor.edgesIgnoringSafeArea(.all)
                 VStack {
                     HStack {
-                        Text(profileVM.profile.page.avatar)
-                        Text(profileVM.profile.page.name)
+                        Text(profile.avatar)
+                        Text(profile.name)
                     }
-                    Text(profileVM.profile.page.statement)
+                    Text(profile.statement)
                     HStack {
-                        Text(profileVM.profile.page.image)
-                        Text(profileVM.profile.page.bio)
+                        Text(profile.image)
+                        Text(profile.bio)
                     }
                 }
             }
@@ -57,6 +56,6 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(profileId: "")
+        ProfileView()
     }
 }

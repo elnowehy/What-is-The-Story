@@ -6,9 +6,13 @@
 //
 
 import Foundation
+import Swinject
 import SwinjectAutoregistration
 
-let registeredServices = [
+let registeredServices: [ServiceType.Type] = [
+    // Models
     Profile.self,
+    // User.self,
+    // Data Managers
     // ProfileManager.self
 ]

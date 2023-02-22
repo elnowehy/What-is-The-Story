@@ -11,11 +11,8 @@ import Foundation
 class ProfileVM: ObservableObject{
     // @Published var profile: Profile
     @Injected private var profile: Profile
-    private var profileManager: ProfileManager
+    var profileManager = ProfileManager()
     
-    init(profile: Profile) {
-        self.profileManager = ProfileManager(profile: profile)
-    }
     
     // fetch data from Firebase and populate "profile"
     // input: Profile struct with the profile id populated

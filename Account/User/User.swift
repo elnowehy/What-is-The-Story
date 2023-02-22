@@ -7,37 +7,58 @@
 // Private user information
 
 import Foundation
+import Swinject
 
-struct User: Encodable, Decodable, Hashable {
-    var uid: String
-    var name: String    // I should move this to profile but that means profile will be created right away otherwise use the email "name"@email.com
-    var email: String
-    var password: String
-    var sponsor: String
-    var tokens: Int
-    var profileId: String = ""
-    var invitationId: String = ""
+// read and write for user only
+// Firestore path: /User/<documentID>
+struct User: ServiceType, Identifiable {
+    var id: String = ""
+    var name: String = ""
+    var email: String = ""
+    var password: String = ""
+    var profileIds: [String] = []
+    var invitationCode: String = ""
     var witsWallet: String = ""
     var ethWallet: String = ""
     
-    init(uid: String, name: String, email: String, password: String, sponsor: String, tokens: Int) {
-        self.uid = uid
+    init(uid: String, name: String, email: String, password: String) {
+        self.id = uid
         self.name = name
         self.email = email
         self.password = password
-        self.sponsor = sponsor // should be public?
-        self.tokens = tokens   // should be public?
     }
     
-    init() {
-        self.uid = ""
-        self.name = ""
-        self.email = ""
-        self.password = ""
-        self.sponsor = "" // should be public?
-        self.tokens = 0   // should be public?
+    init() {}
+    
+    public static func makeService(for container: Container) -> Self {
+        return User()
     }
 }
 
+// read: all, write: system only
+// Firestore path: /Users/<documentID>/Info/<main>
+struct PublicInfo {
+    var id: String = "main"
+    var sponsor: String = ""
+    var tokens: Int = 0
+    var inviteeIDs = [String]()
+}
 
+// read: all, write: user
+// Firestore path: /Users/<documentID>/Contribution/<main>
+struct Contribution {
+    var id: String = "main"
+    var ideaIds = [String]()
+    var voteIds = [String]()
+    var commentIds = [String]()
+}
+
+// read: user, write: user
+// Firestore path: /Users/<documentID>/History/<main>
+struct History {
+    var id: String = "main"
+    var likeIds = [String]()
+    var viewIds = [String]()
+    var bookMarkedIds = [String]()
+}
 
