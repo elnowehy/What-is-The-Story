@@ -9,7 +9,7 @@ import SwiftUI
 import Firebase
 
 struct SignUpView: View {
-    @State var user: User = User(uid: "", name: "", email: "", password: "", sponsor: "", tokens: 0)
+    @State var user: User = User(uid: "", name: "", email: "", password: "")
     @EnvironmentObject var authManager: AuthManager
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var pathRouter: PathRouter
@@ -51,11 +51,11 @@ struct SignUpView: View {
                 HStack {
                     Button (action: {
                         Task {
-                            await user.uid = authManager.signUp(emailAddress: user.email, password: user.password)
-                            if(!user.uid.isEmpty) {
+                            await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
+                            if(!user.id.isEmpty) {
                                 let userMV = UserVM(user: user)
                                 userMV.create()
-                                user.uid = userMV.user.uid
+                                user.id = userMV.user.id
                                 pathRouter.path.append("UserView")
                             } else {
                                 print("we have a problem")

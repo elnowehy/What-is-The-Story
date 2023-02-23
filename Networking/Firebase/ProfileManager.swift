@@ -23,7 +23,7 @@ class ProfileManager:ObservableObject {
         guard let profile = profile else {
              fatalError("Profile not injected")
         }
-        let id = profile.id
+        
         self.db = Firestore.firestore()
         self.data = [:]
         

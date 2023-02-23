@@ -13,12 +13,12 @@ struct AccountView: View {
     var body: some View {
         VStack {
             NavigationStack {
-                ProfileUpdate()
+                ProfileView()
                 Spacer()
                 
                 VStack(alignment: .leading) {
                     LazyVGrid(columns: columns, spacing: 16) {
-                        NavigationLink(destination: ProfileUpdate()) {
+                        NavigationLink(destination: ProfileView()) {
                             VStack(spacing: 8) {
                                 Image(systemName: "person.crop.circle.fill")
                                     .font(.system(size: 32))

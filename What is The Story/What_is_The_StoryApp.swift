@@ -35,16 +35,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct What_is_The_StoryApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var pathRouter = PathRouter()
-    @StateObject var authManager: AuthManager
-    
-    init() {
-        Task {
-            let authManager = try await AuthManager()
-        }
-        // FirebaseApp.configure()
-        // Firebase.Analytics.setAnalyticsCollectionEnabled(true)
-     
-    }
+    @StateObject var authManager = AuthManager()
     
     var body: some Scene {
         WindowGroup {

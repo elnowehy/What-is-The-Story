@@ -10,7 +10,7 @@ import Foundation
 @MainActor
 class ProfileVM: ObservableObject{
     // @Published var profile: Profile
-    @Injected private var profile: Profile
+    @Injected var profile: Profile
     var profileManager = ProfileManager()
     
     

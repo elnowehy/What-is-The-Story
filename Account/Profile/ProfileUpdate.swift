@@ -22,10 +22,10 @@ struct ProfileUpdate: View {
     var body: some View {
         
         VStack {
-            TextField("User Name", text: $profileVM.profile.page.name)
-            TextField("You in one sentence", text: $profileVM.profile.page.statement)
+            TextField("User Name", text: $profileVM.profile.name)
+            TextField("You in one sentence", text: $profileVM.profile.statement)
             Text("Tell us more:")
-            TextEditor(text: $profileVM.profile.page.bio)
+            TextEditor(text: $profileVM.profile.bio)
             Divider()
             SingleImagePickerView(label: "Avatar", image: "person.badge.plus.fill")
             SingleImagePickerView(label: "Photo", image: "person.crop.artframe")

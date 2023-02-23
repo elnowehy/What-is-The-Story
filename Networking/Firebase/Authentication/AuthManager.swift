@@ -124,7 +124,7 @@ final class AuthManager: ObservableObject {
     
     @Published var isLoggedIn: Bool = false
     // @Published var isLoading: Bool = true
-    init() async {
+    init()  {
         self.listenToAuthState()
     }
     
