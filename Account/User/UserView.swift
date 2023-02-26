@@ -9,10 +9,8 @@
 //
 //  User can sign out from this view?
 //
-// access:
-// 1. Navigatoin bar "Account"
-// 2. SignInView
-// 3. SignUp View
+// access: Gear/Settings from the AccountView
+
 
 
 import SwiftUI
@@ -24,20 +22,30 @@ struct UserView: View {
     @ObservedObject var userVM = UserVM()
     
     var body: some View {
-        if authManager.isLoggedIn {
-            VStack {
-                Text("Welcome, \(userVM.user.name)")
-                    .font(.title)
-                Text("Email: \(userVM.user.email)")
-                    .font(.subheadline)
-            }.navigationBarHidden(true)
-            // A bubtton to logout
+        
+        VStack {
+            Text("Welcome, \(userVM.user.name)")
+                .font(.title)
+            Text("Email: \(userVM.user.email)")
+                .font(.subheadline)
             
-            // AccountTabView(isShowingAccountTab: true)
+            Spacer()
             
-        } else {
-            SignInView()
-        }
+            Button(action: {
+                Task {
+                    do {
+                        try Auth.auth().signOut()
+                    } catch {
+                        print("can't even log out")
+                    }
+                }
+            })
+            {
+                Text("Sign Out")
+            }
+            .padding()
+            
+        }.navigationBarHidden(true)
     }
     
 }

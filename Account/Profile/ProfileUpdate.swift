@@ -22,7 +22,7 @@ struct ProfileUpdate: View {
     var body: some View {
         
         VStack {
-            TextField("User Name", text: $profileVM.profile.name)
+            TextField("Your Brand", text: $profileVM.profile.brand)
             TextField("You in one sentence", text: $profileVM.profile.statement)
             Text("Tell us more:")
             TextEditor(text: $profileVM.profile.bio)

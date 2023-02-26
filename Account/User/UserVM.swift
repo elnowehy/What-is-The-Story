@@ -38,7 +38,7 @@ class UserVM: ObservableObject{
     // create User document in Firebase. ** the document id should be the same as the authentication one **
     // input: empty User struct with User.uid populated from the authentication id
     // output: user struct is populated
-    func create()  {
+    func create() async {
         let profileVM = ProfileVM()
         Task {
             async let profileId = profileVM.create() // ** Problem **: for some reason the following code doesn't wait for this line

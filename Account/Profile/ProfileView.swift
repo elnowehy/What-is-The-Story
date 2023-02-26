@@ -4,10 +4,12 @@
 //
 //  Created by Amr El-Nowehy on 2023-02-16.
 //
+// this view has the profile info and option to edit the view
 
 import SwiftUI
 
 struct ProfileView: View {
+    @EnvironmentObject var authManager: AuthManager
     @Injected private var profile: Profile
     @StateObject var profileVM: ProfileVM
     @State private var isPresentingProfileEdit = false
@@ -25,7 +27,7 @@ struct ProfileView: View {
                 VStack {
                     HStack {
                         Text(profile.avatar)
-                        Text(profile.name)
+                        Text(profile.brand)
                     }
                     Text(profile.statement)
                     HStack {

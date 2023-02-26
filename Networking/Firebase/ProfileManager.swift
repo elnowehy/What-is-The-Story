@@ -40,7 +40,7 @@ class ProfileManager:ObservableObject {
     func populateData() {
         self.data = [
             "id": profile.id,
-            "name": profile.name,
+            "brand": profile.brand,
             "statement": profile.statement,
             "bio": profile.bio,
             "image": profile.image,
@@ -51,7 +51,7 @@ class ProfileManager:ObservableObject {
     
     func populateProfile() {
         profile.id = self.data["id"] as? String ?? ""
-        profile.name = self.data["name"] as? String ?? ""
+        profile.brand = self.data["brand"] as? String ?? ""
         profile.bio = self.data["bio"] as? String ?? ""
         profile.image = self.data["image"] as? String ?? ""
         profile.avatar = self.data["avatar"] as? String ?? ""

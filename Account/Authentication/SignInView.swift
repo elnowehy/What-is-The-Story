@@ -9,91 +9,62 @@ import SwiftUI
 import Firebase
 
 struct SignInView: View {
-    @State private var email = "email"
-    @State private var password = ""
-    //@State var path = NavigationPath()
-    @EnvironmentObject var pathRouter: PathRouter
+    @State var email = ""
+    @State var password = ""
     @EnvironmentObject var authManager: AuthManager
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var pathRouter: PathRouter
     
-    
+
     var body: some View {
-        if !authManager.isLoggedIn {
-            NavigationStack(path: $pathRouter.path) {
-                VStack {
-                    Group {
-                        VStack {
-                            Text("Welcome")
-                                .font(.headline)
-                                .offset(x: -100, y: -100)
-                            
-                            TextField("Email", text: $email)
-                                .offset(x: 100, y: -50)
-                                .keyboardType(.emailAddress)
-                                .textInputAutocapitalization(.never)
-                                .submitLabel(.next)
-                            // I can't see "Email" for some reason?
-                            SecureField("Password", text: $password)
-                                .offset(x: 100, y: -50)
-                                .submitLabel(.done)
-                        }
-                    }
-                    .foregroundColor(.black)
-                    .padding()
-                    HStack {
-                        Button(action: {
-                            Task {
-                                await authManager.signIn(emailAddress: email, password: password)
-                            }
-                        })
-                        {
-                            Text("Sign In")
-                        }
-                        .padding()
-                        
-                        Button(action: {
-                            pathRouter.path.append("SignUpView")
-                            // path.append("TestView")
-                        }) {
-                            Text("Sign Up")
-                        }
-                        .padding()
-                    }
-                    
-                    
-                    .navigationDestination(for: String.self) { view in
-                        if view == "SignUpView" {
-                            SignUpView()
-                        } else if !authManager.isLoggedIn {
-                            // UserView()
-                            Text("look into this later")
-                        }
-                    }
-                    
-                    .frame(width: 350, height: 400)
-                    .foregroundColor(.black)
-                    
-                }
-                /*            .onAppear {
-                 if !authManager.isLoading {
-                 path.append("UserView")
-                 }
-                 */
+        NavigationStack(path: $pathRouter.path) {
+            VStack {
+                Text("Welcome Back")
+                    .font(.headline)
+                    .offset(x: -100, y: -100)
+ 
+                TextField("Email", text: $email)
+                    .offset(x: 50, y: -50)
+                    .keyboardType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+                    .submitLabel(.next)
+                
+                SecureField("Password", text: $password)
+                    .offset(x: 50, y: -50)
+                    .submitLabel(.done)
+  
             }
-            /*.alert(authManager.alertMessage, isPresented: $authManager.showingAlert) {
-                Button("OK", role: .cancel) {}
-            }*/
-        } else {
-            UserView()
+            .padding()
+            VStack {
+                HStack {
+                    Button(action: {
+                        Task {
+                            await authManager.signIn(emailAddress: email, password: password)
+                            dismiss()
+                        }
+                    })
+                    {
+                        Text("Sign In")
+                    }
+                    .padding()
+                    
+                    NavigationLink("SignUp", destination: SignUpView())
+                        .padding()
+                }
+                .frame(width: 350, height: 400)
+                .foregroundColor(.black)
+                
+            }
         }
+        /*.alert(authManager.alertMessage, isPresented: $authManager.showingAlert) {
+         Button("OK", role: .cancel) {}
+         }*/
     }
-    
     
 }
 
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
-        // let userData = UserData()
-        // userData.user = User(name: "", email: "", password: "", sponsor: "", tokens: 0)
         return SignInView()
     }
 }

@@ -21,7 +21,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         Storage.storage().useEmulator(withHost: "localhost", port: 9199)
         let settings = Firestore.firestore().settings
         settings.host = "localhost:8080"
-        settings.isPersistenceEnabled = false
+        settings.isPersistenceEnabled = true
         settings.isSSLEnabled = false
         Firestore.firestore().settings = settings
 #elseif DEBUG

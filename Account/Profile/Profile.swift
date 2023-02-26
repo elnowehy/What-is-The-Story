@@ -12,7 +12,7 @@ import Swinject
 // Firestore path: /Profiles/<documentID>
 struct Profile: ServiceType {
     var id: String = ""
-    var name: String = ""
+    var brand: String = ""
     var statement: String = ""
     var bio: String = ""
     var image: String = ""
