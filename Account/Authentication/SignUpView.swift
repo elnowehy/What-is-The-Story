@@ -9,81 +9,79 @@ import SwiftUI
 import Firebase
 
 struct SignUpView: View {
+    @Binding var showLogIn: Bool
     @State var user: User = User(uid: "", name: "", email: "", password: "")
     @EnvironmentObject var authManager: AuthManager
     @Environment(\.dismiss) private var dismiss
     
-    
     var body: some View {
-        NavigationStack(/* path: $pathRouter.path */) {
-            VStack  {
-                Group {
-                    VStack {
-                        Spacer()
-                        
-                        Text("Welcome to WITS")
-                            .font(.headline)
-                            .padding()
-                            .offset(x: -100, y: -100)
-
-                        
-                        TextField("Email", text: $user.email)
-                            .offset(x: 50, y: -50)
-                            .keyboardType(.emailAddress)
-                            .textInputAutocapitalization(.never)
-                            .submitLabel(.next)
-                        
-                        
-                        SecureField("Password", text: $user.password)
-                            .offset(x: 50, y: -50)
-                            .submitLabel(.done)
-                        
-                        
-                        TextField("User Name", text: $user.name)
-                        //.frame(width: .infinity, height: 50)
-                            .textInputAutocapitalization(.never)
-                            .submitLabel(.done)
-                            .offset(x: 50, y: -50)
- 
-                    }
-                    .padding()
-                    .foregroundColor(.black)
-                }
-                
-                HStack {
-                    Button (action: {
-                        Task {
-                            await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
-                            if(!user.id.isEmpty) {
-                                let userMV = UserVM(user: user)
-                                await userMV.create()
-                                user.id = userMV.user.id
-                                await authManager.signIn(emailAddress: user.email, password: user.password)
-                                dismiss()
-                            } else {
-                                print("we have a problem")
-                            }
-                        }
-                        
-                    }) {
-                        Text("Save")
-                    }
-                    .padding()
+        VStack  {
+            Group {
+                VStack {
+                    Spacer()
                     
-                    Button (action: {
-                        dismiss()
-                    }) {
-                        Text("Cancel")
-                    }
-                    .padding()
+                    Text("Welcome to WITS")
+                        .font(.headline)
+                        .padding()
+                        .offset(x: -100, y: -100)
+                    
+                    
+                    TextField("Email", text: $user.email)
+                        .offset(x: 50, y: -50)
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .submitLabel(.next)
+                    
+                    
+                    SecureField("Password", text: $user.password)
+                        .offset(x: 50, y: -50)
+                        .submitLabel(.done)
+                    
+                    
+                    TextField("User Name", text: $user.name)
+                    //.frame(width: .infinity, height: 50)
+                        .textInputAutocapitalization(.never)
+                        .submitLabel(.done)
+                        .offset(x: 50, y: -50)
+                    
                 }
-                
-                .frame(width: 350, height: 300)
+                .padding()
                 .foregroundColor(.black)
-                
-                
-               .navigationBarBackButtonHidden(true)
             }
+            
+            HStack {
+                Button (action: {
+                    Task {
+                        await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
+                        if(!user.id.isEmpty) {
+                            let userMV = UserVM(user: user)
+                            await userMV.create()
+                            user.id = userMV.user.id
+                            await authManager.signIn(emailAddress: user.email, password: user.password)
+                            showLogIn = false
+                        } else {
+                            print("we have a problem")
+                        }
+                    }
+                    
+                }) {
+                    Text("Save")
+                }
+                .padding()
+                
+                Button (action: {
+                    dismiss()
+                }) {
+                    Text("Cancel")
+                }
+                .padding()
+            }
+            
+            .frame(width: 350, height: 300)
+            .foregroundColor(.black)
+            
+            
+            .navigationBarBackButtonHidden(true)
         }
     }
 }

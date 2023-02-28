@@ -10,8 +10,7 @@ import SwiftUI
 class PathRouter: ObservableObject {
     @Published var path = NavigationPath()
     
-    func rest() {
+    func reset() {
         path = NavigationPath()
     }
-    
 }

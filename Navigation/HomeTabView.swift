@@ -51,21 +51,20 @@ struct HomeTabView: View {
             
             SignOutView()
                 .tabItem {
-                    Label("Sign Out", image: "square.and.arrow.up")
+                    Label("Sign Out", systemImage: "square.and.arrow.up.fill")
                 }
-        }
-        
-        .onChange(of: selection){ value in
-            if( (value == .account || value == .bookmarks) && !authManager.isLoggedIn) {
-                showSignInSheet = true
-            }
+                .tag(Tab.signout)
         }
         .sheet(isPresented: $showSignInSheet) {
-            SignInView().environmentObject(authManager)
+            SignInView(showLogIn: $showSignInSheet)
         }
-        
+        .onChange(of: selection) { newValue in
+            showSignInSheet = (selection == .bookmarks || selection == .account) && !authManager.isLoggedIn
+        }
     }
 }
+    
+
     
     /*
      struct HomeTabView_Previews: PreviewProvider {
