@@ -43,7 +43,7 @@ struct HomeTabView: View {
                 .tag(Tab.bookmarks)
             
             
-            AccountMenu()
+            AccountTabView()
                 .tabItem {
                     Label("Account", systemImage: "person")
                 }

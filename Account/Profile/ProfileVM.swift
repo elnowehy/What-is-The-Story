@@ -9,10 +9,10 @@ import Foundation
 
 @MainActor
 class ProfileVM: ObservableObject{
-    // @Published var profile: Profile
     @Injected var profile: Profile
+    var info = ProfileInfo()
     var profileManager = ProfileManager()
-    
+    var profileInfoManager = ProfileInfoManager()
     
     // fetch data from Firebase and populate "profile"
     // input: Profile struct with the profile id populated
@@ -20,7 +20,7 @@ class ProfileVM: ObservableObject{
     // return: Void
     func fetch() async {
         Task {
-            await profileManager.fetchProfile()
+            await profileManager.fetch()
             profile = profileManager.profile
         }
     }
@@ -30,8 +30,9 @@ class ProfileVM: ObservableObject{
     // output: profile strucct is populated
     // return: Profile Id
     func create() async -> String {
-        async let profileId = profileManager.addProfile()
+        async let profileId = profileManager.create()
         profile.id = await profileId
+        await profileInfoManager.create()
         return profile.id
         
     }
@@ -42,7 +43,7 @@ class ProfileVM: ObservableObject{
     // return: Void
     func update() async {
         Task {
-            await profileManager.updateProfile()
+            await profileManager.update()
             profile = profileManager.profile // in case something happens during the update to the data
         }
     }
@@ -52,7 +53,53 @@ class ProfileVM: ObservableObject{
     // output: no ouput
     // retrun: Void
     func remove() {
-        profileManager.removeProfile()
+        profileManager.remove()
+        // I'm sure much more needs to be done, e.g. remove from Profile.Creation
+    }
+    
+    // *********************
+    // **** ProfileInfo ****
+    // *********************
+    
+    // fetch info data from Firebase and populate "info"
+    // input: Profile struct with the profile id populated
+    // output: info struc is populated
+    // return: Void
+    func fetchInfo() async {
+        Task {
+            await profileInfoManager.fetch()
+            info = profileInfoManager.info
+        }
+    }
+    
+    // create Profile document in Firebase and
+    // input: empty Profile struct
+    // output: profile strucct is populated
+    // return: Profile Id
+    func createInfo() async -> String {
+        async let profileId = profileInfoManager.create()
+        info.id = await profileId
+        return info.id
+        
+    }
+    
+    // updates a profile with the profile data
+    // input: a populated Profile struct
+    // output: an updaetd Profile struct
+    // return: Void
+    func updateInfo() async {
+        Task {
+            await profileInfoManager.update()
+            info = profileInfoManager.info // in case something happens during the update to the data
+        }
+    }
+    
+    // remove a profile info from Firebase
+    // input: Profile struct with witht he profile id populated
+    // output: no ouput
+    // retrun: Void
+    func removeInfo() {
+        profileInfoManager.remove()
         // I'm sure much more needs to be done
     }
 }

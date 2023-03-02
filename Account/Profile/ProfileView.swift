@@ -17,25 +17,24 @@ struct ProfileView: View {
     
     init() {
         self._profileVM = StateObject(wrappedValue: ProfileVM())
-        self._bgColor = State(initialValue: Color(hex: profile.bgColor))
+        self._bgColor = State(initialValue: Color(hex: profileVM.info.bgColor))
     }
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                bgColor.edgesIgnoringSafeArea(.all)
-                VStack {
-                    HStack {
-                        Text(profile.avatar)
-                        Text(profile.brand)
-                    }
-                    Text(profile.statement)
-                    HStack {
-                        Text(profile.image)
-                        Text(profile.bio)
-                    }
+            VStack {
+                HStack {
+                    Text(profileVM.profile.avatar)
+                    Text(profileVM.profile.brand)
+                }
+                Text(profileVM.info.statement)
+                HStack {
+                    Text(profileVM.info.image)
+                    Text(profileVM.info.bio)
                 }
             }
+            .foregroundColor(.primary)
+            
             .navigationBarTitle("Profile")
             .navigationBarItems(trailing:
                                     Button(action: {
@@ -51,6 +50,7 @@ struct ProfileView: View {
                 bgColor: $bgColor,
                 presentationMode: $isPresentingProfileEdit)
         }
+        .background(bgColor)
     }
 }
 

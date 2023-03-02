@@ -23,9 +23,9 @@ struct ProfileUpdate: View {
         
         VStack {
             TextField("Your Brand", text: $profileVM.profile.brand)
-            TextField("You in one sentence", text: $profileVM.profile.statement)
+            TextField("You in one sentence", text: $profileVM.info.statement)
             Text("Tell us more:")
-            TextEditor(text: $profileVM.profile.bio)
+            TextEditor(text: $profileVM.info.bio)
             Divider()
             SingleImagePickerView(label: "Avatar", image: "person.badge.plus.fill")
             SingleImagePickerView(label: "Photo", image: "person.crop.artframe")
@@ -41,6 +41,7 @@ struct ProfileUpdate: View {
             Button("Save") {
                 Task {
                     await profileVM.update()
+                    await profileVM.updateInfo()
                     presentationMode = false
                 }
             }

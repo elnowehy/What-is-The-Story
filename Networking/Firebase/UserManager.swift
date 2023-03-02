@@ -14,6 +14,7 @@ import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
 
+@MainActor
 class UserManager: ObservableObject {
     @Published var user: User
     @Published var isLoading = true
@@ -44,11 +45,12 @@ class UserManager: ObservableObject {
         self.user.id = fbUser!.uid
         self.user.email = fbUser!.email!
         Task {
-            await fetchUser()
+            await fetch()
         }
     }
 
-    
+    // in the future, I can make this smarter by passing updated fields only
+    // but make sure you pass the full set if it's going to be used with 'create: setData'
     func populateData() {
         self.data = [
             "id": user.email,
@@ -58,30 +60,38 @@ class UserManager: ObservableObject {
         ]
     }
     
-    @MainActor
-    func fetchUser() async {
+    func populateStruct() {
+        user.email = self.data["email"] as? String ?? ""
+        user.name  = self.data["name"] as? String ?? ""
+        user.profileIds =  self.data["profileId"] as? [String] ?? []
+        user.invitationCode =  self.data["invitationCode"] as? String ?? ""
+    }
+
+    func fetch() async {
         do {
             let document = try await ref.getDocument()
             let data = document.data()
             if data != nil {
-                self.user.email = data!["email"] as? String ?? ""
-                self.user.name  = data!["name"] as? String ?? ""
-                self.user.profileIds =  data!["profileId"] as? [String] ?? []
-                self.user.invitationCode =  data!["invitationCode"] as? String ?? ""
-                
+                self.data = data!
+                self.populateStruct()
                 self.isLoading = false
-                self.populateData()  // why? Just in case
-                
-                
             }
         } catch {
             print(error.localizedDescription)
         }
     }
 
-    @MainActor
-    func setUser() async {
-        self.populateData()
+    func update() async {
+        populateData()
+        do {
+            try await ref.updateData(self.data)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func create() async {
+        populateData()
         do {
             try await ref.setData(self.data)
         } catch {
@@ -89,18 +99,17 @@ class UserManager: ObservableObject {
         }
     }
 
-    @MainActor
     func currentUserData() async -> User {
         async let user = Auth.auth().currentUser
         self.user.id = await user!.uid
         self.user.email = await user!.email!
-        await fetchUser()
+        await fetch()
         return self.user
         
     }
     
-    func removeUser() {
-        ref = db.collection("User").document(user.id)
+    func remove() {
         ref.delete()
+        // far from complete :(
     }
 }

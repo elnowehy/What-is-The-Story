@@ -11,23 +11,28 @@ import Swinject
 // read: pubic write: user
 // Firestore path: /Profiles/<documentID>
 struct Profile: ServiceType {
-    var id: String = ""
+    var id: String = "" // profileId
     var brand: String = ""
-    var statement: String = ""
-    var bio: String = ""
-    var image: String = ""
     var avatar: String = ""
-    var bgColor: String = "#ffffff"
+    
     public static func makeService(for container: Container) -> Self {
         return Profile()
     }
+}
+
+struct ProfileInfo {
+    var id: String = "" // profileId
+    var statement: String = ""
+    var bio: String = ""
+    var image: String = ""
+    var bgColor: String = "#ffffff"
 }
 
 
 // read: public, write: user
 // Firestore path: "/Profiles/<DocumentID>/Creation/<main>"
 struct Creation {
-    var id: String = "main"
+    var id: String = "" // profileId
     var serieseIds = [String]()
     var videoIds = [String]()
 }

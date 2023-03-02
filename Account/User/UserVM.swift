@@ -12,7 +12,6 @@ class UserVM: ObservableObject{
     @Published var user: User
     @Injected private var profile: Profile
     private var userManager: UserManager
-    // @EnvironmentObject var authManager: AuthManager
     
     init(user: User) {
         self.user = user
@@ -30,12 +29,13 @@ class UserVM: ObservableObject{
     // return: Void
     func fetch() {
         Task {
-            await userManager.fetchUser()
+            await userManager.fetch()
             user = userManager.user
         }
     }
     
-    // create User document in Firebase. ** the document id should be the same as the authentication one **
+    // create User document in Firebase.
+    // ** the document id should be the same as the authentication one **
     // input: empty User struct with User.uid populated from the authentication id
     // output: user struct is populated
     func create() async {
@@ -45,7 +45,7 @@ class UserVM: ObservableObject{
             user.profileIds.append(await profileId)
             userManager.user.profileIds = user.profileIds
             
-            await userManager.setUser()
+            await userManager.create()
             user = userManager.user
         }
     }
@@ -56,7 +56,7 @@ class UserVM: ObservableObject{
     // return: Void
     func update() {
         Task {
-            await userManager.setUser()
+            await userManager.create()
             user = userManager.user // in case something happens during the update to the data
         }
     }
@@ -66,8 +66,7 @@ class UserVM: ObservableObject{
     // output: no ouput
     // retrun: Void
     func remove() {
-        
-        userManager.removeUser()
+        userManager.remove()
     
         // there is more to this, all related data in Firebase. I'm not sure if I'll even allow it.
     }

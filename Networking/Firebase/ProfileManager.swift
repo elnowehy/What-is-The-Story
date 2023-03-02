@@ -41,37 +41,31 @@ class ProfileManager:ObservableObject {
         self.data = [
             "id": profile.id,
             "brand": profile.brand,
-            "statement": profile.statement,
-            "bio": profile.bio,
-            "image": profile.image,
             "avatar": profile.avatar,
-            "bgcolor": profile.bgColor,
             ]
     }
     
-    func populateProfile() {
+    func populateStruct() {
         profile.id = self.data["id"] as? String ?? ""
         profile.brand = self.data["brand"] as? String ?? ""
-        profile.bio = self.data["bio"] as? String ?? ""
-        profile.image = self.data["image"] as? String ?? ""
         profile.avatar = self.data["avatar"] as? String ?? ""
-        profile.bgColor = self.data["bgcolor"] as? String ?? ""
     }
-    func fetchProfile() async {
+    
+    func fetch() async {
         do {
             let document = try await ref.getDocument()
             let data = document.data()
             if data != nil {
                 self.data = data!
                 self.data["id"] = document.documentID
-                self.populateProfile()
+                self.populateStruct()
             }
         } catch {
                 print(error.localizedDescription)
         }
     }
     
-    func updateProfile() async {
+    func update() async {
         populateData()
         do {
             try await ref.setData(self.data)
@@ -80,7 +74,7 @@ class ProfileManager:ObservableObject {
         }
     }
     
-    func addProfile() async -> String {
+    func create() async -> String {
         populateData()
         do {
             self.ref = try await db.collection("Profile").addDocument(data: self.data)
@@ -93,9 +87,95 @@ class ProfileManager:ObservableObject {
         }
     }
     
-    func removeProfile() {
-        ref = db.collection("Profile").document(profile.id)
+    func remove() {
         ref.delete()
+    }
+}
+
+@MainActor
+class ProfileInfoManager: ObservableObject {
+    //@Injected var profile: Profile
+    @Published var info = ProfileInfo()
+    @Published var isLoading = true
+    private var db: Firestore
+    private var ref: DocumentReference?
+    private var data: [String: Any] // dictionary
+    
+    init() {
+        // @Injected var profile: Profile! // I had to do this again, I'm running into compiler errors because I'm using the first one in the initializer
+        // guard let profile = profile else {
+        //    fatalError("Profile not injected")
+        // }
+        self.db = Firestore.firestore()
+        self.data = [:]
+    }
+    
+    private func setRef() {
+        if profile.id.isEmpty {
+            fatalError("Profile id is not defined")
+        }
+        self.ref = self.db.collection("Profile").document(profile.id).collection("ProfileInfo").document(profile.id)
+    }
+    
+    // in the future, I can make this smarter by passing updated fields only
+    // but make sure you pass the full set if it's going to be used with 'create: setData'
+    func populateData() {
+        self.data = [
+            "id": profile.id,
+            "statement": info.statement,
+            "bio": info.bio,
+            "image": info.image,
+            "bgColor": info.bgColor
+        ]
+    }
+    
+    func populateStruct() {
+        info.id = profile.id
+        info.statement = self.data["statement"] as? String ?? ""
+        info.bio = self.data["bio"] as? String ?? ""
+        info.image = self.data["image"] as? String ?? ""
+        info.bgColor = self.data["bgcolor"] as? String ?? ""
+    }
+    
+    func fetch() async {
+        setRef()
+        do {
+            let document = try await ref!.getDocument()
+            let data = document.data()
+            if data != nil {
+                self.data = data!
+                self.populateStruct()
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func update() async {
+        setRef()
+        populateData()
+        do {
+            try await ref!.updateData(self.data)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func create() async -> String {
+        setRef()
+        populateData()
+        do {
+            try await self.ref!.setData(self.data)
+            return self.info.id
+        } catch {
+            print(error.localizedDescription)
+            return ""
+        }
+    }
+    
+    func remove() {
+        setRef()
+        ref!.delete()
     }
 }
 
