@@ -15,46 +15,48 @@
 import SwiftUI
 
 struct ProfileUpdate: View {
+    // @Injected private var profile: Profile
     @ObservedObject var profileVM: ProfileVM
-    @Binding var bgColor: Color
+    // @Binding var bgColor: Color
     @Binding var presentationMode: Bool
     
     var body: some View {
-        
         VStack {
             TextField("Your Brand", text: $profileVM.profile.brand)
+                .padding(.top, 20)
             TextField("You in one sentence", text: $profileVM.info.statement)
             Text("Tell us more:")
             TextEditor(text: $profileVM.info.bio)
             Divider()
             SingleImagePickerView(label: "Avatar", image: "person.badge.plus.fill")
             SingleImagePickerView(label: "Photo", image: "person.crop.artframe")
-            ColorPicker("Background Color", selection: $bgColor)
-        }
-        
-        HStack {
-            Spacer()
-            Button("Cancel") {
-                presentationMode = false
-            }
-            Spacer()
-            Button("Save") {
-                Task {
-                    await profileVM.update()
-                    await profileVM.updateInfo()
+            // ColorPicker("Background Color", selection: $bgColor)
+            
+            
+            HStack {
+                Button("Cancel") {
                     presentationMode = false
                 }
+                Spacer()
+                Button("Save") {
+                    Task {
+                        await profileVM.update()
+                        await profileVM.updateInfo()
+                        presentationMode = false
+                    }
+                }
             }
-            Spacer()
         }
+        .padding()
     }
     
 }
 
 /*
- struct ProfileUpdate_Previews: PreviewProvider {
- static var previews: some View {
- ProfileUpdate()
- }
- }
+struct ProfileUpdate_Previews: PreviewProvider {
+    static var previews: some View {
+        ProfileUpdate()
+    }
+}
  */
+ 

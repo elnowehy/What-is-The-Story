@@ -5,20 +5,26 @@
 //  Created by Amr El-Nowehy on 2023-02-07.
 //
 
-import Foundation
+import SwiftUI
 
-@MainActor
 class ProfileVM: ObservableObject{
     @Injected var profile: Profile
     var info = ProfileInfo()
-    var profileManager = ProfileManager()
-    var profileInfoManager = ProfileInfoManager()
+    private var profileManager: ProfileManager
+    private var profileInfoManager: ProfileInfoManager
     
+
+    init() {
+        profileManager = ProfileManager()
+        profileInfoManager = ProfileInfoManager()
+    }
+
+
     // fetch data from Firebase and populate "profile"
     // input: Profile struct with the profile id populated
     // output: profile struc is populated
     // return: Void
-    func fetch() async {
+    func fetch() {
         Task {
             await profileManager.fetch()
             profile = profileManager.profile
@@ -33,15 +39,14 @@ class ProfileVM: ObservableObject{
         async let profileId = profileManager.create()
         profile.id = await profileId
         await profileInfoManager.create()
-        return profile.id
-        
+        return await profileId
     }
     
     // updates a profile with the profile data
     // input: a populated Profile struct
     // output: an updaetd Profile struct
     // return: Void
-    func update() async {
+    func update() {
         Task {
             await profileManager.update()
             profile = profileManager.profile // in case something happens during the update to the data
@@ -53,8 +58,10 @@ class ProfileVM: ObservableObject{
     // output: no ouput
     // retrun: Void
     func remove() {
+        
         profileManager.remove()
         // I'm sure much more needs to be done, e.g. remove from Profile.Creation
+        
     }
     
     // *********************
@@ -65,8 +72,9 @@ class ProfileVM: ObservableObject{
     // input: Profile struct with the profile id populated
     // output: info struc is populated
     // return: Void
-    func fetchInfo() async {
+    func fetchInfo() {
         Task {
+            // profileInfoManager.profileId = profile.id
             await profileInfoManager.fetch()
             info = profileInfoManager.info
         }
@@ -76,19 +84,19 @@ class ProfileVM: ObservableObject{
     // input: empty Profile struct
     // output: profile strucct is populated
     // return: Profile Id
-    func createInfo() async -> String {
-        async let profileId = profileInfoManager.create()
-        info.id = await profileId
-        return info.id
-        
+    func createInfo() {
+        Task {
+            await profileInfoManager.create()
+        }
     }
     
     // updates a profile with the profile data
     // input: a populated Profile struct
     // output: an updaetd Profile struct
     // return: Void
-    func updateInfo() async {
+    func updateInfo()  {
         Task {
+            // profileInfoManager.profileId = profile.id
             await profileInfoManager.update()
             info = profileInfoManager.info // in case something happens during the update to the data
         }

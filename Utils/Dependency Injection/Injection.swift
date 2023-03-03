@@ -31,6 +31,7 @@ final class Injection {
         let container = Container()
         
         container.autoregister(Profile.self, initializer: Profile.init)
+        container.autoregister(User.self, initializer: User.init)
         /* // one day
         for serviceType in registeredServices {
             container.autoregister(serviceType, initializer: serviceType.init)

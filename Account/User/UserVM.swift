@@ -5,29 +5,30 @@
 //  Created by Amr El-Nowehy on 2023-02-07.
 //
 
-import Foundation
+import SwiftUI
 
-@MainActor
 class UserVM: ObservableObject{
-    @Published var user: User
-    @Injected private var profile: Profile
-    private var userManager: UserManager
+    @Injected var profile: Profile
+    @Injected var user: User
+    private var userManager = UserManager()
+    @EnvironmentObject var authManager: AuthManager
     
-    init(user: User) {
-        self.user = user
+    init() {
         self.userManager = UserManager(user: user)
     }
-    
+
+    /*
     init() {
         userManager = UserManager() // current user
         self.user =  userManager.user
     }
-    
+    */
     // fetch data from Firebase and populate User
     // input: User struct with the user uid populated
     // output: User struc is populated
     // return: Void
-    func fetch() {
+
+    func fetch()  {
         Task {
             await userManager.fetch()
             user = userManager.user
@@ -38,13 +39,12 @@ class UserVM: ObservableObject{
     // ** the document id should be the same as the authentication one **
     // input: empty User struct with User.uid populated from the authentication id
     // output: user struct is populated
-    func create() async {
+    func create() {
         let profileVM = ProfileVM()
         Task {
-            async let profileId = profileVM.create() // ** Problem **: for some reason the following code doesn't wait for this line
-            user.profileIds.append(await profileId)
+            async let profileId = await profileVM.create()
+            await user.profileIds.append(profileId)
             userManager.user.profileIds = user.profileIds
-            
             await userManager.create()
             user = userManager.user
         }
@@ -66,8 +66,35 @@ class UserVM: ObservableObject{
     // output: no ouput
     // retrun: Void
     func remove() {
-        userManager.remove()
+        Task {
+            await userManager.remove()
+            
+            // there is more to this, all related data in Firebase. I'm not sure if I'll even allow it.
+        }
+    }
+   
+    func signUp() {
+        Task {
+            await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
+            if(!user.id.isEmpty) {
+                self.create()
+                await authManager.signIn(emailAddress: user.email, password: user.password)
+            } else {
+                fatalError("we have a problem")
+            }
+        }
+    }
     
-        // there is more to this, all related data in Firebase. I'm not sure if I'll even allow it.
+    func signIn() {
+        Task {
+            await user.id = authManager.signIn(emailAddress: user.email, password: user.password)
+        }
+    }
+    
+    @MainActor
+    func currentUserData() {
+        Task {
+            user = await userManager.currentUserData()
+        }
     }
 }

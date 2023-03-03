@@ -16,7 +16,7 @@ import FirebaseFirestoreSwift
 
 @MainActor
 class UserManager: ObservableObject {
-    @Published var user: User
+    @Injected var user: User
     @Published var isLoading = true
     private var db: Firestore
     // private var uid: String
@@ -25,7 +25,7 @@ class UserManager: ObservableObject {
   
     
     init(user: User) {
-        self.user = user
+        //self.user = user
         self.db = Firestore.firestore()
         if user.id.isEmpty {
             self.ref = self.db.collection("User").document()
@@ -37,7 +37,7 @@ class UserManager: ObservableObject {
     
     
     init() {
-        self.user = User()
+        // self.user = User()
         self.db = Firestore.firestore()
         self.data = [:] // to be populated
         let fbUser = Auth.auth().currentUser
@@ -108,8 +108,12 @@ class UserManager: ObservableObject {
         
     }
     
-    func remove() {
-        ref.delete()
+    func remove() async {
+        do {
+            try await ref.delete()
+        } catch {
+            fatalError("can't delete user")
+        }
         // far from complete :(
     }
 }

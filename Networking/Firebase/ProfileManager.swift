@@ -8,9 +8,8 @@
 import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
-import Swinject
 
-@MainActor
+
 class ProfileManager:ObservableObject {
     @Injected var profile: Profile
     @Published var isLoading = true
@@ -20,9 +19,9 @@ class ProfileManager:ObservableObject {
     
     init() {
         @Injected var profile: Profile! // I had to do this again, I'm running into compiler errors because I'm using the first one in the initializer
-        guard let profile = profile else {
+       guard let profile = profile else {
              fatalError("Profile not injected")
-        }
+       }
         
         self.db = Firestore.firestore()
         self.data = [:]
@@ -51,6 +50,7 @@ class ProfileManager:ObservableObject {
         profile.avatar = self.data["avatar"] as? String ?? ""
     }
     
+    @MainActor
     func fetch() async {
         do {
             let document = try await ref.getDocument()
@@ -65,6 +65,7 @@ class ProfileManager:ObservableObject {
         }
     }
     
+    @MainActor
     func update() async {
         populateData()
         do {
@@ -74,15 +75,17 @@ class ProfileManager:ObservableObject {
         }
     }
     
+    @MainActor
     func create() async -> String {
         populateData()
+        
+        self.ref = db.collection("Profile").addDocument(data: self.data)
+        self.data["id"] = ref.documentID
         do {
-            self.ref = try await db.collection("Profile").addDocument(data: self.data)
-            self.data["id"] = ref.documentID
             try await self.ref.updateData(["id": ref.documentID])
             return ref.documentID
         } catch {
-            print(error.localizedDescription)
+            print (error.localizedDescription)
             return ""
         }
     }
@@ -92,36 +95,34 @@ class ProfileManager:ObservableObject {
     }
 }
 
-@MainActor
+
 class ProfileInfoManager: ObservableObject {
-    //@Injected var profile: Profile
+    @Injected var profile: Profile
     @Published var info = ProfileInfo()
     @Published var isLoading = true
+    public var profileId: String
     private var db: Firestore
     private var ref: DocumentReference?
     private var data: [String: Any] // dictionary
     
     init() {
-        // @Injected var profile: Profile! // I had to do this again, I'm running into compiler errors because I'm using the first one in the initializer
-        // guard let profile = profile else {
-        //    fatalError("Profile not injected")
-        // }
-        self.db = Firestore.firestore()
-        self.data = [:]
+        db = Firestore.firestore()
+        data = [:]
+        profileId = ""
     }
     
     private func setRef() {
-        if profile.id.isEmpty {
+        if profileId.isEmpty {
             fatalError("Profile id is not defined")
         }
-        self.ref = self.db.collection("Profile").document(profile.id).collection("ProfileInfo").document(profile.id)
+        self.ref = self.db.collection("Profile").document(profileId).collection("ProfileInfo").document(profileId)
     }
     
     // in the future, I can make this smarter by passing updated fields only
     // but make sure you pass the full set if it's going to be used with 'create: setData'
     func populateData() {
         self.data = [
-            "id": profile.id,
+            "id": profileId,
             "statement": info.statement,
             "bio": info.bio,
             "image": info.image,
@@ -130,13 +131,14 @@ class ProfileInfoManager: ObservableObject {
     }
     
     func populateStruct() {
-        info.id = profile.id
+        info.id = profileId
         info.statement = self.data["statement"] as? String ?? ""
         info.bio = self.data["bio"] as? String ?? ""
         info.image = self.data["image"] as? String ?? ""
         info.bgColor = self.data["bgcolor"] as? String ?? ""
     }
     
+    @MainActor
     func fetch() async {
         setRef()
         do {
@@ -151,6 +153,7 @@ class ProfileInfoManager: ObservableObject {
         }
     }
     
+    @MainActor
     func update() async {
         setRef()
         populateData()
@@ -161,15 +164,14 @@ class ProfileInfoManager: ObservableObject {
         }
     }
     
-    func create() async -> String {
+    @MainActor
+    func create() async  {
         setRef()
         populateData()
         do {
             try await self.ref!.setData(self.data)
-            return self.info.id
         } catch {
             print(error.localizedDescription)
-            return ""
         }
     }
     

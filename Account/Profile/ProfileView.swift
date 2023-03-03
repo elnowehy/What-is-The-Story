@@ -9,21 +9,22 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @EnvironmentObject var authManager: AuthManager
-    @Injected private var profile: Profile
+    // @Injected private var profile: Profile
+    // Remember: ProfileVM has @Injected Profile
+    // Profile.id should be already populated before we come here.
     @StateObject var profileVM: ProfileVM
     @State private var isPresentingProfileEdit = false
     @State private var bgColor = Color.white
     
     init() {
-        self._profileVM = StateObject(wrappedValue: ProfileVM())
-        self._bgColor = State(initialValue: Color(hex: profileVM.info.bgColor))
+        self._profileVM =  StateObject(wrappedValue: ProfileVM())
+        // self._bgColor = State(initialValue: Color(hex: profileVM.info.bgColor))
     }
     
     var body: some View {
         NavigationStack {
-            VStack {
-                HStack {
+            VStack(alignment: .leading) {
+                HStack(alignment: .top) {
                     Text(profileVM.profile.avatar)
                     Text(profileVM.profile.brand)
                 }
@@ -31,9 +32,12 @@ struct ProfileView: View {
                 HStack {
                     Text(profileVM.info.image)
                     Text(profileVM.info.bio)
+                    Text("")
                 }
             }
-            .foregroundColor(.primary)
+            .foregroundColor(.black)
+            .background(Color.blue)
+            
             
             .navigationBarTitle("Profile")
             .navigationBarItems(trailing:
@@ -47,10 +51,16 @@ struct ProfileView: View {
         .sheet(isPresented: $isPresentingProfileEdit) {
             ProfileUpdate(
                 profileVM: profileVM,
-                bgColor: $bgColor,
+                // bgColor: $bgColor,
                 presentationMode: $isPresentingProfileEdit)
         }
         .background(bgColor)
+        .onAppear{
+            Task {
+                await profileVM.fetch()
+                await profileVM.fetchInfo()
+            }
+        }
     }
 }
 

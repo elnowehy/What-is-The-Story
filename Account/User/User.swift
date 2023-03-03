@@ -20,7 +20,7 @@ struct User: ServiceType, Identifiable {
     var invitationCode: String = ""
     var witsWallet: String = ""
     var ethWallet: String = ""
-    
+  /*
     init(uid: String, name: String, email: String, password: String) {
         self.id = uid
         self.name = name
@@ -29,7 +29,7 @@ struct User: ServiceType, Identifiable {
     }
     
     init() {}
-    
+    */
     public static func makeService(for container: Container) -> Self {
         return User()
     }

@@ -9,9 +9,13 @@
 import SwiftUI
 
 struct AccountTabView: View {
-    let columns = [ GridItem(.adaptive(minimum: 100)) ]
-    @EnvironmentObject var authManager: AuthManager
     @State private var selection: Tab = .profile
+    @StateObject var profileVM: ProfileVM
+    private var userVM = UserVM()
+    
+    init() {
+        self._profileVM =  StateObject(wrappedValue: ProfileVM())
+    }
     
     enum Tab {
         case profile
@@ -51,6 +55,10 @@ struct AccountTabView: View {
         //  not working, will look into it later
         // .animation(.linear, value: 1)
         // .background(Color(red: 0255, green: 0/255, blue: 0/255))
+        .onAppear {
+            // consider the full array in the future
+            profileVM.profile.id = userVM.user.profileIds[0]
+        }
     }
 }
 

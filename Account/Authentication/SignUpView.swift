@@ -10,8 +10,8 @@ import Firebase
 
 struct SignUpView: View {
     @Binding var showLogIn: Bool
-    @State var user: User = User(uid: "", name: "", email: "", password: "")
-    @EnvironmentObject var authManager: AuthManager
+    @State private var user  = User()
+    @StateObject private var userVM = UserVM()
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -52,18 +52,10 @@ struct SignUpView: View {
             HStack {
                 Button (action: {
                     Task {
-                        await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
-                        if(!user.id.isEmpty) {
-                            let userMV = UserVM(user: user)
-                            await userMV.create()
-                            user.id = userMV.user.id
-                            await authManager.signIn(emailAddress: user.email, password: user.password)
-                            showLogIn = false
-                        } else {
-                            print("we have a problem")
-                        }
+                        userVM.user = user
+                        await userVM.signUp()
+                        showLogIn = false
                     }
-                    
                 }) {
                     Text("Save")
                 }
