@@ -12,14 +12,14 @@ struct ProfileView: View {
     // @Injected private var profile: Profile
     // Remember: ProfileVM has @Injected Profile
     // Profile.id should be already populated before we come here.
-    @StateObject var profileVM: ProfileVM
+    @StateObject var profileVM = ProfileVM()
     @State private var isPresentingProfileEdit = false
     @State private var bgColor = Color.white
     
-    init() {
-        self._profileVM =  StateObject(wrappedValue: ProfileVM())
-        // self._bgColor = State(initialValue: Color(hex: profileVM.info.bgColor))
-    }
+//    init() {
+//        // self._profileVM =  StateObject(wrappedValue: ProfileVM())
+//        // self._bgColor = State(initialValue: Color(hex: profileVM.info.bgColor))
+//    }
     
     var body: some View {
         NavigationStack {

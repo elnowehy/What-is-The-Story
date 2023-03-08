@@ -18,11 +18,10 @@ final class AuthManager: ObservableObject {
             objectWillChange.send()
         }
     }
-    
     @Published var isLoggedIn: Bool = false
-    // @Published var isLoading: Bool = true
+
     init()  {
-        self.listenToAuthState()
+        // self.listenToAuthState()
     }
     
     func listenToAuthState() {
@@ -48,7 +47,7 @@ final class AuthManager: ObservableObject {
         do {
             let result = try await Auth.auth().createUser(withEmail: emailAddress, password: password)
             let user = result.user
-            self.isLoggedIn = true
+            // self.isLoggedIn = true
             userId  = user.uid
         }
         catch {

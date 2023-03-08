@@ -9,9 +9,12 @@
 import SwiftUI
 
 struct AccountTabView: View {
+    @EnvironmentObject var authManager: AuthManager
     @State private var selection: Tab = .profile
     @StateObject var profileVM: ProfileVM
-    private var userVM = UserVM()
+    @StateObject var userVM: UserVM
+    @Environment(\.dismiss) private var dismiss
+    @State var showLogIn = true
     
     init() {
         self._profileVM =  StateObject(wrappedValue: ProfileVM())
@@ -25,6 +28,14 @@ struct AccountTabView: View {
     }
     
     var body: some View {
+        if authManager.isLoggedIn {
+            content
+        } else{
+            SignInView(showLogIn: $showLogIn)
+        }
+    }
+    
+    var content: some View {
         TabView(selection: $selection) {
             ProfileView()
                 .tabItem {
@@ -56,8 +67,12 @@ struct AccountTabView: View {
         // .animation(.linear, value: 1)
         // .background(Color(red: 0255, green: 0/255, blue: 0/255))
         .onAppear {
+            // to get here, the user has to be logged in first, right?
             // consider the full array in the future
-            profileVM.profile.id = userVM.user.profileIds[0]
+            // *** authManager.isLoggedIn set to true once the user is signed up
+            if authManager.isLoggedIn {
+                profileVM.profile.id = userVM.user.profileIds[0]
+            } 
         }
     }
 }

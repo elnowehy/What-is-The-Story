@@ -17,7 +17,6 @@ import FirebaseFirestoreSwift
 @MainActor
 class UserManager: ObservableObject {
     @Injected var user: User
-    @Published var isLoading = true
     private var db: Firestore
     // private var uid: String
     private var ref: DocumentReference
@@ -40,12 +39,15 @@ class UserManager: ObservableObject {
         // self.user = User()
         self.db = Firestore.firestore()
         self.data = [:] // to be populated
-        let fbUser = Auth.auth().currentUser
-        self.ref = self.db.collection("User").document(fbUser!.uid)
-        self.user.id = fbUser!.uid
-        self.user.email = fbUser!.email!
-        Task {
-            await fetch()
+        if let fbUser = Auth.auth().currentUser {
+            self.ref = self.db.collection("User").document(fbUser.uid)
+            self.user.id = fbUser.uid
+            self.user.email = fbUser.email!
+            Task {
+                await fetch()
+            }
+        } else {
+            self.ref = self.db.collection("User").document()
         }
     }
 
@@ -53,7 +55,8 @@ class UserManager: ObservableObject {
     // but make sure you pass the full set if it's going to be used with 'create: setData'
     func populateData() {
         self.data = [
-            "id": user.email,
+            "id": user.id,
+            "email": user.email,
             "name": user.name,
             "profileIds": user.profileIds,
             "InvitationCode": user.invitationCode,
@@ -61,6 +64,7 @@ class UserManager: ObservableObject {
     }
     
     func populateStruct() {
+        user.id = self.data["id"] as? String ?? ""
         user.email = self.data["email"] as? String ?? ""
         user.name  = self.data["name"] as? String ?? ""
         user.profileIds =  self.data["profileId"] as? [String] ?? []
@@ -74,7 +78,6 @@ class UserManager: ObservableObject {
             if data != nil {
                 self.data = data!
                 self.populateStruct()
-                self.isLoading = false
             }
         } catch {
             print(error.localizedDescription)
@@ -104,8 +107,8 @@ class UserManager: ObservableObject {
         self.user.id = await user!.uid
         self.user.email = await user!.email!
         await fetch()
+        populateStruct()
         return self.user
-        
     }
     
     func remove() async {

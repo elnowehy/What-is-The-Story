@@ -10,10 +10,10 @@ import Firebase
 
 struct SignInView: View {
     @Binding var showLogIn: Bool
-    @State var email = ""
-    @State var password = ""
-    @EnvironmentObject var authManager: AuthManager
+    @State var user = User()
+    @ObservedObject var userVM = UserVM()
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var authManager: AuthManager
     
     var body: some View {
         NavigationStack {
@@ -22,13 +22,13 @@ struct SignInView: View {
                     .font(.headline)
                     .offset(x: -100, y: -100)
                 
-                TextField("Email", text: $email)
+                TextField("Email", text: $user.email)
                     .offset(x: 50, y: -50)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .submitLabel(.next)
                 
-                SecureField("Password", text: $password)
+                SecureField("Password", text: $user.password)
                     .offset(x: 50, y: -50)
                     .submitLabel(.done)
                 
@@ -38,7 +38,9 @@ struct SignInView: View {
                 HStack {
                     Button(action: {
                         Task {
-                            await authManager.signIn(emailAddress: email, password: password)
+                            await user.id = authManager.signIn(emailAddress: user.email, password: user.password)
+                            userVM.user = user
+                            await userVM.fetch()
                             dismiss()
                         }
                     })

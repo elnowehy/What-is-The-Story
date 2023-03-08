@@ -13,6 +13,7 @@ struct SignUpView: View {
     @State private var user  = User()
     @StateObject private var userVM = UserVM()
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var authManager: AuthManager
     
     var body: some View {
         VStack  {
@@ -52,10 +53,17 @@ struct SignUpView: View {
             HStack {
                 Button (action: {
                     Task {
-                        userVM.user = user
-                        await userVM.signUp()
-                        showLogIn = false
-                    }
+                        await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
+                        if(!user.id.isEmpty) {
+                            userVM.user = user
+                            await userVM.create()
+                            await user.id = authManager.signIn(emailAddress: user.email, password: user.password)
+                            showLogIn = false
+                            authManager.isLoggedIn = true
+                        } else {
+                            fatalError("we have a problem")
+                        }
+                    }                    
                 }) {
                     Text("Save")
                 }

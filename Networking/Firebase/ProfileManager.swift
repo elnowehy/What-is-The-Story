@@ -12,7 +12,6 @@ import FirebaseFirestoreSwift
 
 class ProfileManager:ObservableObject {
     @Injected var profile: Profile
-    @Published var isLoading = true
     private var db: Firestore
     private var ref: DocumentReference
     private var data: [String: Any] // dictionary
@@ -78,10 +77,9 @@ class ProfileManager:ObservableObject {
     @MainActor
     func create() async -> String {
         populateData()
-        
-        self.ref = db.collection("Profile").addDocument(data: self.data)
-        self.data["id"] = ref.documentID
         do {
+            self.ref = try await db.collection("Profile").addDocument(data: self.data)
+            self.data["id"] = ref.documentID
             try await self.ref.updateData(["id": ref.documentID])
             return ref.documentID
         } catch {
@@ -99,7 +97,6 @@ class ProfileManager:ObservableObject {
 class ProfileInfoManager: ObservableObject {
     @Injected var profile: Profile
     @Published var info = ProfileInfo()
-    @Published var isLoading = true
     public var profileId: String
     private var db: Firestore
     private var ref: DocumentReference?
