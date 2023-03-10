@@ -8,7 +8,7 @@
 import SwiftUI
 
 class ProfileVM: ObservableObject{
-    @Injected var profile: Profile
+    var profile = Profile()
     var info = ProfileInfo()
     private var profileManager: ProfileManager
     private var profileInfoManager: ProfileInfoManager
@@ -26,6 +26,7 @@ class ProfileVM: ObservableObject{
     // return: Void
     @MainActor
     func fetch() async {
+        profileManager.profile.id = profile.id
         await profileManager.fetch()
         profile = profileManager.profile
     }
@@ -49,8 +50,8 @@ class ProfileVM: ObservableObject{
     // return: Void
     @MainActor
     func update() async {
+        profileManager.profile = profile
         await profileManager.update()
-        profile = profileManager.profile // in case something happens during the update to the data
     }
     
     // remove a profile from Firebase
@@ -58,6 +59,7 @@ class ProfileVM: ObservableObject{
     // output: no ouput
     // retrun: Void
     func remove() {
+        profileManager.profile = profile
         profileManager.remove()
         // I'm sure much more needs to be done, e.g. remove from Profile.Creation
         
@@ -73,7 +75,7 @@ class ProfileVM: ObservableObject{
     // return: Void
     @MainActor
     func fetchInfo() async {
-        // profileInfoManager.profileId = profile.id
+        profileInfoManager.profileId = profile.id
         await profileInfoManager.fetch()
         info = profileInfoManager.info
     }
@@ -93,10 +95,9 @@ class ProfileVM: ObservableObject{
     // return: Void
     @MainActor
     func updateInfo() async {
-        // profileInfoManager.profileId = profile.id
+        profileInfoManager.profileId = profile.id
+        profileInfoManager.info = info
         await profileInfoManager.update()
-        info = profileInfoManager.info // in case something happens during the update to the data
-        
     }
     
     // remove a profile info from Firebase

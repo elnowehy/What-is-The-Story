@@ -60,9 +60,8 @@ final class AuthManager: ObservableObject {
         var userId: String = ""
         do {
             let result = try await Auth.auth().signIn(withEmail: emailAddress, password: password)
-            let user = result.user
-            self.isLoggedIn = true
-            userId  = user.uid
+            userId = result.user.uid
+            // self.isLoggedIn = true
         }
         catch {
             print("an error occured: \(error.localizedDescription)")

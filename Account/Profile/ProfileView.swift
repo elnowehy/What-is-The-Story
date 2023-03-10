@@ -9,10 +9,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    // @Injected private var profile: Profile
-    // Remember: ProfileVM has @Injected Profile
-    // Profile.id should be already populated before we come here.
-    @StateObject var profileVM = ProfileVM()
+    @StateObject var profileVM: ProfileVM
     @State private var isPresentingProfileEdit = false
     @State private var bgColor = Color.white
     
@@ -66,8 +63,8 @@ struct ProfileView: View {
 
 
 
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView()
-    }
-}
+//struct ProfileView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileView()
+//    }
+//}

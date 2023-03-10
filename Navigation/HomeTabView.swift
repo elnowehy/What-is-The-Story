@@ -11,6 +11,7 @@ struct HomeTabView: View {
     @EnvironmentObject var authManager: AuthManager
     @State private var selection: Tab = .home
     @State private var showSignInSheet = false
+    @ObservedObject var userVM = UserVM()
     
     enum Tab {
         case home
@@ -43,7 +44,7 @@ struct HomeTabView: View {
                 .tag(Tab.bookmarks)
             
             
-            AccountTabView()
+            AccountTabView(userVM: userVM)
                 .tabItem {
                     Label("Account", systemImage: "person")
                 }
@@ -56,7 +57,7 @@ struct HomeTabView: View {
                 .tag(Tab.signout)
         }
         .sheet(isPresented: $showSignInSheet) {
-            SignInView(showLogIn: $showSignInSheet)
+            SignInView(showLogIn: $showSignInSheet, userVM: userVM)
         }
         .onChange(of: selection) { newValue in
             showSignInSheet = (selection == .bookmarks || selection == .account) && !authManager.isLoggedIn

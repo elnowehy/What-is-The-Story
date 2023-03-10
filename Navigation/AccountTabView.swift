@@ -9,17 +9,14 @@
 import SwiftUI
 
 struct AccountTabView: View {
+    @StateObject var userVM:UserVM
     @EnvironmentObject var authManager: AuthManager
     @State private var selection: Tab = .profile
-    @StateObject var profileVM: ProfileVM
-    @StateObject var userVM: UserVM
+    @ObservedObject var profileVM = ProfileVM()
     @Environment(\.dismiss) private var dismiss
     @State var showLogIn = true
     
-    init() {
-        self._profileVM =  StateObject(wrappedValue: ProfileVM())
-    }
-    
+
     enum Tab {
         case profile
         case create
@@ -31,13 +28,13 @@ struct AccountTabView: View {
         if authManager.isLoggedIn {
             content
         } else{
-            SignInView(showLogIn: $showLogIn)
+            SignInView(showLogIn: $showLogIn, userVM: userVM)
         }
     }
     
     var content: some View {
         TabView(selection: $selection) {
-            ProfileView()
+            ProfileView(profileVM: profileVM)
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle.fill")
                 }
@@ -78,9 +75,9 @@ struct AccountTabView: View {
 }
 
 
-struct AccountTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        AccountTabView()
-    }
-}
+//struct AccountTabView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AccountTabView()
+//    }
+//}
 

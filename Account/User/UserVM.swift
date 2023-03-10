@@ -6,15 +6,19 @@
 //
 
 import SwiftUI
-
+//  Manages User data through UserManager. Acts as an abstraction layer
+//  for the underlying database.
+//  UserVM.user is populated by the calling function/view, before
+//  executing any of the functions
 class UserVM: ObservableObject{
-    @Injected var profile: Profile
-    @Injected var user: User
+    @Published var profile = Profile()
+    @Published var user = User()
     private var userManager: UserManager
+    private var profileManager = ProfileManager()
     // @EnvironmentObject var authManager: AuthManager
     
     init() {
-        self.userManager = await UserManager(user: user)
+        self.userManager = UserManager()
     }
 
     /*
@@ -29,6 +33,7 @@ class UserVM: ObservableObject{
     // return: Void
     @MainActor
     func fetch() async {
+        userManager.user = user
         await userManager.fetch()
         user = userManager.user
     }
@@ -56,8 +61,8 @@ class UserVM: ObservableObject{
     // return: Void
     @MainActor
     func update() async {
+        userManager.user = user
         await userManager.create()
-        user = userManager.user // in case something happens during the update to the data
     }
     
     // remove a user from Firebase
@@ -66,6 +71,7 @@ class UserVM: ObservableObject{
     // retrun: Void
     @MainActor
     func remove() async {
+        userManager.user = user
         await userManager.remove()
         // there is more to this, all related data in Firebase. I'm not sure if I'll even allow it.
     }

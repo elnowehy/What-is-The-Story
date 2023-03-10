@@ -14,43 +14,47 @@ import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
 
-@MainActor
+// Firebase User data Manager. Should be called through UserVM only
+// UserVM has to populate User before calling any of the functions
 class UserManager: ObservableObject {
-    @Injected var user: User
+    @Published var user = User()
     private var db: Firestore
     // private var uid: String
-    private var ref: DocumentReference
+    private var ref: DocumentReference?
     private var data: [String: Any] // dictionary
   
     
-    init(user: User) {
-        //self.user = user
+    init() {
         self.db = Firestore.firestore()
+        self.data = [:] // to be populated
+    }
+    
+    // I hope I won't need this. To be removed after inspecting the deisgn
+//    init() {
+//        // self.user = User()
+//        self.db = Firestore.firestore()
+//        self.data = [:] // to be populated
+//        if let fbUser = Auth.auth().currentUser {
+//            self.ref = self.db.collection("User").document(fbUser.uid)
+//            self.user.id = fbUser.uid
+//            self.user.email = fbUser.email!
+////            Task {
+////                await fetch()
+////            }
+//        } else {
+//            self.ref = self.db.collection("User").document()
+//        }
+//    }
+
+    func setRef() {
         if user.id.isEmpty {
             self.ref = self.db.collection("User").document()
+            self.user.id = self.ref!.documentID
         } else {
             self.ref = self.db.collection("User").document(user.id)
         }
-        self.data = [:] // to be populated
     }
     
-    
-    init() {
-        // self.user = User()
-        self.db = Firestore.firestore()
-        self.data = [:] // to be populated
-        if let fbUser = Auth.auth().currentUser {
-            self.ref = self.db.collection("User").document(fbUser.uid)
-            self.user.id = fbUser.uid
-            self.user.email = fbUser.email!
-            Task {
-                await fetch()
-            }
-        } else {
-            self.ref = self.db.collection("User").document()
-        }
-    }
-
     // in the future, I can make this smarter by passing updated fields only
     // but make sure you pass the full set if it's going to be used with 'create: setData'
     func populateData() {
@@ -67,13 +71,15 @@ class UserManager: ObservableObject {
         user.id = self.data["id"] as? String ?? ""
         user.email = self.data["email"] as? String ?? ""
         user.name  = self.data["name"] as? String ?? ""
-        user.profileIds =  self.data["profileId"] as? [String] ?? []
+        user.profileIds =  self.data["profileIds"] as? [String] ?? []
         user.invitationCode =  self.data["invitationCode"] as? String ?? ""
     }
 
+    @MainActor
     func fetch() async {
+        setRef()
         do {
-            let document = try await ref.getDocument()
+            let document = try await ref!.getDocument()
             let data = document.data()
             if data != nil {
                 self.data = data!
@@ -84,24 +90,29 @@ class UserManager: ObservableObject {
         }
     }
 
+    @MainActor
     func update() async {
+        setRef()
         populateData()
         do {
-            try await ref.updateData(self.data)
+            try await ref!.updateData(self.data)
         } catch {
             print(error.localizedDescription)
         }
     }
     
+    @MainActor
     func create() async {
+        setRef()
         populateData()
         do {
-            try await ref.setData(self.data)
+            try await ref!.setData(self.data)
         } catch {
             print(error.localizedDescription)
         }
     }
 
+    @MainActor
     func currentUserData() async -> User {
         async let user = Auth.auth().currentUser
         self.user.id = await user!.uid
@@ -111,9 +122,11 @@ class UserManager: ObservableObject {
         return self.user
     }
     
+    @MainActor
     func remove() async {
+        setRef()
         do {
-            try await ref.delete()
+            try await ref!.delete()
         } catch {
             fatalError("can't delete user")
         }

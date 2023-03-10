@@ -11,29 +11,23 @@ import FirebaseFirestoreSwift
 
 
 class ProfileManager:ObservableObject {
-    @Injected var profile: Profile
+    @Published var profile = Profile()
     private var db: Firestore
-    private var ref: DocumentReference
+    private var ref: DocumentReference?
     private var data: [String: Any] // dictionary
     
     init() {
-        @Injected var profile: Profile! // I had to do this again, I'm running into compiler errors because I'm using the first one in the initializer
-       guard let profile = profile else {
-             fatalError("Profile not injected")
-       }
-        
         self.db = Firestore.firestore()
         self.data = [:]
+    }
         
+    func setRef() {
         if profile.id.isEmpty {
             self.ref = self.db.collection("Profile").document()
         } else {
             self.ref = self.db.collection("Profile").document(profile.id) // will return a Document reference for a unsaved one
         }
-        
     }
-        
-
 
     func populateData() {
         self.data = [
@@ -51,8 +45,9 @@ class ProfileManager:ObservableObject {
     
     @MainActor
     func fetch() async {
+        setRef()
         do {
-            let document = try await ref.getDocument()
+            let document = try await ref!.getDocument()
             let data = document.data()
             if data != nil {
                 self.data = data!
@@ -66,9 +61,10 @@ class ProfileManager:ObservableObject {
     
     @MainActor
     func update() async {
+        setRef()
         populateData()
         do {
-            try await ref.setData(self.data)
+            try await ref!.setData(self.data)
         } catch {
             print(error.localizedDescription)
         }
@@ -76,12 +72,13 @@ class ProfileManager:ObservableObject {
     
     @MainActor
     func create() async -> String {
+        setRef()
         populateData()
         do {
             self.ref = try await db.collection("Profile").addDocument(data: self.data)
-            self.data["id"] = ref.documentID
-            try await self.ref.updateData(["id": ref.documentID])
-            return ref.documentID
+            self.data["id"] = ref!.documentID
+            try await self.ref!.updateData(["id": ref!.documentID])
+            return ref!.documentID
         } catch {
             print (error.localizedDescription)
             return ""
@@ -89,13 +86,14 @@ class ProfileManager:ObservableObject {
     }
     
     func remove() {
-        ref.delete()
+        setRef()
+        ref!.delete()
     }
 }
 
 
 class ProfileInfoManager: ObservableObject {
-    @Injected var profile: Profile
+    private var profile = Profile()
     @Published var info = ProfileInfo()
     public var profileId: String
     private var db: Firestore

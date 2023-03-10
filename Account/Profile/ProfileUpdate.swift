@@ -15,7 +15,6 @@
 import SwiftUI
 
 struct ProfileUpdate: View {
-    // @Injected private var profile: Profile
     @ObservedObject var profileVM: ProfileVM
     // @Binding var bgColor: Color
     @Binding var presentationMode: Bool

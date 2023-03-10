@@ -11,7 +11,7 @@ import Firebase
 struct SignInView: View {
     @Binding var showLogIn: Bool
     @State var user = User()
-    @ObservedObject var userVM = UserVM()
+    @ObservedObject var userVM: UserVM
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authManager: AuthManager
     
@@ -41,6 +41,8 @@ struct SignInView: View {
                             await user.id = authManager.signIn(emailAddress: user.email, password: user.password)
                             userVM.user = user
                             await userVM.fetch()
+                            showLogIn = false
+                            authManager.isLoggedIn = true
                             dismiss()
                         }
                     })
@@ -76,11 +78,11 @@ struct SignInView: View {
     
 }
 
-struct SignInView_Previews: PreviewProvider {
-    static var previews: some View {
-        @State var showLogIn = true
-        return SignInView(showLogIn: $showLogIn)
-    }
-}
+//struct SignInView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        @State var showLogIn = true
+//        return SignInView(showLogIn: $showLogIn)
+//    }
+//}
 
 
