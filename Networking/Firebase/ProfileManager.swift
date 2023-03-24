@@ -8,39 +8,52 @@
 import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
+import FirebaseStorage
 
 
 class ProfileManager:ObservableObject {
     @Published var profile = Profile()
+    public var avatarImage = UIImage()
     private var db: Firestore
     private var ref: DocumentReference?
-    private var data: [String: Any] // dictionary
+    private var storage: Storage
+    private var storageRef: StorageReference?
+    private var data: [String: Any]
+    
     
     init() {
         self.db = Firestore.firestore()
+        self.storage = Storage.storage()
         self.data = [:]
     }
         
     func setRef() {
         if profile.id.isEmpty {
+            // create a referece to populate User.profileIds during creation
             self.ref = self.db.collection("Profile").document()
-        } else {
-            self.ref = self.db.collection("Profile").document(profile.id) // will return a Document reference for a unsaved one
+            if let profileId = self.ref?.documentID {
+                profile.id = profileId
+            }
         }
+        
+        self.ref = self.db.collection("Profile").document(profile.id)
+        self.storageRef = self.storage.reference().child("avatars").child("\(profile.id).jpeg")
     }
 
-    func populateData() {
+    @MainActor
+    func populateData() async {
         self.data = [
-            "id": profile.id,
-            "brand": profile.brand,
-            "avatar": profile.avatar,
-            ]
+            "id": self.profile.id,
+            "brand": self.profile.brand,
+            "avatar": await storeImage(ref: storageRef!, uiImage: avatarImage, quality: profile.imgQlty).absoluteString
+        ]
     }
+    
     
     func populateStruct() {
         profile.id = self.data["id"] as? String ?? ""
         profile.brand = self.data["brand"] as? String ?? ""
-        profile.avatar = self.data["avatar"] as? String ?? ""
+        profile.avatar = URL(string: self.data["avatar"] as? String ?? "")!
     }
     
     @MainActor
@@ -51,18 +64,17 @@ class ProfileManager:ObservableObject {
             let data = document.data()
             if data != nil {
                 self.data = data!
-                self.data["id"] = document.documentID
                 self.populateStruct()
             }
         } catch {
-                print(error.localizedDescription)
+            print(error.localizedDescription)
         }
     }
     
     @MainActor
     func update() async {
         setRef()
-        populateData()
+        await populateData() // I need to think about the avatar image and URL
         do {
             try await ref!.setData(self.data)
         } catch {
@@ -72,13 +84,11 @@ class ProfileManager:ObservableObject {
     
     @MainActor
     func create() async -> String {
-        setRef()
-        populateData()
         do {
-            self.ref = try await db.collection("Profile").addDocument(data: self.data)
-            self.data["id"] = ref!.documentID
-            try await self.ref!.updateData(["id": ref!.documentID])
-            return ref!.documentID
+            setRef()
+            await populateData()
+            try await ref!.setData(self.data)
+            return profile.id
         } catch {
             print (error.localizedDescription)
             return ""
@@ -121,7 +131,7 @@ class ProfileInfoManager: ObservableObject {
             "statement": info.statement,
             "bio": info.bio,
             "image": info.image,
-            "bgColor": info.bgColor
+            "bgImage": info.bgImage
         ]
     }
     
@@ -130,7 +140,7 @@ class ProfileInfoManager: ObservableObject {
         info.statement = self.data["statement"] as? String ?? ""
         info.bio = self.data["bio"] as? String ?? ""
         info.image = self.data["image"] as? String ?? ""
-        info.bgColor = self.data["bgcolor"] as? String ?? ""
+        info.bgImage = self.data["bgImage"] as? String ?? ""
     }
     
     @MainActor

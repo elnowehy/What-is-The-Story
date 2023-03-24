@@ -51,7 +51,7 @@ struct SignInView: View {
                     }
                     .padding()
                     
-                    NavigationLink("SignUp", destination: SignUpView(showLogIn: $showLogIn))
+                    NavigationLink("SignUp", destination: SignUpView(showLogIn: $showLogIn, userVM: userVM))
                         .padding()
                     
                     Button(action: { dismiss()} )

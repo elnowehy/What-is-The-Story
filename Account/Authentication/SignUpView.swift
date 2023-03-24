@@ -11,7 +11,7 @@ import Firebase
 struct SignUpView: View {
     @Binding var showLogIn: Bool
     @State private var user  = User()
-    @ObservedObject var userVM = UserVM()
+    @ObservedObject var userVM: UserVM
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authManager: AuthManager
     

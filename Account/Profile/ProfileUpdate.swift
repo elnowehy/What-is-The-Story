@@ -16,8 +16,8 @@ import SwiftUI
 
 struct ProfileUpdate: View {
     @ObservedObject var profileVM: ProfileVM
-    // @Binding var bgColor: Color
     @Binding var presentationMode: Bool
+    @StateObject var imagePicker = ImagePicker()
     
     var body: some View {
         VStack {
@@ -27,10 +27,9 @@ struct ProfileUpdate: View {
             Text("Tell us more:")
             TextEditor(text: $profileVM.info.bio)
             Divider()
-            SingleImagePickerView(label: "Avatar", image: "person.badge.plus.fill")
-            SingleImagePickerView(label: "Photo", image: "person.crop.artframe")
-            // ColorPicker("Background Color", selection: $bgColor)
-            
+            SingleImagePickerView(label: "Avatar", image: "person.badge.plus.fill", imagePicker: imagePicker)
+//            SingleImagePickerView(label: "Photo", image: "person.crop.artframe")
+//            SingleImagePickerView(label: "Background", image: "person.and.background.dotted")
             
             HStack {
                 Button("Cancel") {
@@ -39,6 +38,9 @@ struct ProfileUpdate: View {
                 Spacer()
                 Button("Save") {
                     Task {
+                        if imagePicker.image != nil {
+                            profileVM.avatarImage = imagePicker.image!
+                        }
                         await profileVM.update()
                         await profileVM.updateInfo()
                         presentationMode = false

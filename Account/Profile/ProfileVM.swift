@@ -10,6 +10,7 @@ import SwiftUI
 class ProfileVM: ObservableObject{
     var profile = Profile()
     var info = ProfileInfo()
+    public var avatarImage = UIImage(systemName: "person.circle")!
     private var profileManager: ProfileManager
     private var profileInfoManager: ProfileInfoManager
     
@@ -37,6 +38,7 @@ class ProfileVM: ObservableObject{
     // return: Profile Id
     @MainActor
     func create() async -> String {
+        profileManager.avatarImage = avatarImage
         async let profileId = profileManager.create()
         profile.id = await profileId
         profileInfoManager.profileId = await profileId
@@ -50,6 +52,7 @@ class ProfileVM: ObservableObject{
     // return: Void
     @MainActor
     func update() async {
+        profileManager.avatarImage = avatarImage
         profileManager.profile = profile
         await profileManager.update()
     }

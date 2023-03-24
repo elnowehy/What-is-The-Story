@@ -11,13 +11,13 @@ import PhotosUI
 struct SingleImagePickerView: View {
     @State var label: String
     @State var image: String
-    @StateObject var imagePicker = ImagePicker()
+    @ObservedObject var imagePicker: ImagePicker
     
     var body: some View {
         NavigationStack {
             VStack {
-                if let image = imagePicker.image {
-                    image
+                if imagePicker.image != nil {
+                    Image(uiImage: imagePicker.image!) 
                         .resizable()
                         .scaledToFit()
                 }
@@ -35,8 +35,9 @@ struct SingleImagePickerView: View {
 }
 
 
-struct SingleImagePickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        SingleImagePickerView(label: "photo", image: "photo.artframe")
-    }
-}
+//struct SingleImagePickerView_Previews: PreviewProvider {
+//    @StateObject var imagePicker = ImagePicker()
+//    static var previews: some View {
+//        SingleImagePickerView(label: "photo", image: "photo.artframe", imagePicker: $imagePicker)
+//    }
+//}

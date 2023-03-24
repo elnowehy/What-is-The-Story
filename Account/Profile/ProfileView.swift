@@ -11,18 +11,21 @@ import SwiftUI
 struct ProfileView: View {
     @StateObject var profileVM: ProfileVM
     @State private var isPresentingProfileEdit = false
-    @State private var bgColor = Color.white
-    
-//    init() {
-//        // self._profileVM =  StateObject(wrappedValue: ProfileVM())
-//        // self._bgColor = State(initialValue: Color(hex: profileVM.info.bgColor))
-//    }
     
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
-                HStack(alignment: .top) {
-                    Text(profileVM.profile.avatar)
+                HStack(alignment: .center) {
+                    AsyncImage(url: profileVM.profile.avatar, content: { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                    }) {
+                        ProgressView()
+                    }
+                    
                     Text(profileVM.profile.brand)
                 }
                 Text(profileVM.info.statement)
@@ -48,14 +51,21 @@ struct ProfileView: View {
         .sheet(isPresented: $isPresentingProfileEdit) {
             ProfileUpdate(
                 profileVM: profileVM,
-                // bgColor: $bgColor,
                 presentationMode: $isPresentingProfileEdit)
         }
-        .background(bgColor)
+        .background(
+            Image(profileVM.info.bgImage)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        )
         .onAppear{
             Task {
+                // for some reason this code is executed AFTER the view is rendered.
+                // The view is rendered properly after I click Edit then cancel
                 await profileVM.fetch()
+                print("\(profileVM.profile.avatar)")
                 await profileVM.fetchInfo()
+                print("\(profileVM.info.bio)")
             }
         }
     }

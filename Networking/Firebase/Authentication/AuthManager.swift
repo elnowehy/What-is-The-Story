@@ -8,6 +8,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestoreSwift
 
 
 typealias FireBaseUser = FirebaseAuth.User
@@ -37,8 +38,6 @@ final class AuthManager: ObservableObject {
             } else {
                 self.isLoggedIn = false
             }
-            
-            // self.isLoggedIn = true
         }
     }
     
