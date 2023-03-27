@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject var profileVM: ProfileVM
+    @EnvironmentObject var profileVM: ProfileVM
     @State private var isPresentingProfileEdit = false
     
     var body: some View {
@@ -30,34 +30,42 @@ struct ProfileView: View {
                 }
                 Text(profileVM.info.statement)
                 HStack {
-                    Text(profileVM.info.image)
+                    AsyncImage(url: profileVM.info.photo, content: { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 250)
+                    }) {
+                        ProgressView()
+                    }
                     Text(profileVM.info.bio)
-                    Text("")
                 }
             }
             .foregroundColor(.black)
-            .background(Color.blue)
-            
-            
+
             .navigationBarTitle("Profile")
-            .navigationBarItems(trailing:
-                                    Button(action: {
-                self.isPresentingProfileEdit = true
-            }) {
-                Text("Edit")
-            }
+            .navigationBarItems(
+                trailing:
+                Button(action: {
+                    self.isPresentingProfileEdit = true
+                }) {
+                    Text("Edit")
+                }
             )
         }
         .sheet(isPresented: $isPresentingProfileEdit) {
-            ProfileUpdate(
-                profileVM: profileVM,
-                presentationMode: $isPresentingProfileEdit)
+            ProfileUpdate(presentationMode: $isPresentingProfileEdit)
         }
-        .background(
-            Image(profileVM.info.bgImage)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-        )
+        .background(Color.blue)
+        //        .background(
+        //            AsyncImage(url: profileVM.info.background, content: { image in
+        //                image
+        //                    .resizable()
+        //                    .aspectRatio(contentMode: .fill)
+        //            }) {
+        //                ProgressView()
+        //            }
+        //        )
         .onAppear{
             Task {
                 // for some reason this code is executed AFTER the view is rendered.
@@ -65,7 +73,7 @@ struct ProfileView: View {
                 await profileVM.fetch()
                 print("\(profileVM.profile.avatar)")
                 await profileVM.fetchInfo()
-                print("\(profileVM.info.bio)")
+                print("\(profileVM.info.photo)")
             }
         }
     }

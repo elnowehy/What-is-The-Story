@@ -12,7 +12,7 @@ struct AccountTabView: View {
     @StateObject var userVM:UserVM
     @EnvironmentObject var authManager: AuthManager
     @State private var selection: Tab = .profile
-    @ObservedObject var profileVM = ProfileVM()
+    @StateObject var profileVM = ProfileVM()
     @Environment(\.dismiss) private var dismiss
     @State var showLogIn = true
     
@@ -34,7 +34,7 @@ struct AccountTabView: View {
     
     var content: some View {
         TabView(selection: $selection) {
-            ProfileView(profileVM: profileVM)
+            ProfileView().environmentObject(profileVM)
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle.fill")
                 }

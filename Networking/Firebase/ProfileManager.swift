@@ -9,6 +9,7 @@ import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
 import FirebaseStorage
+import Swinject
 
 
 class ProfileManager:ObservableObject {
@@ -76,7 +77,7 @@ class ProfileManager:ObservableObject {
         setRef()
         await populateData() // I need to think about the avatar image and URL
         do {
-            try await ref!.setData(self.data)
+            try await ref!.updateData(self.data)
         } catch {
             print(error.localizedDescription)
         }
@@ -103,15 +104,23 @@ class ProfileManager:ObservableObject {
 
 
 class ProfileInfoManager: ObservableObject {
-    private var profile = Profile()
+    @Published var profile = Profile()
     @Published var info = ProfileInfo()
     public var profileId: String
+    public var photo = UIImage()
+    public var background = UIImage()
+    public var updatePhoto = false
+    public var updateBackground = false
     private var db: Firestore
     private var ref: DocumentReference?
+    private var storage: Storage
+    private var photoRef: StorageReference?
+    private var bgRef: StorageReference?
     private var data: [String: Any] // dictionary
     
     init() {
         db = Firestore.firestore()
+        storage = Storage.storage()
         data = [:]
         profileId = ""
     }
@@ -121,26 +130,33 @@ class ProfileInfoManager: ObservableObject {
             fatalError("Profile id is not defined")
         }
         self.ref = self.db.collection("Profile").document(profileId).collection("ProfileInfo").document(profileId)
+        self.photoRef = self.storage.reference().child("photos").child("\(profileId).jpeg")
+        self.bgRef = self.storage.reference().child("background").child("\(profileId).jpeg")
     }
     
     // in the future, I can make this smarter by passing updated fields only
     // but make sure you pass the full set if it's going to be used with 'create: setData'
-    func populateData() {
+    @MainActor
+    func populateData() async {
         self.data = [
             "id": profileId,
             "statement": info.statement,
             "bio": info.bio,
-            "image": info.image,
-            "bgImage": info.bgImage
         ]
+        if updatePhoto {
+            self.data["photo"] = await storeImage(ref: photoRef!, uiImage: photo, quality: info.photoQlty).absoluteString
+        }
+        if updateBackground {
+            self.data["background"] = await storeImage(ref: bgRef!, uiImage: background, quality: info.bgQlty).absoluteString
+        }
     }
     
     func populateStruct() {
         info.id = profileId
         info.statement = self.data["statement"] as? String ?? ""
         info.bio = self.data["bio"] as? String ?? ""
-        info.image = self.data["image"] as? String ?? ""
-        info.bgImage = self.data["bgImage"] as? String ?? ""
+        info.photo = URL(string: self.data["photo"] as? String ?? "")!
+        info.background = URL(string: self.data["background"] as? String ?? "")!
     }
     
     @MainActor
@@ -161,7 +177,7 @@ class ProfileInfoManager: ObservableObject {
     @MainActor
     func update() async {
         setRef()
-        populateData()
+        await populateData()
         do {
             try await ref!.updateData(self.data)
         } catch {
@@ -171,9 +187,11 @@ class ProfileInfoManager: ObservableObject {
     
     @MainActor
     func create() async  {
-        setRef()
-        populateData()
         do {
+            setRef()
+            updatePhoto = true
+            updateBackground = true
+            await populateData()
             try await self.ref!.setData(self.data)
         } catch {
             print(error.localizedDescription)
@@ -185,41 +203,3 @@ class ProfileInfoManager: ObservableObject {
         ref!.delete()
     }
 }
-
-/*
-
- 
- func test() {
-     let test = self.db.collection("User").document("a55yXrgdsmSRZCKhNmci8Xqlmh93")
-     test.getDocument() { document, error in print(error!.localizedDescription) }
-     // self.db.collection("User")  { collection, error in
-     // let test = self.db.collection("User").whereField("email", isEqualTo: self.user.email)
-     db.collection("User").whereField("email", isEqualTo: self.user.email).getDocuments() { (querySnapshot, err) in
-             if let err = err {
-                 print("Error getting documents: \(err)")
-             } else {
-                 for document in querySnapshot!.documents {
-                     print("\(document.documentID) => \(document.data())")
-                     let data = document.data()
-                     print(data["name"])
-                 }
-             }
-     }
-     // Firebase.Analytics.logEvent("Error_Creating_Collection_Reference", parameters: ["error": "help me"])
-     print("Error creating reference: help him")
-       test.getDocument() { document, error in
-         if let document = document, document.exists {
-             guard let data = document.data() else {
-                 return
-             }
-             if let error = error {
-                 Firebase.Analytics.logEvent("Error_Creating_Collection_Reference", parameters: ["error": error.localizedDescription])
-                 print("Error creating reference: \(error.localizedDescription)")
-             }
-         }
-         print("I don't know what do")
-     }
-
- }
- 
-*/

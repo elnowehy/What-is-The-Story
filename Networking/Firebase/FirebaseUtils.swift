@@ -16,11 +16,15 @@ func storeImage(ref: StorageReference, uiImage: UIImage, quality: Double) async 
     var url = URL(string: "")
     guard let data = uiImage.jpegData(compressionQuality: quality) else {
         // set alert box or something
+        // print(error.localizedDescription)
         return url!
     }
     
+    let metadata = StorageMetadata()
+    metadata.contentType = "image/jpg"
+    
     do {
-        _ = try await ref.putDataAsync(data)
+        let _ = try await ref.putDataAsync(data, metadata: metadata)
         url = try await ref.downloadURL()
     } catch {
         print(error.localizedDescription)

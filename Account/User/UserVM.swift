@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Swinject
 //  Manages User data through UserManager. Acts as an abstraction layer
 //  for the underlying database.
 //  UserVM.user is populated by the calling function/view, before
@@ -15,7 +16,6 @@ class UserVM: ObservableObject{
     @Published var user = User()
     private var userManager: UserManager
     private var profileManager = ProfileManager()
-    // @EnvironmentObject var authManager: AuthManager
     
     init() {
         self.userManager = UserManager()

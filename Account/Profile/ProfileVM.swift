@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+import Swinject
 
 class ProfileVM: ObservableObject{
-    var profile = Profile()
+    @Published var profile = Profile()
     var info = ProfileInfo()
     public var avatarImage = UIImage(systemName: "person.circle")!
+    public var photoImage = UIImage(systemName: "photo.artframe")!
+    public var bgImage = UIImage(systemName: "scribble")!
+    public var updatePhoto = false
+    public var updateBackground = false
     private var profileManager: ProfileManager
     private var profileInfoManager: ProfileInfoManager
     
@@ -42,6 +47,8 @@ class ProfileVM: ObservableObject{
         async let profileId = profileManager.create()
         profile.id = await profileId
         profileInfoManager.profileId = await profileId
+        profileInfoManager.photo = photoImage
+        profileInfoManager.background = bgImage
         await profileInfoManager.create()
         return await profileId
     }
@@ -100,6 +107,14 @@ class ProfileVM: ObservableObject{
     func updateInfo() async {
         profileInfoManager.profileId = profile.id
         profileInfoManager.info = info
+        if updatePhoto {
+            profileInfoManager.photo = photoImage
+            profileInfoManager.updatePhoto = true
+        }
+        if updateBackground {
+            profileInfoManager.background = bgImage
+            profileInfoManager.updateBackground = true
+        }
         await profileInfoManager.update()
     }
     

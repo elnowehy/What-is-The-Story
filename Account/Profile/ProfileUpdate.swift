@@ -15,9 +15,11 @@
 import SwiftUI
 
 struct ProfileUpdate: View {
-    @ObservedObject var profileVM: ProfileVM
+    @EnvironmentObject var profileVM: ProfileVM
     @Binding var presentationMode: Bool
-    @StateObject var imagePicker = ImagePicker()
+    @StateObject var avatarPicker = ImagePicker()
+    @StateObject var photoPicker = ImagePicker()
+    @StateObject var backgroundPicker = ImagePicker()
     
     var body: some View {
         VStack {
@@ -27,9 +29,9 @@ struct ProfileUpdate: View {
             Text("Tell us more:")
             TextEditor(text: $profileVM.info.bio)
             Divider()
-            SingleImagePickerView(label: "Avatar", image: "person.badge.plus.fill", imagePicker: imagePicker)
-//            SingleImagePickerView(label: "Photo", image: "person.crop.artframe")
-//            SingleImagePickerView(label: "Background", image: "person.and.background.dotted")
+            SingleImagePickerView(label: "Avatar", image: "person.badge.plus.fill", imagePicker: avatarPicker)
+            SingleImagePickerView(label: "Photo", image: "person.crop.artframe", imagePicker: photoPicker)
+            SingleImagePickerView(label: "Background", image: "person.and.background.dotted", imagePicker: backgroundPicker)
             
             HStack {
                 Button("Cancel") {
@@ -38,10 +40,18 @@ struct ProfileUpdate: View {
                 Spacer()
                 Button("Save") {
                     Task {
-                        if imagePicker.image != nil {
-                            profileVM.avatarImage = imagePicker.image!
+                        if avatarPicker.image != nil {
+                            profileVM.avatarImage = avatarPicker.image!
+                            await profileVM.update()
                         }
-                        await profileVM.update()
+                        if photoPicker.image != nil {
+                            profileVM.photoImage = photoPicker.image!
+                            profileVM.updatePhoto = true
+                        }
+                        if backgroundPicker.image != nil {
+                            profileVM.bgImage = backgroundPicker.image!
+                            profileVM.updateBackground = true
+                        }
                         await profileVM.updateInfo()
                         presentationMode = false
                     }

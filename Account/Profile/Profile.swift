@@ -25,9 +25,10 @@ struct ProfileInfo {
     var id: String = "" // profileId
     var statement: String = ""
     var bio: String = ""
-    var image: String = ""
-    var bgImage: String = ""
-    var imgQlty = 0.5
+    var photo = URL(filePath: "")
+    var background = URL(filePath: "")
+    var photoQlty = 0.2
+    var bgQlty = 0.2
 }
 
 
