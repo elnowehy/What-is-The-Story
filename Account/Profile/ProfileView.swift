@@ -71,9 +71,7 @@ struct ProfileView: View {
                 // for some reason this code is executed AFTER the view is rendered.
                 // The view is rendered properly after I click Edit then cancel
                 await profileVM.fetch()
-                print("\(profileVM.profile.avatar)")
                 await profileVM.fetchInfo()
-                print("\(profileVM.info.photo)")
             }
         }
     }

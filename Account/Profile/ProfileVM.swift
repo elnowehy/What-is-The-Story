@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Swinject
 
 class ProfileVM: ObservableObject{
     @Published var profile = Profile()
@@ -125,5 +124,23 @@ class ProfileVM: ObservableObject{
     func removeInfo() {
         profileInfoManager.remove()
         // I'm sure much more needs to be done
+    }
+    
+    // this function has to be called after the series has been
+    // created and we already have the seriesId
+    @MainActor
+    func addSeries(seriesId: String) async  {
+        await profileManager.addSeries(seriesId: seriesId)
+        profile.seriesIds.append(seriesId)
+    }
+    
+    @MainActor
+    func removeSeries(seriesId: String) async {
+        await profileManager.removeSeries(seriesId: seriesId)
+        await MainActor.run {
+            profile.seriesIds.removeAll { id in
+                seriesId == id
+            }
+        }
     }
 }

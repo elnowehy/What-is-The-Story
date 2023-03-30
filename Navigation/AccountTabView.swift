@@ -40,7 +40,7 @@ struct AccountTabView: View {
                 }
                 .tag(Tab.profile)
             
-            CreateView()
+            CreateView().environmentObject(profileVM)
                 .tabItem {
                     Label("Create", systemImage: "pencil.and.outline")
                 }

@@ -10,7 +10,7 @@
 // 3. maybe onde delete the data
 
 
-import SwiftUI
+import Foundation
 import Firebase
 import FirebaseFirestoreSwift
 

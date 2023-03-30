@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Like {
+struct Like { // or ratings? And even reviews? 
     var video: String
     var user: String
 }

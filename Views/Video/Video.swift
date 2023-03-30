@@ -6,19 +6,18 @@
 //
 
 import Foundation
-import SwiftUI
 
-struct Video {
-    let eid: String //epdisode ID
+struct Video: Identifiable {
+    let id: String //epdisode ID
     let title: String
     let duration: TimeInterval
-    let thumbnailImage: Image
-    let description: String
-    let isEpisode: Bool
+    let thumbnail: String
+    let synopsis: String
     let question: String
     let video: URL
     let votingOpen: Bool
     let creator: String
+    let series: String
     let views: Int
     let likes: Int
 }

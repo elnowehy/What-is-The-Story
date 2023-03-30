@@ -6,19 +6,15 @@
 //
 
 import SwiftUI
-import Swinject
 
 // read: pubic write: user
 // Firestore path: /Profiles/<documentID>
-struct Profile: ServiceType {
+struct Profile {
     var id: String = "" // profileId
     var brand: String = ""
     var avatar = URL(filePath: "")
     var imgQlty = 0.2
-    
-    public static func makeService(for container: Container) -> Self {
-        return Profile()
-    }
+    var seriesIds = [String]()
 }
 
 struct ProfileInfo {
@@ -31,14 +27,6 @@ struct ProfileInfo {
     var bgQlty = 0.2
 }
 
-
-// read: public, write: user
-// Firestore path: "/Profiles/<DocumentID>/Creation/<main>"
-struct Creation {
-    var id: String = "" // profileId
-    var serieseIds = [String]()
-    var videoIds = [String]()
-}
 
 
 

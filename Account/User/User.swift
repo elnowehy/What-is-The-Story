@@ -7,11 +7,10 @@
 // Private user information
 
 import Foundation
-import Swinject
 
 // read and write for user only
 // Firestore path: /User/<documentID>
-struct User: ServiceType, Identifiable {
+struct User: Identifiable {
     var id: String = ""
     var name: String = ""
     var email: String = ""
@@ -20,19 +19,6 @@ struct User: ServiceType, Identifiable {
     var invitationCode: String = ""
     var witsWallet: String = ""
     var ethWallet: String = ""
-  /*
-    init(uid: String, name: String, email: String, password: String) {
-        self.id = uid
-        self.name = name
-        self.email = email
-        self.password = password
-    }
-    
-    init() {}
-    */
-    public static func makeService(for container: Container) -> Self {
-        return User()
-    }
 }
 
 // read: all, write: system only

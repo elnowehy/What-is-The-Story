@@ -5,14 +5,14 @@
 //  Created by Amr El-Nowehy on 2023-02-07.
 //
 
-import SwiftUI
+import Foundation
 import Firebase
 import FirebaseFirestoreSwift
 import FirebaseStorage
-import Swinject
 
 
-class ProfileManager:ObservableObject {
+
+class ProfileManager: ObservableObject {
     @Published var profile = Profile()
     public var avatarImage = UIImage()
     private var db: Firestore
@@ -55,6 +55,7 @@ class ProfileManager:ObservableObject {
         profile.id = self.data["id"] as? String ?? ""
         profile.brand = self.data["brand"] as? String ?? ""
         profile.avatar = URL(string: self.data["avatar"] as? String ?? "")!
+        profile.seriesIds = self.data["seriesIds"] as? [String] ?? []
     }
     
     @MainActor
@@ -100,13 +101,33 @@ class ProfileManager:ObservableObject {
         setRef()
         ref!.delete()
     }
+    
+    @MainActor
+    func addSeries(seriesId: String) async -> Void {
+        setRef()
+        do {
+            try await ref!.updateData(["seriesIds": FieldValue.arrayUnion([seriesId])])
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    @MainActor
+    func removeSeries(seriesId: String) async -> Void {
+        setRef()
+        do {
+            try await ref!.updateData(["seriesIds": FieldValue.arrayRemove([seriesId])])
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 
 
 class ProfileInfoManager: ObservableObject {
     @Published var profile = Profile()
     @Published var info = ProfileInfo()
-    public var profileId: String
+    public var profileId: String = ""
     public var photo = UIImage()
     public var background = UIImage()
     public var updatePhoto = false
@@ -116,13 +137,12 @@ class ProfileInfoManager: ObservableObject {
     private var storage: Storage
     private var photoRef: StorageReference?
     private var bgRef: StorageReference?
-    private var data: [String: Any] // dictionary
+    private var data: [String: Any]
     
     init() {
         db = Firestore.firestore()
         storage = Storage.storage()
         data = [:]
-        profileId = ""
     }
     
     private func setRef() {
@@ -134,8 +154,6 @@ class ProfileInfoManager: ObservableObject {
         self.bgRef = self.storage.reference().child("background").child("\(profileId).jpeg")
     }
     
-    // in the future, I can make this smarter by passing updated fields only
-    // but make sure you pass the full set if it's going to be used with 'create: setData'
     @MainActor
     func populateData() async {
         self.data = [
@@ -203,3 +221,4 @@ class ProfileInfoManager: ObservableObject {
         ref!.delete()
     }
 }
+
