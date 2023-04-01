@@ -13,49 +13,48 @@
 import SwiftUI
 
 struct SeriesView: View {
-    var series: Series
-    var seriesVM = SeriesVM()
-//    @Environment(\.dismiss) private var dismiss
+    @State var series: Series
+    @Environment(\.dismiss) private var dismiss
     
 
     var body: some View {
-        Text(series.id)
-//        VStack {
-//            Spacer()
-//            Text(series.title)
-//            AsyncImage(url: series.poster, content: { image in
-//                image
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 150, height: 50)
-//            }) {
-//                ProgressView()
-//            }
-//            Divider()
-//            Text(series.synopsis)
-//            Spacer()
-//            HStack {
-//                padding()
-//                Button("Add Episode") {
-//                    //add epdisode
+        NavigationStack {
+            VStack {
+                Spacer()
+                Text(series.title)
+                AsyncImage(url: series.poster, content: { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 150, height: 50)
+                }) {
+                    ProgressView()
+                }
+                Divider()
+                Text(series.synopsis)
+                Spacer()
+//                HStack {
+//                    padding()
+//                    Button("Add Episode") {
+//                        //add epdisode
+//                    }
+//                    padding()
+//                    Button("Delete") {
+//                        // delete series
+//                    }
+//                    padding()
+                    NavigationLink("Update") {
+                        SeriesUpdate(series: $series)
+                        // SeriesLIstView()
+                    }
+//                    Button("Cancel") {
+//                        dismiss()
+//                    }
+//                    padding()
 //                }
-//                padding()
-//                Button("Delete") {
-//                    // delete series
-//                }
-//                padding()
-//                NavigationLink("Update") {
-//                    SeriesUpdate(seriesVM: seriesVM)
-//                }
-//                Button("Cancel") {
-//                    dismiss()
-//                }
-//                padding()
-//            }
-//            Spacer()
-//        }
-//
-//
+                Spacer()
+            }
+        }
     }
 }
 

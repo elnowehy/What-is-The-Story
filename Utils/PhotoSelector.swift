@@ -2,9 +2,15 @@
 //  PhotoSelector.swift
 //  What is The Story
 //
-//  Created by Amr El-Nowehy on 2023-02-15.
+//  Created by Amr El-Nowehy on 2023-04-01.
 //
 
+//
+//  PhotoSelector.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-02-15.
+//
 import SwiftUI
 import PhotosUI
 
@@ -17,7 +23,7 @@ struct SingleImagePickerView: View {
         NavigationStack {
             VStack {
                 if imagePicker.image != nil {
-                    Image(uiImage: imagePicker.image!) 
+                    Image(uiImage: imagePicker.image!)
                         .resizable()
                         .scaledToFit()
                 }

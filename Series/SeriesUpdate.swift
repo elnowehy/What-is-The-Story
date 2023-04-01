@@ -12,25 +12,29 @@
 import SwiftUI
 import ARKit
 import _AVKit_SwiftUI
+import AVFAudio
+import PhotosUI
 
 struct SeriesUpdate: View {
-    @StateObject var seriesVM: SeriesVM
+    @Binding var series: Series
+    // var seriesVM = SeriesVM()
     @EnvironmentObject var proifleVM: ProfileVM
-    @StateObject var posterPicker = ImagePicker()
-//    @State var videoURL: URL?
+    @State private var posterPicker: PhotosPickerItem? //ImagePicker()
+    @State var videoURL: URL?
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack {
-            TextField("Title", text: $seriesVM.series.title)
+            TextField("Title", text: $series.title)
                 .padding(.top, 20)
-            Text("Synopsis:")
-            TextEditor(text: $seriesVM.series.synopsis)
-            
+            TextEditor(text: $series.synopsis)
+
             Divider()
             
-            SingleImagePickerView(label: "Poster", image: "photo", imagePicker: posterPicker)
-            
+            // SingleImagePickerView(label: "Poster", image: "photo", imagePicker: posterPicker)
+            PhotosPicker(selection: $posterPicker) {
+                Label("Select a Poster", systemImage: "photo")
+            }
 //            if let videoURL = videoURL {
 //                VideoPlayer(player: AVPlayer(url: videoURL))
 //            } else {
@@ -44,7 +48,8 @@ struct SeriesUpdate: View {
 //                picker.showsCameraControls = true
 //                picker.videoMaximumDuration = 30.0
 //                picker.mediaTypes = [UTType.movie.identifier]
-//                presentationMode.wrappedValue.dismiss()
+//                // presentationMode.wrappedValue.dismiss()
+//                dismiss()
 //            }
             
             HStack {
@@ -54,13 +59,15 @@ struct SeriesUpdate: View {
                 Spacer()
                 Button("Save") {
                     Task {
+                        var seriesVM = SeriesVM()
+                        seriesVM.series = series
                         if posterPicker.image != nil {
                             seriesVM.updatePoster = true
                             seriesVM.posterImage = posterPicker.image!
                         }
-//                        if videoURL {
-//                            seriesVM.updateTrailer = true
-//                        }
+                        if videoURL != nil {
+                            seriesVM.updateTrailer = true
+                        }
                         if seriesVM.series.id.isEmpty {
                             seriesVM.series.profile = proifleVM.profile.id
                             let seriesId = await seriesVM.create()

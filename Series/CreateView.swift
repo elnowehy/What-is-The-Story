@@ -9,8 +9,8 @@ import SwiftUI
 
 struct CreateView: View {
     @EnvironmentObject var profileVM: ProfileVM
-    @State private var isPresentingSeriesEdit = false
     @StateObject var seriesVM = SeriesVM()
+    @State var series = Series()
     
     var body: some View {
         NavigationStack {
@@ -24,7 +24,7 @@ struct CreateView: View {
             
             Spacer()
             NavigationLink(
-                destination: SeriesUpdate(seriesVM: seriesVM),
+                destination: SeriesUpdate(series: $series),
                 label: { Text("Create Series") }
             )
             Divider()
@@ -44,14 +44,20 @@ struct CreateView: View {
             }
             
         }
-        .onAppear {
-            Task {
-                await profileVM.fetch()
-                if !profileVM.profile.seriesIds.isEmpty {
-                    seriesVM.seriesIds = profileVM.profile.seriesIds
-                    await seriesVM.fetch()
-                }
-            }
+        .task {
+            await profileVM.fetch()
+            if !profileVM.profile.seriesIds.isEmpty {
+                seriesVM.seriesIds = profileVM.profile.seriesIds
+                await seriesVM.fetch()
+        }
+//        .onAppear {
+//            Task {
+//                await profileVM.fetch()
+//                if !profileVM.profile.seriesIds.isEmpty {
+//                    seriesVM.seriesIds = profileVM.profile.seriesIds
+//                    await seriesVM.fetch()
+//                }
+//            }
         }
     }
 }

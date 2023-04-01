@@ -50,7 +50,7 @@ class SeriesManager: ObservableObject {
             "profile": self.series.profile,
             "title": self.series.title,
             "genre": self.series.genre,
-            "synobsis": self.series.synopsis,
+            "synopsis": self.series.synopsis,
             "episodes": self.series.episodes,
         ]
         if updatePoster {

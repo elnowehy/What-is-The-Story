@@ -27,7 +27,7 @@ class SeriesVM: ObservableObject{
     // return: Void
     @MainActor
     func fetch() async {
-        seriesList = []
+        self.seriesList = []
         await withTaskGroup(of: Series.self) { group in
             for id in seriesIds {
                 group.addTask {
