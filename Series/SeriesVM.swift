@@ -13,7 +13,7 @@ class SeriesVM: ObservableObject{
     public var seriesIds = [String]()
     public var posterImage = UIImage(systemName: "photo")!
     public var updatePoster = false
-    public var trailerImage = UIImage(systemName: "film")!
+    public var trailerData = Data()
     public var updateTrailer = false
     private var seriesManager: SeriesManager
 
@@ -49,7 +49,9 @@ class SeriesVM: ObservableObject{
     @MainActor
     func create() async -> String {
         seriesManager.posterImage = posterImage
-        seriesManager.updatePoster = true
+        seriesManager.trailerData = trailerData
+        seriesManager.updatePoster = updatePoster
+        seriesManager.updateTrailer = updateTrailer
         seriesManager.series = series
         async let seriesId = seriesManager.create()
         series.id = await seriesId
@@ -63,7 +65,9 @@ class SeriesVM: ObservableObject{
     @MainActor
     func update() async {
         seriesManager.posterImage = posterImage
+        seriesManager.trailerData = trailerData
         seriesManager.updatePoster = updatePoster
+        seriesManager.updateTrailer = updateTrailer
         seriesManager.series = series
         await seriesManager.update()
     }

@@ -20,6 +20,7 @@ struct SeriesUpdate: View {
     // var seriesVM = SeriesVM()
     @EnvironmentObject var proifleVM: ProfileVM
     @State private var posterPicker: PhotosPickerItem? //ImagePicker()
+    @State private var trailerPicker: PhotosPickerItem?
     @State var videoURL: URL?
     @Environment(\.dismiss) private var dismiss
     
@@ -30,10 +31,14 @@ struct SeriesUpdate: View {
             TextEditor(text: $series.synopsis)
 
             Divider()
-            
+             
             // SingleImagePickerView(label: "Poster", image: "photo", imagePicker: posterPicker)
-            PhotosPicker(selection: $posterPicker) {
+            PhotosPicker(selection: $posterPicker, matching: .images) {
                 Label("Select a Poster", systemImage: "photo")
+            }
+            
+            PhotosPicker(selection: $trailerPicker, matching: .videos) {
+                Label("Select a Trailer", systemImage: "film")
             }
 //            if let videoURL = videoURL {
 //                VideoPlayer(player: AVPlayer(url: videoURL))
@@ -59,15 +64,35 @@ struct SeriesUpdate: View {
                 Spacer()
                 Button("Save") {
                     Task {
-                        var seriesVM = SeriesVM()
+                        let seriesVM = SeriesVM()
                         seriesVM.series = series
-                        if posterPicker.image != nil {
+                        if posterPicker != nil {
                             seriesVM.updatePoster = true
-                            seriesVM.posterImage = posterPicker.image!
+                            do {
+                                if let data = try await posterPicker?.loadTransferable(type: Data.self) {
+                                    if let uiImage = UIImage(data: data) {
+                                        seriesVM.posterImage = uiImage
+                                    }
+                                }
+                            } catch {
+                                print(error.localizedDescription)
+                            }
                         }
-                        if videoURL != nil {
+                        
+                        if trailerPicker != nil {
                             seriesVM.updateTrailer = true
+                            do {
+                                if let data = try await trailerPicker?.loadTransferable(type: Data.self) {
+                                    seriesVM.trailerData = data
+                                }
+                            } catch {
+                                print(error.localizedDescription)
+                            }
                         }
+                        
+//                        if videoURL != nil {
+//                            seriesVM.updateTrailer = true
+//                        }
                         if seriesVM.series.id.isEmpty {
                             seriesVM.series.profile = proifleVM.profile.id
                             let seriesId = await seriesVM.create()

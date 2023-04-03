@@ -10,6 +10,7 @@
 //  Access: HomeView -> SeriesView. When a user taps on a series in the home view, they will be
 //          taken to the series view to see the details of the selected series
 
+import AVKit
 import SwiftUI
 
 struct SeriesView: View {
@@ -30,6 +31,9 @@ struct SeriesView: View {
                 }) {
                     ProgressView()
                 }
+                VideoPlayer(player: AVPlayer(url: series.trailer))
+                    .frame(width: 300, height: 200)
+                    .clipped()
                 Divider()
                 Text(series.synopsis)
                 Spacer()

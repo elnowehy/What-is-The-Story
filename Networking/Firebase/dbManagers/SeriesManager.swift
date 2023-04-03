@@ -16,11 +16,13 @@ class SeriesManager: ObservableObject {
     @Published var series = Series()
     public var posterImage = UIImage()
     public var updatePoster = false
+    public var trailerData = Data()
     public var updateTrailer = false
     private var db: Firestore
     private var ref: DocumentReference?
     private var storage: Storage
-    private var storageRef: StorageReference?
+    private var posterRef: StorageReference?
+    private var trailerRef: StorageReference?
     private var data: [String: Any]
     
     
@@ -40,7 +42,8 @@ class SeriesManager: ObservableObject {
         }
         
         self.ref = self.db.collection("Series").document(series.id)
-        self.storageRef = self.storage.reference().child("posters").child("\(series.id).jpeg")
+        self.posterRef = self.storage.reference().child("posters").child("\(series.id).jpeg")
+        self.trailerRef = self.storage.reference().child("trailers").child("\(series.id).mp4")
     }
 
     @MainActor
@@ -54,7 +57,11 @@ class SeriesManager: ObservableObject {
             "episodes": self.series.episodes,
         ]
         if updatePoster {
-            self.data["poster"] = await storeImage(ref: storageRef!, uiImage: posterImage, quality: series.imgQlty).absoluteString
+            self.data["poster"] = await storeImage(ref: posterRef!, uiImage: posterImage, quality: series.imgQlty).absoluteString
+        }
+        
+        if updateTrailer {
+            self.data["trailer"] = await storeVideo(ref: trailerRef!, data: self.trailerData).absoluteString
         }
     }
     
@@ -66,7 +73,7 @@ class SeriesManager: ObservableObject {
         series.genre = self.data["genre"] as? String ?? ""
         series.synopsis = self.data["synopsis"] as? String ?? ""
         series.poster = URL(string: self.data["poster"] as? String ?? "")!
- //       series.trailer = URL(string: self.data["trailer"] as? String ?? "")!
+        series.trailer = URL(string: self.data["trailer"] as? String ?? "")!
     }
     
     @MainActor
