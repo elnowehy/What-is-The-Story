@@ -10,57 +10,51 @@
 
 
 import SwiftUI
-import ARKit
-import _AVKit_SwiftUI
+//import ARKit
+//import _AVKit_SwiftUI
 import AVFAudio
 import PhotosUI
 
 struct SeriesUpdate: View {
     @Binding var series: Series
-    // var seriesVM = SeriesVM()
     @EnvironmentObject var proifleVM: ProfileVM
-    @State private var posterPicker: PhotosPickerItem? //ImagePicker()
+    @State private var posterPicker: PhotosPickerItem?
     @State private var trailerPicker: PhotosPickerItem?
-    @State var videoURL: URL?
+    @State private var createEpisode = false
+    @State var episode = Episode()
+    @StateObject var episodeVM = EpisodeVM()
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack {
+            Spacer()
             TextField("Title", text: $series.title)
                 .padding(.top, 20)
             TextEditor(text: $series.synopsis)
 
             Divider()
-             
-            // SingleImagePickerView(label: "Poster", image: "photo", imagePicker: posterPicker)
+            List(episodeVM.episodeList) { episode in
+                NavigationLink(destination: EpisodeView(series: series)) {
+                    AsyncImage(url: series.poster, content: { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150, height: 50)
+                    }) {
+                        ProgressView()
+                    }
+                    Text(series.title)
+                }
+            }
             PhotosPicker(selection: $posterPicker, matching: .images) {
                 Label("Select a Poster", systemImage: "photo")
             }
-            
+            Spacer()
             PhotosPicker(selection: $trailerPicker, matching: .videos) {
                 Label("Select a Trailer", systemImage: "film")
             }
-//            if let videoURL = videoURL {
-//                VideoPlayer(player: AVPlayer(url: videoURL))
-//            } else {
-//                Text("No video selected")
-//            }
-//            Button("Select video") {
-//                // Show the video picker
-//                let picker = VideoPicker(videoURL: $videoURL, sourceType: .photoLibrary)
-//                picker.sourceType = .photoLibrary
-//                picker.videoQuality = .typeHigh
-//                picker.showsCameraControls = true
-//                picker.videoMaximumDuration = 30.0
-//                picker.mediaTypes = [UTType.movie.identifier]
-//                // presentationMode.wrappedValue.dismiss()
-//                dismiss()
-//            }
-            
+            Spacer()
             HStack {
-                Button("Cancel") {
-                    dismiss()
-                }
                 Spacer()
                 Button("Save") {
                     Task {
@@ -78,7 +72,7 @@ struct SeriesUpdate: View {
                                 print(error.localizedDescription)
                             }
                         }
-                        
+
                         if trailerPicker != nil {
                             seriesVM.updateTrailer = true
                             do {
@@ -89,10 +83,7 @@ struct SeriesUpdate: View {
                                 print(error.localizedDescription)
                             }
                         }
-                        
-//                        if videoURL != nil {
-//                            seriesVM.updateTrailer = true
-//                        }
+
                         if seriesVM.series.id.isEmpty {
                             seriesVM.series.profile = proifleVM.profile.id
                             let seriesId = await seriesVM.create()
@@ -103,7 +94,19 @@ struct SeriesUpdate: View {
                         dismiss()
                     }
                 }
+
+                Spacer()
+                NavigationLink("Create Episode") {
+                    EpisodeUpdate(episode: $episode, series: $series)
+                }
+
+                Spacer()
+                Button("Cancel") {
+                    dismiss()
+                }
+                Spacer()
             }
+            Spacer()
         }
     }
 }

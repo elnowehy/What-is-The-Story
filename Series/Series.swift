@@ -17,4 +17,5 @@ struct Series: Identifiable {
     var poster = URL(filePath: "")
     var imgQlty = 0.5
     var trailer = URL(filePath: "")
+    var rating = 1...5
 }

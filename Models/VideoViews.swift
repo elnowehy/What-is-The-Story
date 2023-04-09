@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct VideoView {
+struct VideoViews {
     var video: String
     var user: String
 }

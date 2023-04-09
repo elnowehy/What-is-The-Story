@@ -120,5 +120,25 @@ class SeriesManager: ObservableObject {
         setRef()
         ref!.delete()
     }
+    
+    @MainActor
+    func addEpisode(episodeId: String) async -> Void {
+        setRef()
+        do {
+            try await ref!.updateData(["episodes": FieldValue.arrayUnion([episodeId])])
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    @MainActor
+    func removeEpisode(episodeId: String) async -> Void {
+        setRef()
+        do {
+            try await ref!.updateData(["episodes": FieldValue.arrayRemove([episodeId])])
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 

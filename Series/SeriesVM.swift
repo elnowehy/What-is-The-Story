@@ -37,7 +37,7 @@ class SeriesVM: ObservableObject{
                 }
             }
             for await series in group {
-                seriesList.append(series)
+                self.seriesList.append(series)
             }
         }
     }
@@ -82,4 +82,24 @@ class SeriesVM: ObservableObject{
         // I'm sure much more needs to be done, e.g. remove from Profile.Creation
         
     }
+    
+    // this function has to be called after the series has been
+    // created and we already have the seriesId
+    @MainActor
+    func addEpisode(episodeId: String) async  {
+        seriesManager.series = self.series
+        await seriesManager.addEpisode(episodeId: episodeId)
+        series.episodes.append(episodeId)
+    }
+    
+    @MainActor
+    func removeSeries(episodeId: String) async {
+        await seriesManager.removeEpisode(episodeId: episodeId)
+        await MainActor.run {
+            series.episodes.removeAll { id in
+                episodeId == id
+            }
+        }
+    }
+    
 }
