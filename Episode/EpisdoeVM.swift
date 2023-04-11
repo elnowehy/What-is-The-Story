@@ -23,7 +23,7 @@ class EpisodeVM: ObservableObject{
     // input: Profile struct with the profile id populated
     // output: profile struc is populated
     // return: Void
-    // @MainActor
+    @MainActor
     func fetch() async {
         self.episodeList = []
         await withTaskGroup(of: Episode.self) { group in

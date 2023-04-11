@@ -9,6 +9,7 @@ import AVKit
 import SwiftUI
 
 struct EpisodeView: View {
+    @ObservedObject var episodeVM : EpisodeVM
     @State var episode: Episode
     @Environment(\.dismiss) private var dismiss
     
@@ -17,27 +18,26 @@ struct EpisodeView: View {
         NavigationStack {
             VStack {
                 Spacer()
-                Text(series.title)
-                AsyncImage(url: series.poster, content: { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 150, height: 50)
-                }) {
-                    ProgressView()
+                Text(episodeVM.episode.title)
+                if episodeVM.episode.votingOpen {
+                    Text(episodeVM.episode.question)
+                    Text(episodeVM.episode.pollClosingDate.formatted())
                 }
-                VideoPlayer(player: AVPlayer(url: series.trailer))
+
+                VideoPlayer(player: AVPlayer(url: episodeVM.episode.video))
                     .frame(width: 300, height: 200)
                     .clipped()
                 Divider()
-                Text(series.synopsis)
+                Text(episodeVM.episode.synopsis)
                 Spacer()
                 NavigationLink("Update") {
-                    SeriesUpdate(series: $series)
-                    // SeriesLIstView()
+                    EpisodeUpdate(episodeVM: episodeVM)
                 }
                 Spacer()
             }
+        }
+        .onAppear{
+            episodeVM.episode = episode
         }
     }
 }

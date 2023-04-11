@@ -54,7 +54,6 @@ class SeriesManager: ObservableObject {
             "title": self.series.title,
             "genre": self.series.genre,
             "synopsis": self.series.synopsis,
-            "episodes": self.series.episodes,
         ]
         if updatePoster {
             self.data["poster"] = await storeImage(ref: posterRef!, uiImage: posterImage, quality: series.imgQlty).absoluteString
@@ -74,6 +73,7 @@ class SeriesManager: ObservableObject {
         series.synopsis = self.data["synopsis"] as? String ?? ""
         series.poster = URL(string: self.data["poster"] as? String ?? "")!
         series.trailer = URL(string: self.data["trailer"] as? String ?? "")!
+        series.episodes = self.data["episodes"] as? [String] ?? []
     }
     
     @MainActor

@@ -10,8 +10,8 @@ import Firebase
 
 struct SignInView: View {
     @Binding var showLogIn: Bool
-    @State var user = User()
-    @ObservedObject var userVM: UserVM
+    // @State var user = User()
+    @StateObject var userVM: UserVM
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authManager: AuthManager
     
@@ -22,13 +22,13 @@ struct SignInView: View {
                     .font(.headline)
                     .offset(x: -100, y: -100)
                 
-                TextField("Email", text: $user.email)
+                TextField("Email", text: $userVM.user.email)
                     .offset(x: 50, y: -50)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .submitLabel(.next)
                 
-                SecureField("Password", text: $user.password)
+                SecureField("Password", text: $userVM.user.password)
                     .offset(x: 50, y: -50)
                     .submitLabel(.done)
                 
@@ -38,8 +38,8 @@ struct SignInView: View {
                 HStack {
                     Button(action: {
                         Task {
-                            await user.id = authManager.signIn(emailAddress: user.email, password: user.password)
-                            userVM.user = user
+                            await userVM.user.id = authManager.signIn(emailAddress: userVM.user.email, password: userVM.user.password)
+                            // userVM.user = user
                             await userVM.fetch()
                             showLogIn = false
                             authManager.isLoggedIn = true
@@ -65,17 +65,6 @@ struct SignInView: View {
             }
         }
     }
-    /*.alert(authManager.alertMessage, isPresented: $authManager.showingAlert) {
-     Button("OK", role: .cancel) {}
-     }*/
-    /*
-     .onChange(of: pathRouter.path) { path in
-     if !authManager.isLoggedIn {
-     pathRouter.path = NavigationPath(SignInView())// redirect to sign in if not logged in
-     }
-     }
-     */
-    
 }
 
 //struct SignInView_Previews: PreviewProvider {

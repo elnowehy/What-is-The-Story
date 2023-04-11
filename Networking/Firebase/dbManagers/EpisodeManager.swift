@@ -49,7 +49,7 @@ class EpisodeManager: ObservableObject {
             "synopsis": self.episode.synopsis,
             "question": self.episode.question,
             "votingOpen": self.episode.votingOpen,
-            // "pollClosingDate": self.episode.pollClosingDate,
+            "pollClosingDate": self.episode.pollClosingDate,
             "series": self.episode.series,
             "view": self.episode.views,
         ]
@@ -66,7 +66,7 @@ class EpisodeManager: ObservableObject {
         episode.synopsis = self.data["synopsis"] as? String ?? ""
         episode.question = self.data["question"] as? String ?? ""
         episode.votingOpen = self.data["votingOpen"] as? Bool ?? false
-        // episode.pollClosingDate = self.data["pollClosingDate"] as? Date ?? Date()
+        episode.pollClosingDate = self.data["pollClosingDate"] as? Date ?? Date()
         episode.series = self.data["series"] as? String ?? ""
         episode.views = self.data["views"] as? Int ?? 0
         episode.video = URL(string: self.data["video"] as? String ?? "")!

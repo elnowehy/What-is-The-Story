@@ -14,6 +14,7 @@ import AVKit
 import SwiftUI
 
 struct SeriesView: View {
+    @ObservedObject var seriesVM: SeriesVM
     @State var series: Series
     @Environment(\.dismiss) private var dismiss
     
@@ -22,8 +23,8 @@ struct SeriesView: View {
         NavigationStack {
             VStack {
                 Spacer()
-                Text(series.title)
-                AsyncImage(url: series.poster, content: { image in
+                Text(seriesVM.series.title)
+                AsyncImage(url: seriesVM.series.poster, content: { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -31,19 +32,20 @@ struct SeriesView: View {
                 }) {
                     ProgressView()
                 }
-                VideoPlayer(player: AVPlayer(url: series.trailer))
+                VideoPlayer(player: AVPlayer(url: seriesVM.series.trailer))
                     .frame(width: 300, height: 200)
                     .clipped()
                 Divider()
-                Text(series.synopsis)
+                Text(seriesVM.series.synopsis)
                 Spacer()
                 NavigationLink("Update") {
-                    SeriesUpdate(series: $series)
+                    SeriesUpdate(seriesVM: seriesVM)
                     // SeriesLIstView()
                 }
                 Spacer()
             }
         }
+        .onAppear{ seriesVM.series = series}
     }
 }
 

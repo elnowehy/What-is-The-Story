@@ -10,25 +10,23 @@ import SwiftUI
 import PhotosUI
 
 struct EpisodeUpdate: View {
-    @Binding var episode: Episode
-    @Binding var series: Series
-    @EnvironmentObject var proifleVM: ProfileVM
+    @ObservedObject var episodeVM: EpisodeVM
     @State private var videoPicker: PhotosPickerItem?
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack {
             Spacer()
-            TextField("Title", text: $episode.title)
+            TextField("Title", text: $episodeVM.episode.title)
                 .padding(.top, 20)
-            Toggle("Open for Vote?", isOn: $episode.votingOpen)
-            if episode.votingOpen  {
-                TextField("Question", text: $episode.question)
+            Toggle("Open for Vote?", isOn: $episodeVM.episode.votingOpen)
+            if episodeVM.episode.votingOpen  {
+                TextField("Question", text: $episodeVM.episode.question)
                     .padding(.top, 20)
                 
-                // DatePicker("Poll Closing Date", selection: $episode.pollClosingDate)
+                DatePicker("Poll Closing Date", selection: $episodeVM.episode.pollClosingDate)
             }
-            TextEditor(text: $episode.synopsis)
+            TextEditor(text: $episodeVM.episode.synopsis)
 
             Divider()
             
@@ -41,10 +39,8 @@ struct EpisodeUpdate: View {
                 Spacer()
                 Button("Save") {
                     Task {
-                        let episodeVM = EpisodeVM()
                         let seriesVM = SeriesVM()
-                        seriesVM.series = series
-                        episodeVM.episode = episode
+                        seriesVM.series.id = episodeVM.episode.series
                         if videoPicker != nil {
                             episodeVM.updateVideo = true
                             do {
@@ -56,8 +52,8 @@ struct EpisodeUpdate: View {
                             }
                         }
                         
-                        if episode.id.isEmpty {
-                            episodeVM.episode.series = series.id
+                        if episodeVM.episode.id.isEmpty {
+                            episodeVM.episode.series = seriesVM.series.id
                             let id = await episodeVM.create()
                             await seriesVM.addEpisode(episodeId: id)
                         } else {
@@ -74,6 +70,7 @@ struct EpisodeUpdate: View {
             }
             Spacer()
         }
+        .navigationBarBackButtonHidden()
     }
 }
 //

@@ -14,8 +14,9 @@ struct Episode: Identifiable {
     var synopsis: String = ""
     var question: String = ""
     var video : URL = URL(filePath: "")
+    // var thumbnail : URL = URL(filePath: "")
     var votingOpen: Bool = false
-    // var pollClosingDate: Date = Date()
+    var pollClosingDate: Date = Date()
     var series: String = ""
     var views: Int = 0
 }

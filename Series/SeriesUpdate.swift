@@ -10,40 +10,37 @@
 
 
 import SwiftUI
-//import ARKit
-//import _AVKit_SwiftUI
 import AVFAudio
 import PhotosUI
 
 struct SeriesUpdate: View {
-    @Binding var series: Series
-    @EnvironmentObject var proifleVM: ProfileVM
+    @ObservedObject var seriesVM: SeriesVM
+    @EnvironmentObject var profileVM: ProfileVM
     @State private var posterPicker: PhotosPickerItem?
     @State private var trailerPicker: PhotosPickerItem?
     @State private var createEpisode = false
-    @State var episode = Episode()
     @StateObject var episodeVM = EpisodeVM()
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack {
             Spacer()
-            TextField("Title", text: $series.title)
+            TextField("Title", text: $seriesVM.series.title)
                 .padding(.top, 20)
-            TextEditor(text: $series.synopsis)
+            TextEditor(text: $seriesVM.series.synopsis)
 
             Divider()
             List(episodeVM.episodeList) { episode in
-                NavigationLink(destination: EpisodeView(series: series)) {
-                    AsyncImage(url: series.poster, content: { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 150, height: 50)
-                    }) {
-                        ProgressView()
-                    }
-                    Text(series.title)
+                NavigationLink(destination: EpisodeView(episodeVM: episodeVM, episode: episode)) {
+//                    AsyncImage(url: seriesVM.series.poster, content: { image in
+//                        image
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(width: 150, height: 50)
+//                    }) {
+//                        ProgressView()
+//                    }
+                    Text(episode.title)
                 }
             }
             PhotosPicker(selection: $posterPicker, matching: .images) {
@@ -58,8 +55,6 @@ struct SeriesUpdate: View {
                 Spacer()
                 Button("Save") {
                     Task {
-                        let seriesVM = SeriesVM()
-                        seriesVM.series = series
                         if posterPicker != nil {
                             seriesVM.updatePoster = true
                             do {
@@ -85,9 +80,9 @@ struct SeriesUpdate: View {
                         }
 
                         if seriesVM.series.id.isEmpty {
-                            seriesVM.series.profile = proifleVM.profile.id
+                            seriesVM.series.profile = profileVM.profile.id
                             let seriesId = await seriesVM.create()
-                            await proifleVM.addSeries(seriesId: seriesId)
+                            await profileVM.addSeries(seriesId: seriesId)
                         } else {
                             await seriesVM.update()
                         }
@@ -97,7 +92,7 @@ struct SeriesUpdate: View {
 
                 Spacer()
                 NavigationLink("Create Episode") {
-                    EpisodeUpdate(episode: $episode, series: $series)
+                    EpisodeUpdate(episodeVM: episodeVM)
                 }
 
                 Spacer()
@@ -106,7 +101,13 @@ struct SeriesUpdate: View {
                 }
                 Spacer()
             }
-            Spacer()
+        }
+        .task {
+            episodeVM.episode.series = seriesVM.series.id
+            if !seriesVM.series.episodes.isEmpty {
+                episodeVM.episodeIds = seriesVM.series.episodes
+                await episodeVM.fetch()
+            }
         }
     }
 }

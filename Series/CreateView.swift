@@ -24,13 +24,14 @@ struct CreateView: View {
             
             Spacer()
             NavigationLink(
-                destination: SeriesUpdate(series: $series),
+                destination: SeriesUpdate(seriesVM: seriesVM),
                 label: { Text("Create Series") }
             )
             Divider()
             
             List(seriesVM.seriesList) { series in
-                NavigationLink(destination: SeriesView(series: series)) {
+                NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series)) 
+                {
                     AsyncImage(url: series.poster, content: { image in
                         image
                             .resizable()
@@ -49,15 +50,7 @@ struct CreateView: View {
             if !profileVM.profile.seriesIds.isEmpty {
                 seriesVM.seriesIds = profileVM.profile.seriesIds
                 await seriesVM.fetch()
-        }
-//        .onAppear {
-//            Task {
-//                await profileVM.fetch()
-//                if !profileVM.profile.seriesIds.isEmpty {
-//                    seriesVM.seriesIds = profileVM.profile.seriesIds
-//                    await seriesVM.fetch()
-//                }
-//            }
+            }
         }
     }
 }
