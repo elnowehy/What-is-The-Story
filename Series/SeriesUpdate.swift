@@ -42,7 +42,9 @@ struct SeriesUpdate: View {
 //                    }
                     Text(episode.title)
                 }
+                .isDetailLink(false)
             }
+            
             PhotosPicker(selection: $posterPicker, matching: .images) {
                 Label("Select a Poster", systemImage: "photo")
             }
