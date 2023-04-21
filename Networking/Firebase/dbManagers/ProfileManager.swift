@@ -54,7 +54,7 @@ class ProfileManager: ObservableObject {
     func populateStruct() {
         profile.id = self.data["id"] as? String ?? ""
         profile.brand = self.data["brand"] as? String ?? ""
-        profile.avatar = URL(string: self.data["avatar"] as? String ?? "")!
+        profile.avatar = URL(string: self.data["avatar"] as? String ?? "") ?? URL(filePath: "")
         profile.seriesIds = self.data["seriesIds"] as? [String] ?? []
     }
     
@@ -173,8 +173,8 @@ class ProfileInfoManager: ObservableObject {
         info.id = profileId
         info.statement = self.data["statement"] as? String ?? ""
         info.bio = self.data["bio"] as? String ?? ""
-        info.photo = URL(string: self.data["photo"] as? String ?? "")!
-        info.background = URL(string: self.data["background"] as? String ?? "")!
+        info.photo = URL(string: self.data["photo"] as? String ?? "") ?? URL(filePath: "")
+        info.background = URL(string: self.data["background"] as? String ?? "") ?? URL(filePath: "")
     }
     
     @MainActor

@@ -16,103 +16,142 @@ import PhotosUI
 struct SeriesUpdate: View {
     @ObservedObject var seriesVM: SeriesVM
     @EnvironmentObject var profileVM: ProfileVM
+    @StateObject var categoryVM = CategoryVM()
     @State private var posterPicker: PhotosPickerItem?
     @State private var trailerPicker: PhotosPickerItem?
     @State private var createEpisode = false
     @StateObject var episodeVM = EpisodeVM()
     @Environment(\.dismiss) private var dismiss
-    
+    @State private var selectedCategories: Set<String>
+
+    init(seriesVM: SeriesVM) {
+        self.seriesVM = seriesVM
+        _selectedCategories = State(initialValue: seriesVM.series.categories)
+    }
+
+
     var body: some View {
         VStack {
-            Spacer()
             TextField("Title", text: $seriesVM.series.title)
                 .padding(.top, 20)
+                .font(.title)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal)
+
             TextEditor(text: $seriesVM.series.synopsis)
+                .frame(minHeight: 100)
+                .padding(.horizontal)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.gray, lineWidth: 1)
+                )
+                .padding(.bottom)
+
+            CategorySelectionView(selectedCategories: $selectedCategories).environmentObject(categoryVM)
 
             Divider()
+                .padding(.horizontal)
+
             List(episodeVM.episodeList) { episode in
                 NavigationLink(destination: EpisodeView(episodeVM: episodeVM, episode: episode)) {
-//                    AsyncImage(url: seriesVM.series.poster, content: { image in
-//                        image
-//                            .resizable()
-//                            .scaledToFit()
-//                            .frame(width: 150, height: 50)
-//                    }) {
-//                        ProgressView()
-//                    }
                     Text(episode.title)
                 }
                 .isDetailLink(false)
             }
-            
+
             PhotosPicker(selection: $posterPicker, matching: .images) {
                 Label("Select a Poster", systemImage: "photo")
+                    .font(.headline)
+                    .padding(.vertical)
             }
+            .padding(.horizontal)
+
             Spacer()
+
             PhotosPicker(selection: $trailerPicker, matching: .videos) {
                 Label("Select a Trailer", systemImage: "film")
+                    .font(.headline)
+                    .padding(.vertical)
             }
+            .padding(.horizontal)
+
             Spacer()
+
             HStack {
                 Spacer()
                 Button("Save") {
-                    Task {
-                        if posterPicker != nil {
-                            seriesVM.updatePoster = true
-                            do {
-                                if let data = try await posterPicker?.loadTransferable(type: Data.self) {
-                                    if let uiImage = UIImage(data: data) {
-                                        seriesVM.posterImage = uiImage
-                                    }
-                                }
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                        }
-
-                        if trailerPicker != nil {
-                            seriesVM.updateTrailer = true
-                            do {
-                                if let data = try await trailerPicker?.loadTransferable(type: Data.self) {
-                                    seriesVM.trailerData = data
-                                }
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                        }
-
-                        if seriesVM.series.id.isEmpty {
-                            seriesVM.series.profile = profileVM.profile.id
-                            let seriesId = await seriesVM.create()
-                            await profileVM.addSeries(seriesId: seriesId)
-                        } else {
-                            await seriesVM.update()
-                        }
-                        dismiss()
-                    }
+                    SaveSeries()
+                    dismiss()
                 }
+                .font(.headline)
+                .padding(.vertical)
 
                 Spacer()
                 NavigationLink("Create Episode") {
                     EpisodeUpdate(episodeVM: episodeVM)
                 }
+                .font(.headline)
+                .padding(.vertical)
 
                 Spacer()
                 Button("Cancel") {
                     dismiss()
                 }
+                .font(.headline)
+                .padding(.vertical)
                 Spacer()
             }
         }
         .task {
             episodeVM.episode.series = seriesVM.series.id
+            selectedCategories = seriesVM.series.categories
             if !seriesVM.series.episodes.isEmpty {
                 episodeVM.episodeIds = seriesVM.series.episodes
                 await episodeVM.fetch()
             }
         }
     }
+    
+    private func SaveSeries() {
+        Task {
+            if posterPicker != nil {
+                seriesVM.updatePoster = true
+                do {
+                    if let data = try await posterPicker?.loadTransferable(type: Data.self) {
+                        if let uiImage = UIImage(data: data) {
+                            seriesVM.posterImage = uiImage
+                        }
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            
+            if trailerPicker != nil {
+                seriesVM.updateTrailer = true
+                do {
+                    if let data = try await trailerPicker?.loadTransferable(type: Data.self) {
+                        seriesVM.trailerData = data
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            
+            seriesVM.series.categories = selectedCategories
+            
+            if seriesVM.series.id.isEmpty {
+                seriesVM.series.profile = profileVM.profile.id
+                let seriesId = await seriesVM.create()
+                await profileVM.addSeries(seriesId: seriesId)
+            } else {
+                await seriesVM.update()
+            }
+        }
+    }
 }
+
+
 
 //struct SeriesUPdate_Previews: PreviewProvider {
 //    static var previews: some View {

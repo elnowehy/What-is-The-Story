@@ -52,7 +52,7 @@ class SeriesManager: ObservableObject {
             "id": self.series.id,
             "profile": self.series.profile,
             "title": self.series.title,
-            "genre": self.series.genre,
+            "categories": Array(self.series.categories),
             "synopsis": self.series.synopsis,
         ]
         if updatePoster {
@@ -69,10 +69,10 @@ class SeriesManager: ObservableObject {
         series.id = self.data["id"] as? String ?? ""
         series.profile = self.data["profile"] as? String ?? ""
         series.title = self.data["title"] as? String ?? ""
-        series.genre = self.data["genre"] as? String ?? ""
+        series.categories = Set(self.data["categories"] as? [String] ?? [])
         series.synopsis = self.data["synopsis"] as? String ?? ""
-        series.poster = URL(string: self.data["poster"] as? String ?? "")!
-        series.trailer = URL(string: self.data["trailer"] as? String ?? "")!
+        series.poster = URL(string: self.data["poster"] as? String ?? "") ?? URL(filePath: "")
+        series.trailer = URL(string: self.data["trailer"] as? String ?? "") ?? URL(filePath: "")
         series.episodes = self.data["episodes"] as? [String] ?? []
     }
     

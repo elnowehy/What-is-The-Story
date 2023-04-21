@@ -11,7 +11,7 @@ struct Series: Identifiable {
     var id: String = ""
     var profile: String = ""
     var title: String = ""
-    var genre: String = ""
+    var categories: Set<String> = []
     var synopsis: String = ""
     var episodes = [String]()
     var poster = URL(filePath: "")

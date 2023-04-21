@@ -93,7 +93,7 @@ class SeriesVM: ObservableObject{
     }
     
     @MainActor
-    func removeSeries(episodeId: String) async {
+    func removeEpisode(episodeId: String) async {
         await seriesManager.removeEpisode(episodeId: episodeId)
         
         series.episodes.removeAll { id in

@@ -9,7 +9,13 @@ import SwiftUI
 
 struct VideoListView: View {
     var body: some View {
-        Text("Hello, List!")
+        VStack {
+            AsyncImage(url: /*@START_MENU_TOKEN@*/URL(string: "https://example.com/icon.png")/*@END_MENU_TOKEN@*/)
+                .frame(width: 360.0, height: 200.0)
+            Spacer()
+            Text("Hello, List!")
+            Spacer()
+        }
     }
 }
 

@@ -69,7 +69,7 @@ class EpisodeManager: ObservableObject {
         episode.pollClosingDate = self.data["pollClosingDate"] as? Date ?? Date()
         episode.series = self.data["series"] as? String ?? ""
         episode.views = self.data["views"] as? Int ?? 0
-        episode.video = URL(string: self.data["video"] as? String ?? "")!
+        episode.video = URL(string: self.data["video"] as? String ?? "") ?? URL(filePath: "")
     }
     
     @MainActor
