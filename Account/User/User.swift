@@ -19,6 +19,8 @@ struct User: Identifiable {
     var invitationCode: String = ""
     var witsWallet: String = ""
     var ethWallet: String = ""
+    var createdTimestamp = Date()
+    var loggedInTimestamp = Date()
 }
 
 // read: all, write: system only

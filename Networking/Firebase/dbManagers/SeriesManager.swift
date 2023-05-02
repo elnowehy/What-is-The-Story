@@ -140,5 +140,48 @@ class SeriesManager: ObservableObject {
             print(error.localizedDescription)
         }
     }
+    
+    @MainActor
+    func fetchAllSeries(for listType: LandingPageVM.SeriesListType, category: Category? = nil, page: Int, pageSize: Int) async throws -> [Series] {
+        var fetchedSeries: [Series] = []
+        var query: Query
+        
+        switch listType {
+        case .featured:
+            query = db.collection("Series").whereField("featured", isEqualTo: true)
+        case .popular:
+            query = db.collection("Series").order(by: "totalRatings", descending: true)
+        case .new:
+            query = db.collection("Series").order(by: "releaseDate", descending: true)
+        case .trending:
+            query = db.collection("Series").order(by: "viewsIncrease", descending: true)
+        }
+        
+        if let category = category {
+            query = query.whereField("categories", arrayContains: category)
+        }
+        
+        // Add pagination
+        query = query.start(at: [page * pageSize]).limit(to: pageSize)
+        
+        let querySnapshot = try await query.getDocuments()
+        
+        await withTaskGroup(of: Series.self) { group in
+            for document in querySnapshot.documents {
+                group.addTask {
+                    let seriesId = document.documentID
+                    let seriesManager = SeriesManager()
+                    await seriesManager.fetch(id: seriesId)
+                    return seriesManager.series
+                }
+            }
+            
+            for await result in group {
+                fetchedSeries.append(result)
+            }
+        }
+        
+        return fetchedSeries
+    }
 }
 

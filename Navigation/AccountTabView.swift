@@ -20,6 +20,7 @@ struct AccountTabView: View {
     enum Tab {
         case profile
         case create
+        case bookmarks
         case earnings
         case settings
     }
@@ -46,6 +47,11 @@ struct AccountTabView: View {
                 }
                 .tag(Tab.create)
             
+            BookmarksView()
+                .tabItem{
+                    Label("Bookmarks", systemImage: "bookmark")
+                }
+                .tag(Tab.bookmarks)
             
             EarningsView()
                 .tabItem{

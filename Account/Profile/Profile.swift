@@ -15,6 +15,7 @@ struct Profile {
     var avatar = URL(filePath: "")
     var imgQlty = 0.2
     var seriesIds = [String]()
+    var timestamp = Date()
 }
 
 struct ProfileInfo {

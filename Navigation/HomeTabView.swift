@@ -17,32 +17,29 @@ struct HomeTabView: View {
         case home
         case find
         case community
-        case bookmarks
         case account
         case signout
     }
     
     var body: some View {
         TabView(selection: $selection) {
-            VideoListView()
+            LandingPageView()
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }
                 .tag(Tab.home)
+            
+            FindView()
+                .tabItem {
+                    Label("Find", systemImage: "magnifyingglass")
+                }
+                .tag(Tab.find)
             
             CommunityView()
                 .tabItem {
                     Label("Community", systemImage: "person.3")
                 }
                 .tag(Tab.community)
-            
-            
-            BookmarksView()
-                .tabItem{
-                    Label("Bookmarks", systemImage: "bookmark")
-                }
-                .tag(Tab.bookmarks)
-            
             
             AccountTabView(userVM: userVM)
                 .tabItem {
@@ -60,7 +57,7 @@ struct HomeTabView: View {
             SignInView(showLogIn: $showSignInSheet, userVM: userVM)
         }
         .onChange(of: selection) { newValue in
-            showSignInSheet = (selection == .bookmarks || selection == .account) && !authManager.isLoggedIn
+            showSignInSheet = selection == .account && !authManager.isLoggedIn
         }
     }
 }

@@ -76,5 +76,42 @@ class EpisodeVM: ObservableObject{
         // I'm sure much more needs to be done, e.g. remove from Profile.Creation
         
     }
+    
+    // Get the next episode
+    func getNextEpisode() -> Episode? {
+        if let currentIndex = episodeList.firstIndex(where: { $0.id == episode.id }) {
+            if currentIndex < episodeList.count - 1 {
+                return episodeList[currentIndex + 1]
+            }
+        }
+        return nil
+    }
+
+    // Get the previous episode
+    func getPreviousEpisode() -> Episode? {
+        if let currentIndex = episodeList.firstIndex(where: { $0.id == episode.id }) {
+            if currentIndex > 0 {
+                return episodeList[currentIndex - 1]
+            }
+        }
+        return nil
+    }
+
+    // Check if there is a previous episode
+    func hasPreviousEpisode() -> Bool {
+        if let currentIndex = episodeList.firstIndex(where: { $0.id == episode.id }) {
+            return currentIndex > 0
+        }
+        return false
+    }
+
+    // Check if there is a next episode
+    func hasNextEpisode() -> Bool {
+        if let currentIndex = episodeList.firstIndex(where: { $0.id == episode.id }) {
+            return currentIndex < episodeList.count - 1
+        }
+        return false
+    }
+
 }
 
