@@ -36,12 +36,14 @@ struct What_is_The_StoryApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var pathRouter = PathRouter()
     @StateObject var authManager = AuthManager()
+    @StateObject var userVM = UserVM()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(authManager)
                 .environmentObject(pathRouter)
+                .environmentObject(userVM)
         }
     }
 }

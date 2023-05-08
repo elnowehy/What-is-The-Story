@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 class LandingPageVM: ObservableObject {
     @Published var categories: [Category] = []
@@ -20,6 +21,7 @@ class LandingPageVM: ObservableObject {
 
     private var currentPage: Int = 0
     private var pageSize: Int = 20 // adjust the page size as needed
+    public var lastFetchedDocuments: [SeriesListType: DocumentSnapshot] = [:]
 
     // Flags for pagination
     @Published private(set) var isLoading: Bool = false
@@ -31,6 +33,7 @@ class LandingPageVM: ObservableObject {
 
     private func fetchInitialData() {
         Task {
+            lastFetchedDocuments = [:]
             // Fetch initial data for each list
             fetchCategories()
             await fetchFeaturedSeries()
@@ -44,6 +47,7 @@ class LandingPageVM: ObservableObject {
         // Fetch categories
     }
     
+    @MainActor
     private func fetchSeriesList(for listType: SeriesListType) async {
         guard !isLoading else { return }
         
@@ -51,7 +55,7 @@ class LandingPageVM: ObservableObject {
         currentPage = 0
         
         do {
-            let seriesList = try await seriesManager.fetchAllSeries(for: listType, category: selectedCategory, page: currentPage, pageSize: pageSize)
+            let seriesList = try await seriesManager.fetchAllSeries(vm: self, listType: listType,  category: selectedCategory, page: currentPage, pageSize: pageSize) // Pass self as the vm argument
             updateSeriesList(listType, with: seriesList)
         } catch {
             print("Error fetching series list: \(error.localizedDescription)")
@@ -59,6 +63,7 @@ class LandingPageVM: ObservableObject {
         
         isLoading = false
     }
+
 
 
     func fetchFeaturedSeries() async {
@@ -85,7 +90,7 @@ class LandingPageVM: ObservableObject {
         currentPage += 1
 
         do {
-            let moreSeries = try await seriesManager.fetchAllSeries(for: listType, category: selectedCategory, page: currentPage, pageSize: pageSize)
+            let moreSeries = try await seriesManager.fetchAllSeries(vm: self, listType: listType, category: selectedCategory, page: currentPage, pageSize: pageSize) // Pass self as the vm argument
             if moreSeries.isEmpty {
                 hasMoreData = false
             } else {

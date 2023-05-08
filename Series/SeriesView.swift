@@ -16,6 +16,8 @@ import SwiftUI
 struct SeriesView: View {
     @ObservedObject var seriesVM: SeriesVM
     @State var series: Series
+    @StateObject var episodeVM = EpisodeVM()
+    @StateObject var viewRatingVM = ViewRatingVM()
     @Environment(\.dismiss) private var dismiss
     
 
@@ -38,11 +40,38 @@ struct SeriesView: View {
                 Divider()
                 Text(seriesVM.series.synopsis)
                 Spacer()
-                NavigationLink("Update") {
-                    SeriesUpdate(seriesVM: seriesVM)
-                    // SeriesLIstView()
+                HStack {
+                    Spacer()
+                    NavigationLink("Update") {
+                        SeriesUpdate(seriesVM: seriesVM)
+                        // SeriesLIstView()
+                    }
+                    
+                    Spacer()
+                    NavigationLink("Create Episode") {
+                        EpisodeUpdate(episodeVM: episodeVM)
+                    }
+                    .font(.headline)
+                    .padding(.vertical)
+                    
+                    Spacer()
                 }
-                Spacer()
+            }
+            
+            List(episodeVM.episodeList) { episode in
+                NavigationLink(destination: EpisodeView(episodeVM: episodeVM, episode: episode)
+                    .environmentObject(viewRatingVM)
+                ) {
+                    Text(episode.title)
+                }
+                .isDetailLink(false)
+            }
+        }
+        .task {
+            episodeVM.episode.series = seriesVM.series.id
+            if !seriesVM.series.episodes.isEmpty {
+                episodeVM.episodeIds = seriesVM.series.episodes
+                await episodeVM.fetch()
             }
         }
         .onAppear{ seriesVM.series = series}

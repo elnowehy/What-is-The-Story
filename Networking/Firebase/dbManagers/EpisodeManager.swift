@@ -52,6 +52,11 @@ class EpisodeManager: ObservableObject {
             "pollClosingDate": self.episode.pollClosingDate,
             "series": self.episode.series,
             "view": self.episode.views,
+            "numOfRatings": self.episode.numOfRatings,
+            "totalRating": self.episode.totalRatings,
+            "avgRating": self.episode.avgRating,
+            "releaseDate": self.episode.releaseDate,
+            "featuredScore": self.episode.featuredScore
         ]
         
         if updateVideo {
@@ -69,6 +74,9 @@ class EpisodeManager: ObservableObject {
         episode.pollClosingDate = self.data["pollClosingDate"] as? Date ?? Date()
         episode.series = self.data["series"] as? String ?? ""
         episode.views = self.data["views"] as? Int ?? 0
+        episode.numOfRatings = self.data["numOfRatings"] as? Int ?? 0
+        episode.totalRatings = self.data["totalRatings"] as? Int ?? 0
+        episode.releaseDate = self.data["releaseDate"] as? Date ?? Date()
         episode.video = URL(string: self.data["video"] as? String ?? "") ?? URL(filePath: "")
     }
     

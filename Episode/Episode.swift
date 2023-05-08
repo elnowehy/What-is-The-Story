@@ -20,7 +20,15 @@ struct Episode: Identifiable {
     var series: String = ""
     var views: Int = 0
     var numOfRatings: Int = 0
-    var avgRating : Int = 0 // look in to having this as a computed property
+    var totalRatings: Int = 0
     var releaseDate = Date()
-    var featuredScore = 0 // featuredScore = (numRatings + numComments) / (k + e^(t - t0)) where t: currenttime, t0: release date
+    var avgRating: Double = 0.0
+    
+    var featuredScore: Double {
+        let k = 1.0
+        let t = Date().timeIntervalSince1970
+        let t0 = releaseDate.timeIntervalSince1970
+        return Double((numOfRatings /* +  numofComments */)) / (k + exp(t - t0))
+        // featuredScore = (numRatings + numComments) / (k + e^(t - t0)) where t: currenttime, t0: release date
+    }
 }

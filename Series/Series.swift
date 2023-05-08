@@ -22,12 +22,26 @@ struct Series: Identifiable, Codable, Equatable {
     var totalRatings = 0
     var numberOfRatings = 0
     var totalViews = 0
-    var trendingScore = 1.0  // vlaue / (k + e^(t - t0) where t: current time, t0: view time, k: factor, e: natural logarithm
-    var popularScore = 0 // 0.5 * averageRating + 0.5 * totalViews
-    var newScore = 0 // newSeriesScore = (0.6 * (currentDate - releaseDateWeight)) + (0.2 * averageRating) + (0.2 * numberOfRatings)
-                     // releaseDateWeight = (currentDate - initialReleaseDate) / (latestReleaseDate - initialReleaseDate)
-    
+
     var averageRating: Double {
         return numberOfRatings == 0 ? 0 : Double(totalRatings) / Double(numberOfRatings)
     }
+    
+    var trendingScore: Double {
+        let k = 1.0 // factor (customize according to your needs)
+        let t = Date().timeIntervalSince1970
+        let t0 = initialReleaseDate.timeIntervalSince1970
+        return 1.0 / (k + exp(t - t0))
+    }
+    
+    var popularScore: Double {
+        return 0.5 * averageRating + 0.5 * Double(totalViews)
+    }
+    
+    var newScore: Double {
+        let currentDate = Date().timeIntervalSince1970
+        let releaseDateWeight = (currentDate - initialReleaseDate.timeIntervalSince1970) / (latestReleaseDate.timeIntervalSince1970 - initialReleaseDate.timeIntervalSince1970)
+        return (0.6 * releaseDateWeight) + (0.2 * averageRating) + (0.2 * Double(numberOfRatings))
+    }
 }
+

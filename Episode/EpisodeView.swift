@@ -14,52 +14,53 @@ import SwiftUI
 
 struct EpisodeView: View {
     @ObservedObject var episodeVM: EpisodeVM
-    @ObservedObject var viewRatingsVM = ViewRatingVM()
     @State var episode: Episode
+    @EnvironmentObject var viewRatingVM: ViewRatingVM
     @State private var isFullScreen = false
     @State private var player: AVPlayer?
     @State private var timeObserver: Any?
     @Environment(\.dismiss) private var dismiss
     @State private var autoPlayNextEpisode = false
     @State private var showShareSheet = false
-    @State private var onShareCompletion: (Bool) -> Void = { _ in }
+//    @State private var onShareCompletion: (Bool) -> Void = { _ in }
     @State private var playbackPercentage: Double = 0.0
     @State private var showRating = false
-    @State private var userRating: Int? = nil
-    @ObservedObject var userVM = UserVM()
-    
+//    @State private var userRating: Int? = nil
+    @EnvironmentObject var userVM: UserVM
+
+
     private func handleViewCount() {
         let duration = player?.currentItem?.duration.seconds ?? 0
         let playbackTime = player!.currentTime().seconds
         playbackPercentage = playbackTime / duration
 
         if playbackPercentage >= 0.8 {
-            viewRatingsVM.userId = userVM.user.id
-            viewRatingsVM.episodeId = episode.id
-            viewRatingsVM.handleViewCount()
+            viewRatingVM.viewRating.userId = userVM.user.id
+            viewRatingVM.viewRating.episodeId = episode.id
+            viewRatingVM.handleViewCount()
             showRating = true
         }
         print("\(duration), \(playbackTime), \(playbackPercentage)")
     }
-    
+
     private func rewindToBeginning() {
         player?.seek(to: .zero)
     }
-    
+
     private func skipToNextEpisode() {
         let nextEpisode = episodeVM.getNextEpisode()
         if let nextEpisode = nextEpisode {
             player?.replaceCurrentItem(with: AVPlayerItem(url: nextEpisode.video))
         }
     }
-    
+
     private func skipToPreviousEpisode() {
         let previousEpisode = episodeVM.getPreviousEpisode()
         if let previousEpisode = previousEpisode {
             player?.replaceCurrentItem(with: AVPlayerItem(url: previousEpisode.video))
         }
     }
-    
+
     private func playNextEpisodeAutomatically() {
         NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: .main) { _ in
             if autoPlayNextEpisode, let nextEpisode = episodeVM.getNextEpisode() {
@@ -70,25 +71,25 @@ struct EpisodeView: View {
         }
     }
 
-    
+
     private func bookmark() {
         // update bookmarks
     }
-    
-    private func share() {
-        showShareSheet = true
-        onShareCompletion = { completed in
-            if completed {
-                // The user shared the URL
-                print("URL shared")
-                // Add your custom logic for sharing completion here
-            } else {
-                // The user canceled the sharing process
-                print("URL sharing canceled")
-                // Add your custom logic for sharing cancellation here
-            }
-        }
-    }
+
+//    private func share() {
+//        showShareSheet = true
+//        onShareCompletion = { completed in
+//            if completed {
+//                // The user shared the URL
+//                print("URL shared")
+//                // Add your custom logic for sharing completion here
+//            } else {
+//                // The user canceled the sharing process
+//                print("URL sharing canceled")
+//                // Add your custom logic for sharing cancellation here
+//            }
+//        }
+//    }
 
     
     var body: some View {
@@ -113,7 +114,7 @@ struct EpisodeView: View {
                         }
                     
                     if showRating {
-                        RatingView(avgRating: $episodeVM.episode.avgRating, userRating: $userRating)
+                        RatingView(avgRating: $episodeVM.episode.avgRating, viewRatingVM: viewRatingVM)
                             .opacity(showRating ? 1 : 0)
                             .animation(.easeInOut(duration: 0.4), value: showRating)
                     }
@@ -123,36 +124,36 @@ struct EpisodeView: View {
                             .padding()
 
                         Button(action: rewindToBeginning) {
-                            Image(systemName: "gobackward")
+                            Image(systemName: "backward.end.fill")
                         }
-                        
+
                         Button(action: skipToPreviousEpisode) {
-                            Image(systemName: "skip.backward")
+                            Image(systemName: "backward.end.alt.fill")
                         }
                         .disabled(episodeVM.hasPreviousEpisode() == false)
-                        
+
                         Button(action: skipToNextEpisode) {
-                            Image(systemName: "skip.forward")
+                            Image(systemName: "forward.end.alt.fill")
                         }
                         .disabled(episodeVM.hasNextEpisode() == false)
-                        
+
                         Button(action: bookmark) {
                             Image(systemName: "bookmark")
                         }
-                        
-                        Button(action: share) {
-                            Image(systemName: "square.and.arrow.up")
-                        }
+
+//                        Button(action: share) {
+//                            Image(systemName: "square.and.arrow.up")
+//                        }
                     }
                     .padding()
                     .foregroundColor(.blue)
-                    
+
                     Divider()
                     ScrollView {
                         Text(episodeVM.episode.synopsis)
                     }
                     .padding(.bottom)
-                    
+
                     Spacer()
                     
                     NavigationLink("Update") {
@@ -161,8 +162,10 @@ struct EpisodeView: View {
                 }
             }
         }
-        .background(ShareSheet(items: [episode.video], isPresented: $showShareSheet, onShareCompletion: onShareCompletion))
+//        .background(ShareSheet(items: [episode.video.absoluteString], isPresented: $showShareSheet, onShareCompletion: onShareCompletion))
+
         .onAppear{
+            print(".onAppear \(episode.video)")
             episodeVM.episode = episode
             player = AVPlayer(url: episodeVM.episode.video)
             if player != nil {
@@ -175,11 +178,14 @@ struct EpisodeView: View {
         }
         .task {
             await userVM.currentUserData()
-            viewRatingsVM.viewRating.episodeId = episodeVM.episode.id
-            viewRatingsVM.viewRating.userId = userVM.user.id
-            await viewRatingsVM.fetchViewRating()
+            viewRatingVM.viewRating.episodeId = episodeVM.episode.id
+            viewRatingVM.viewRating.userId = userVM.user.id
+            print(".task \(viewRatingVM.viewRating.userId)")
+            print(".task \(viewRatingVM.viewRating.episodeId)")
+            await viewRatingVM.fetchViewRating()
         }
         .onDisappear {
+            print("onDisappear \(episode.title)")
             if let observer = timeObserver {
                 player!.removeTimeObserver(observer)
             }
@@ -187,54 +193,61 @@ struct EpisodeView: View {
     }
 }
 
-struct ShareSheet: UIViewControllerRepresentable {
-    var items: [Any]
-    @Binding var isPresented: Bool
-    var onShareCompletion: (Bool) -> Void
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
-        // No update needed
-    }
-    
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        controller.completionWithItemsHandler = { _, completed, _, _ in
-            onShareCompletion(completed)
-            isPresented = false
-        }
-        return controller
-    }
-}
-
+//struct ShareSheet: UIViewControllerRepresentable {
+//    var items: [Any]
+//    @Binding var isPresented: Bool
+//    var onShareCompletion: (Bool) -> Void
+//
+//    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+//        // No update needed
+//    }
+//
+//    func makeUIViewController(context: Context) -> UIActivityViewController {
+//        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+//        controller.completionWithItemsHandler = { _, completed, _, _ in
+//            onShareCompletion(completed)
+//            isPresented = false
+//        }
+//        return controller
+//    }
+//}
+//
 struct RatingView: View {
-    @Binding var avgRating: Int
-    @Binding var userRating: Int?
+    @Binding var avgRating: Double
+    @ObservedObject var viewRatingVM: ViewRatingVM
 
     var body: some View {
         VStack {
             Text("Average Rating")
-            ratingStars(rating: avgRating, isInteractive: false)
-            
+            ratingStars(rating: avgRating, isInteractive: false, onTap: nil)
+
             Text("Your Rating")
-            ratingStars(rating: userRating ?? 0, isInteractive: true)
+            ratingStars(rating: Double(viewRatingVM.viewRating.rating), isInteractive: true) { selectedRating in
+                viewRatingVM.viewRating.rating = selectedRating
+                Task {
+                    await viewRatingVM.saveUserRating()
+                }
+            }
         }
     }
-    
-    private func ratingStars(rating: Int, isInteractive: Bool) -> some View {
+
+    private func ratingStars(rating: Double, isInteractive: Bool, onTap: ((Int) -> Void)?) -> some View {
         HStack {
             ForEach(1...5, id: \.self) { index in
+                let doubleIndex = Double(index)
                 Image(systemName: "star.fill")
-                    .foregroundColor(index <= rating ? .yellow : .gray)
-                    .scaleEffect(index == rating ? 1.2 : 1.0)
+                    .foregroundColor(doubleIndex <= rating ? .yellow : .gray)
+                    .scaleEffect(doubleIndex == rating ? 1.2 : 1.0)
                     .animation(.easeInOut(duration: 0.2), value: rating)
                     .onTapGesture {
                         if isInteractive {
-                            userRating = index
+                            onTap?(index)
                         }
                     }
             }
         }
     }
+
 
 }
 

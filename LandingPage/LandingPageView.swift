@@ -97,8 +97,7 @@ struct SeriesRow: View {
     var body: some View {
         HStack {
             // Series image
-            Image("placeholder")
-                .resizable()
+            AsyncImage(url: series.poster)
                 .scaledToFit()
                 .frame(width: 80, height: 120)
                 .cornerRadius(4)

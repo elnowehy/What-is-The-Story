@@ -56,7 +56,7 @@ class ViewRatingManager: ObservableObject {
         setRef()
         await populateData()
         do {
-            try await ref!.updateData(self.data)
+            try await ref!.setData(self.data)
         } catch {
             print(error.localizedDescription)
         }

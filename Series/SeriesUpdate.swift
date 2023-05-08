@@ -19,10 +19,10 @@ struct SeriesUpdate: View {
     @StateObject var categoryVM = CategoryVM()
     @State private var posterPicker: PhotosPickerItem?
     @State private var trailerPicker: PhotosPickerItem?
-    @State private var createEpisode = false
-    @StateObject var episodeVM = EpisodeVM()
+    // @State private var createEpisode = false
     @Environment(\.dismiss) private var dismiss
     @State private var selectedCategories: Set<String>
+    @StateObject var episodeVM = EpisodeVM()
 
     init(seriesVM: SeriesVM) {
         self.seriesVM = seriesVM
@@ -52,13 +52,6 @@ struct SeriesUpdate: View {
             Divider()
                 .padding(.horizontal)
 
-            List(episodeVM.episodeList) { episode in
-                NavigationLink(destination: EpisodeView(episodeVM: episodeVM, episode: episode)) {
-                    Text(episode.title)
-                }
-                .isDetailLink(false)
-            }
-
             PhotosPicker(selection: $posterPicker, matching: .images) {
                 Label("Select a Poster", systemImage: "photo")
                     .font(.headline)
@@ -82,13 +75,6 @@ struct SeriesUpdate: View {
                 Button("Save") {
                     SaveSeries()
                     dismiss()
-                }
-                .font(.headline)
-                .padding(.vertical)
-
-                Spacer()
-                NavigationLink("Create Episode") {
-                    EpisodeUpdate(episodeVM: episodeVM)
                 }
                 .font(.headline)
                 .padding(.vertical)

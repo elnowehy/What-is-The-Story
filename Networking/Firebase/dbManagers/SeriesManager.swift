@@ -31,7 +31,7 @@ class SeriesManager: ObservableObject {
         self.storage = Storage.storage()
         self.data = [:]
     }
-        
+    
     func setRef() {
         if series.id.isEmpty {
             // create a referece to populate Profile.seriesIds during creation
@@ -45,7 +45,7 @@ class SeriesManager: ObservableObject {
         self.posterRef = self.storage.reference().child("posters").child("\(series.id).jpeg")
         self.trailerRef = self.storage.reference().child("trailers").child("\(series.id).mp4")
     }
-
+    
     @MainActor
     func populateData() async {
         self.data = [
@@ -54,6 +54,15 @@ class SeriesManager: ObservableObject {
             "title": self.series.title,
             "categories": Array(self.series.categories),
             "synopsis": self.series.synopsis,
+            "initialReleaseDate": Date(),
+            "latestReleseDate": Date(), //should be updated by Episodes when added
+            "totalRatings": self.series.totalRatings,
+            "numberOfRatings": self.series.numberOfRatings,
+            "totalViews": self.series.totalViews,
+            "avgRating": self.series.averageRating,
+            "trendingScore": self.series.trendingScore, 
+            "populatScore": self.series.popularScore,
+            "newScore": self.series.newScore
         ]
         if updatePoster {
             self.data["poster"] = await storeImage(ref: posterRef!, uiImage: posterImage, quality: series.imgQlty).absoluteString
@@ -71,6 +80,11 @@ class SeriesManager: ObservableObject {
         series.title = self.data["title"] as? String ?? ""
         series.categories = Set(self.data["categories"] as? [String] ?? [])
         series.synopsis = self.data["synopsis"] as? String ?? ""
+        series.initialReleaseDate = self.data["initialReleaseDate"] as? Date ?? Date()
+        series.latestReleaseDate = self.data["latestReleseDate"] as? Date ?? Date()
+        series.totalRatings = self.data["totalRatings"] as? Int ?? 0
+        series.totalViews = self.data["totalViews"] as? Int ?? 0
+        series.numberOfRatings = self.data["numberOfRatings"] as? Int ?? 0
         series.poster = URL(string: self.data["poster"] as? String ?? "") ?? URL(filePath: "")
         series.trailer = URL(string: self.data["trailer"] as? String ?? "") ?? URL(filePath: "")
         series.episodes = self.data["episodes"] as? [String] ?? []
@@ -142,7 +156,7 @@ class SeriesManager: ObservableObject {
     }
     
     @MainActor
-    func fetchAllSeries(for listType: LandingPageVM.SeriesListType, category: Category? = nil, page: Int, pageSize: Int) async throws -> [Series] {
+    func fetchAllSeries(vm: LandingPageVM, listType: LandingPageVM.SeriesListType, category: Category? = nil, page: Int, pageSize: Int) async throws -> [Series] {
         var fetchedSeries: [Series] = []
         var query: Query
         
@@ -162,7 +176,10 @@ class SeriesManager: ObservableObject {
         }
         
         // Add pagination
-        query = query.start(at: [page * pageSize]).limit(to: pageSize)
+        if let lastDocument = vm.lastFetchedDocuments[listType] {
+            query = query.start(afterDocument: lastDocument)
+        }
+        query = query.limit(to: pageSize)
         
         let querySnapshot = try await query.getDocuments()
         
@@ -183,5 +200,6 @@ class SeriesManager: ObservableObject {
         
         return fetchedSeries
     }
+
 }
 
