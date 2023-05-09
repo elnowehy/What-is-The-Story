@@ -40,7 +40,6 @@ struct EpisodeView: View {
             viewRatingVM.handleViewCount()
             showRating = true
         }
-        print("\(duration), \(playbackTime), \(playbackPercentage)")
     }
 
     private func rewindToBeginning() {
@@ -113,8 +112,10 @@ struct EpisodeView: View {
                             isFullScreen.toggle()
                         }
                     
+                    AvgRatingView(avgRating: $episodeVM.episode.avgRating)
+                    
                     if showRating {
-                        RatingView(avgRating: $episodeVM.episode.avgRating, viewRatingVM: viewRatingVM)
+                        UserRatingView(viewRatingVM: viewRatingVM)
                             .opacity(showRating ? 1 : 0)
                             .animation(.easeInOut(duration: 0.4), value: showRating)
                     }
@@ -157,7 +158,7 @@ struct EpisodeView: View {
                     Spacer()
                     
                     NavigationLink("Update") {
-                        EpisodeUpdate(episodeVM: episodeVM)
+                        EpisodeUpdate(episodeVM: episodeVM, mode: .update)
                     }
                 }
             }
@@ -212,15 +213,23 @@ struct EpisodeView: View {
 //    }
 //}
 //
-struct RatingView: View {
+
+struct AvgRatingView: View {
     @Binding var avgRating: Double
-    @ObservedObject var viewRatingVM: ViewRatingVM
 
     var body: some View {
         VStack {
             Text("Average Rating")
             ratingStars(rating: avgRating, isInteractive: false, onTap: nil)
+        }
+    }
+}
 
+struct UserRatingView: View {
+    @ObservedObject var viewRatingVM: ViewRatingVM
+
+    var body: some View {
+        VStack {
             Text("Your Rating")
             ratingStars(rating: Double(viewRatingVM.viewRating.rating), isInteractive: true) { selectedRating in
                 viewRatingVM.viewRating.rating = selectedRating
@@ -230,25 +239,6 @@ struct RatingView: View {
             }
         }
     }
-
-    private func ratingStars(rating: Double, isInteractive: Bool, onTap: ((Int) -> Void)?) -> some View {
-        HStack {
-            ForEach(1...5, id: \.self) { index in
-                let doubleIndex = Double(index)
-                Image(systemName: "star.fill")
-                    .foregroundColor(doubleIndex <= rating ? .yellow : .gray)
-                    .scaleEffect(doubleIndex == rating ? 1.2 : 1.0)
-                    .animation(.easeInOut(duration: 0.2), value: rating)
-                    .onTapGesture {
-                        if isInteractive {
-                            onTap?(index)
-                        }
-                    }
-            }
-        }
-    }
-
-
 }
 
 

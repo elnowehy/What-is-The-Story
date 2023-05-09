@@ -53,7 +53,7 @@ class EpisodeManager: ObservableObject {
             "series": self.episode.series,
             "view": self.episode.views,
             "numOfRatings": self.episode.numOfRatings,
-            "totalRating": self.episode.totalRatings,
+            "totalRatings": self.episode.totalRatings,
             "avgRating": self.episode.avgRating,
             "releaseDate": self.episode.releaseDate,
             "featuredScore": self.episode.featuredScore
@@ -76,6 +76,7 @@ class EpisodeManager: ObservableObject {
         episode.views = self.data["views"] as? Int ?? 0
         episode.numOfRatings = self.data["numOfRatings"] as? Int ?? 0
         episode.totalRatings = self.data["totalRatings"] as? Int ?? 0
+        episode.avgRating = self.data["avgRating"] as? Double ?? 0.0
         episode.releaseDate = self.data["releaseDate"] as? Date ?? Date()
         episode.video = URL(string: self.data["video"] as? String ?? "") ?? URL(filePath: "")
     }

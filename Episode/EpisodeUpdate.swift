@@ -9,8 +9,14 @@
 import SwiftUI
 import PhotosUI
 
+enum Mode {
+    case update
+    case add
+}
+
 struct EpisodeUpdate: View {
     @ObservedObject var episodeVM: EpisodeVM
+    var mode: Mode
     @State private var videoPicker: PhotosPickerItem?
     @Environment(\.dismiss) private var dismiss
     
@@ -71,6 +77,14 @@ struct EpisodeUpdate: View {
             Spacer()
         }
         .navigationBarBackButtonHidden()
+        .onAppear{
+            if mode == .add {
+                let seriesId = episodeVM.episode.series
+                episodeVM.episode = Episode()
+                episodeVM.episode.series = seriesId
+            }
+            
+        }
     }
 }
 //

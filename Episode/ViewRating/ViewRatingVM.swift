@@ -42,10 +42,8 @@ class ViewRatingVM: ObservableObject {
 
     private func incrementEpisodeViews() async {
         // Fetch the Episode with the given episodeId from the EpisodeDatabase
-        
         await episodeManager.fetch(id: viewRating.episodeId)
-        
-        // Increment the views count for the fetched Episode
+        // Increment the views count for the Episode
         episodeManager.episode.views += 1
         // Update the Episode in the EpisodeDatabase with the new views count
         await episodeManager.update()
@@ -53,27 +51,30 @@ class ViewRatingVM: ObservableObject {
 
     private func incrementSeriesTotalViews() async {
         // Fetch the Episode with the given episodeId from the EpisodeDatabase
+        await episodeManager.fetch(id: viewRating.episodeId)
         // Fetch the Series related to the fetched Episode from the SeriesDatabase
+        await seriesManager.fetch(id: episodeManager.episode.series)
         // Increment the totalViews count for the fetched Series
+        seriesManager.series.totalViews += 1
         // Update the Series in the SeriesDatabase with the new totalViews count
-
-        // Alternatively, call a function in SeriesVM to handle this logic
+        await seriesManager.update()
     }
 
     func saveUserRating() async {
         // Update user's rating in the ViewsRatings database
         // Implement the logic to interact with your database or API here
-        await viewRatingManager.fetch()
-        if viewRatingManager.viewRating.rating != 0 {
+        // await viewRatingManager.fetch()
+        if viewRating.rating != 0 {
+            viewRatingManager.viewRating.rating = viewRating.rating
             await viewRatingManager.update()
         }
         
         // update episode rating
         await episodeManager.fetch(id: viewRating.episodeId)
         episodeManager.episode.numOfRatings += 1
-        episodeManager.episode.totalRatings += 1
+        episodeManager.episode.totalRatings += viewRating.rating
         
-        episodeManager.episode.avgRating = Double(episodeManager.episode.totalRatings / episodeManager.episode.numOfRatings)
+        episodeManager.episode.avgRating = Double(episodeManager.episode.totalRatings) / Double (episodeManager.episode.numOfRatings)
         await episodeManager.update()
         
         // update series rating
