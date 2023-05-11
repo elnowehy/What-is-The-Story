@@ -11,7 +11,7 @@ struct HomeTabView: View {
     @EnvironmentObject var authManager: AuthManager
     @State private var selection: Tab = .home
     @State private var showSignInSheet = false
-    @ObservedObject var userVM = UserVM()
+    @EnvironmentObject var userVM: UserVM
     
     enum Tab {
         case home

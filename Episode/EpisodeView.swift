@@ -13,19 +13,19 @@ import AVKit
 import SwiftUI
 
 struct EpisodeView: View {
-    @ObservedObject var episodeVM: EpisodeVM
+    @EnvironmentObject var episodeVM: EpisodeVM
+    @EnvironmentObject var seriesVM: SeriesVM
     @State var episode: Episode
-    @EnvironmentObject var viewRatingVM: ViewRatingVM
+    @StateObject var viewRatingVM = ViewRatingVM()
     @State private var isFullScreen = false
     @State private var player: AVPlayer?
     @State private var timeObserver: Any?
     @Environment(\.dismiss) private var dismiss
     @State private var autoPlayNextEpisode = false
     @State private var showShareSheet = false
-//    @State private var onShareCompletion: (Bool) -> Void = { _ in }
     @State private var playbackPercentage: Double = 0.0
     @State private var showRating = false
-//    @State private var userRating: Int? = nil
+    @State private var countViews = true
     @EnvironmentObject var userVM: UserVM
 
 
@@ -37,8 +37,14 @@ struct EpisodeView: View {
         if playbackPercentage >= 0.8 {
             viewRatingVM.viewRating.userId = userVM.user.id
             viewRatingVM.viewRating.episodeId = episode.id
-            viewRatingVM.handleViewCount()
             showRating = true
+            
+            if countViews {
+                episodeVM.incrementViewCount()
+                seriesVM.incrementViewCount()
+                viewRatingVM.add()
+                countViews = false
+            }
         }
     }
 
@@ -112,13 +118,9 @@ struct EpisodeView: View {
                             isFullScreen.toggle()
                         }
                     
-                    AvgRatingView(avgRating: $episodeVM.episode.avgRating)
-                    
-                    if showRating {
-                        UserRatingView(viewRatingVM: viewRatingVM)
-                            .opacity(showRating ? 1 : 0)
-                            .animation(.easeInOut(duration: 0.4), value: showRating)
-                    }
+                    ViewRatingView(episode: $episode, showRating: $showRating)
+                        .environmentObject(viewRatingVM)
+                        
 
                     HStack {
                         Toggle("Auto Play Next Episode", isOn: $autoPlayNextEpisode)
@@ -177,14 +179,14 @@ struct EpisodeView: View {
                 }
             }
         }
-        .task {
-            await userVM.currentUserData()
-            viewRatingVM.viewRating.episodeId = episodeVM.episode.id
-            viewRatingVM.viewRating.userId = userVM.user.id
-            print(".task \(viewRatingVM.viewRating.userId)")
-            print(".task \(viewRatingVM.viewRating.episodeId)")
-            await viewRatingVM.fetchViewRating()
-        }
+//        .task {
+//            await userVM.currentUserData()
+//            viewRatingVM.viewRating.episodeId = episodeVM.episode.id
+//            viewRatingVM.viewRating.userId = userVM.user.id
+//            print(".task \(viewRatingVM.viewRating.userId)")
+//            print(".task \(viewRatingVM.viewRating.episodeId)")
+//            await viewRatingVM.fetchViewRating()
+//        }
         .onDisappear {
             print("onDisappear \(episode.title)")
             if let observer = timeObserver {
@@ -214,31 +216,6 @@ struct EpisodeView: View {
 //}
 //
 
-struct AvgRatingView: View {
-    @Binding var avgRating: Double
 
-    var body: some View {
-        VStack {
-            Text("Average Rating")
-            ratingStars(rating: avgRating, isInteractive: false, onTap: nil)
-        }
-    }
-}
-
-struct UserRatingView: View {
-    @ObservedObject var viewRatingVM: ViewRatingVM
-
-    var body: some View {
-        VStack {
-            Text("Your Rating")
-            ratingStars(rating: Double(viewRatingVM.viewRating.rating), isInteractive: true) { selectedRating in
-                viewRatingVM.viewRating.rating = selectedRating
-                Task {
-                    await viewRatingVM.saveUserRating()
-                }
-            }
-        }
-    }
-}
 
 

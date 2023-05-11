@@ -17,7 +17,6 @@ struct SeriesView: View {
     @ObservedObject var seriesVM: SeriesVM
     @State var series: Series
     @StateObject var episodeVM = EpisodeVM()
-    @StateObject var viewRatingVM = ViewRatingVM()
     @Environment(\.dismiss) private var dismiss
     
 
@@ -59,8 +58,9 @@ struct SeriesView: View {
             }
             
             List(episodeVM.episodeList) { episode in
-                NavigationLink(destination: EpisodeView(episodeVM: episodeVM, episode: episode)
-                    .environmentObject(viewRatingVM)
+                NavigationLink(destination: EpisodeView(episode: episode)
+                    .environmentObject(episodeVM)
+                    .environmentObject(seriesVM)
                 ) {
                     Text(episode.title)
                 }

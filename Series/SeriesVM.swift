@@ -102,4 +102,24 @@ class SeriesVM: ObservableObject{
         
     }
     
+    func incrementViewCount() {
+        Task {
+            series.totalViews += 1
+            await update()
+        }
+    }
+    
+    
+    func addRating(rating: Int) async {
+        series.numberOfRatings += 1
+        series.totalRatings += rating
+        await update()
+    }
+    
+    func updateRating(old: Int, new: Int) async {
+        series.totalRatings -= old
+        series.totalRatings += new
+        await update()
+    }
+    
 }

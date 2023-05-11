@@ -17,6 +17,12 @@ class ViewRatingManager: ObservableObject {
     private var ref: DocumentReference?
     private var data: [String: Any]
     
+    enum FetchResult {
+        case success
+        case notFound
+        case error(Error)
+    }
+    
     
     init() {
         self.db = Firestore.firestore()
@@ -63,17 +69,20 @@ class ViewRatingManager: ObservableObject {
     }
     
     @MainActor
-    func fetch() async {
+    func fetch() async -> FetchResult {
         setRef()
         do {
             let document = try await ref!.getDocument()
-            let data = document.data()
-            if data != nil {
+            if document.exists {
+                let data = document.data()
                 self.data = data!
                 self.populateStruct()
+                return .success
+            } else {
+                return .notFound
             }
         } catch {
-            print(error.localizedDescription)
+            return .error(error)
         }
     }
     
