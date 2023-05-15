@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ViewRating: Codable {
+struct ViewRating: Codable, Hashable {
     var episodeId: String = ""
     var userId: String = ""
     var rating: Int = 0 // 1...5

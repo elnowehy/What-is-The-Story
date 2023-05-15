@@ -30,7 +30,7 @@ struct CreateView: View {
             Divider()
             
             List(seriesVM.seriesList) { series in
-                NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series)) 
+                NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series))
                 {
                     AsyncImage(url: series.poster, content: { image in
                         image

@@ -41,15 +41,15 @@ struct HomeTabView: View {
                 }
                 .tag(Tab.community)
             
-            AccountTabView(userVM: userVM)
+            AccountMenu(userVM: userVM)
                 .tabItem {
                     Label("Account", systemImage: "person")
                 }
                 .tag(Tab.account)
             
-            SignOutView()
+            AboutView()
                 .tabItem {
-                    Label("Sign Out", systemImage: "square.and.arrow.up.fill")
+                    Label("About", systemImage: "info.circle")
                 }
                 .tag(Tab.signout)
         }

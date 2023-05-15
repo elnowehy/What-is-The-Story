@@ -11,8 +11,9 @@ import FirebaseFirestoreSwift
 
 class ViewRatingManager: ObservableObject {
     @Published var viewRating = ViewRating()
-    @Published var ratedEpisodes: [String] = []
+    @Published var selectedEpisodes: [ViewRating] = []
     @Published var usersWhoRated: [String] = []
+    private var lastDocument: DocumentSnapshot?
     private var db: Firestore
     private var ref: DocumentReference?
     private var data: [String: Any]
@@ -45,7 +46,7 @@ class ViewRatingManager: ObservableObject {
             "episodeId": self.viewRating.episodeId,
             "userId": self.viewRating.userId,
             "rating": self.viewRating.rating,
-            "timesamp": Date(),
+            "timestamp": Date(),
         ]
     }
     
@@ -54,7 +55,10 @@ class ViewRatingManager: ObservableObject {
         viewRating.episodeId = self.data["episodeId"] as? String ?? ""
         viewRating.userId = self.data["userId"] as? String ?? ""
         viewRating.rating = self.data["rating"] as? Int ?? 0
-        viewRating.timestamp = self.data["timestamp"] as? Date ?? Date()
+        if let timestamp = self.data["timestamp"] as? Timestamp {
+            viewRating.timestamp = timestamp.dateValue()
+        }
+            
     }
     
     @MainActor
@@ -98,19 +102,29 @@ class ViewRatingManager: ObservableObject {
     }
     
     @MainActor
-    func fetchAllEpisodesRatedByUser() async {
-        ratedEpisodes = []
-        let query = db.collection("ViewRating").whereField("userId", isEqualTo: viewRating.userId)
+    func fetchUserHistory(pageSize: Int) async -> [ViewRating]{
+        selectedEpisodes = []
+        //var query = db.collection("ViewRating").whereField("userId", isEqualTo: viewRating.userId).limit(to: pageSize)
+        var query = db.collection("ViewRating").limit(to: pageSize)
+        if let lastDocument = lastDocument {
+            query = query.start(afterDocument: lastDocument)
+        }
         
         do {
             let documents = try await query.getDocuments()
             for document in documents.documents {
-                let episodeId = document.get("episodeId") as? String ?? ""
-                ratedEpisodes.append(episodeId)
+                self.data = document.data()
+                populateStruct()
+                selectedEpisodes.append(viewRating)
             }
+            
+            lastDocument = documents.documents.last
+            
         } catch {
             print(error.localizedDescription)
         }
+        
+        return selectedEpisodes
     }
     
     @MainActor
@@ -129,9 +143,15 @@ class ViewRatingManager: ObservableObject {
         }
     }
     
-    func remove() {
+    func delete() async {
         setRef()
-        ref!.delete()
+        viewRating.userId = randomString(length: 10)
+        await populateData()
+        do {
+            try await ref!.updateData(self.data)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }
 

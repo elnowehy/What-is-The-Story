@@ -8,12 +8,10 @@
 
 import SwiftUI
 
-struct AccountTabView: View {
+struct AccountMenu: View {
     @StateObject var userVM:UserVM
     @EnvironmentObject var authManager: AuthManager
-    @State private var selection: Tab = .profile
     @StateObject var profileVM = ProfileVM()
-    @Environment(\.dismiss) private var dismiss
     @State var showLogIn = true
     
 
@@ -34,41 +32,42 @@ struct AccountTabView: View {
     }
     
     var content: some View {
-        TabView(selection: $selection) {
-            ProfileView().environmentObject(profileVM)
-                .tabItem {
+        NavigationStack {
+            List {
+                NavigationLink(destination: ProfileView().environmentObject(profileVM)) {
                     Label("Profile", systemImage: "person.crop.circle.fill")
                 }
-                .tag(Tab.profile)
-            
-            CreateView().environmentObject(profileVM)
-                .tabItem {
+                
+                NavigationLink(destination: CreateView().environmentObject(profileVM)) {
                     Label("Create", systemImage: "pencil.and.outline")
                 }
-                .tag(Tab.create)
-            
-            BookmarksView()
-                .tabItem{
+                
+                NavigationLink(destination: BookmarksView()) {
+                    Label("Messages", systemImage: "envelope.badge")
+                }
+                
+                NavigationLink(destination: BookmarksView()) {
                     Label("Bookmarks", systemImage: "bookmark")
                 }
-                .tag(Tab.bookmarks)
-            
-            EarningsView()
-                .tabItem{
+                
+                NavigationLink(destination: UserViewHistoryView()) {
+                    Label("View History", systemImage: "clock")
+                }
+                
+                NavigationLink(destination: EarningsView()) {
                     Label("Earnings", systemImage: "chart.bar.xaxis")
                 }
-                .tag(Tab.earnings)
-            
-            
-            SettingsView()
-                .tabItem {
+                
+                NavigationLink(destination: SettingsView()) {
                     Label("Settings", systemImage: "gearshape")
                 }
-                .tag(Tab.settings)
+                
+                NavigationLink(destination: SignOutView()) {
+                    Label("Sign Out", systemImage: "square.and.arrow.up.fill")
+                }
+                
+            }
         }
-        //  not working, will look into it later
-        // .animation(.linear, value: 1)
-        // .background(Color(red: 0255, green: 0/255, blue: 0/255))
         .onAppear {
             // to get here, the user has to be logged in first, right?
             // consider the full array in the future

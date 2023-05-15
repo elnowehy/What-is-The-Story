@@ -101,7 +101,9 @@ class EpisodeVM: ObservableObject{
     func getNextEpisode() -> Episode? {
         if let currentIndex = episodeList.firstIndex(where: { $0.id == episode.id }) {
             if currentIndex < episodeList.count - 1 {
-                return episodeList[currentIndex + 1]
+                let nextEpisode = episodeList[currentIndex + 1]
+                self.episode = nextEpisode
+                return nextEpisode
             }
         }
         return nil
@@ -111,7 +113,9 @@ class EpisodeVM: ObservableObject{
     func getPreviousEpisode() -> Episode? {
         if let currentIndex = episodeList.firstIndex(where: { $0.id == episode.id }) {
             if currentIndex > 0 {
-                return episodeList[currentIndex - 1]
+                let previousEpisode = episodeList[currentIndex - 1]
+                self.episode = previousEpisode
+                return previousEpisode
             }
         }
         return nil

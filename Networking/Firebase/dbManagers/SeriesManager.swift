@@ -80,8 +80,12 @@ class SeriesManager: ObservableObject {
         series.title = self.data["title"] as? String ?? ""
         series.categories = Set(self.data["categories"] as? [String] ?? [])
         series.synopsis = self.data["synopsis"] as? String ?? ""
-        series.initialReleaseDate = self.data["initialReleaseDate"] as? Date ?? Date()
-        series.latestReleaseDate = self.data["latestReleseDate"] as? Date ?? Date()
+        if let timestamp = self.data["releaseDate"] as? Timestamp {
+            series.initialReleaseDate = timestamp.dateValue()
+        }
+        if let timestamp = self.data["releaseDate"] as? Timestamp {
+            series.latestReleaseDate = timestamp.dateValue()
+        }
         series.totalRatings = self.data["totalRatings"] as? Int ?? 0
         series.totalViews = self.data["totalViews"] as? Int ?? 0
         series.numberOfRatings = self.data["numberOfRatings"] as? Int ?? 0

@@ -53,15 +53,15 @@ struct EpisodeView: View {
     }
 
     private func skipToNextEpisode() {
-        let nextEpisode = episodeVM.getNextEpisode()
-        if let nextEpisode = nextEpisode {
+        if let nextEpisode = episodeVM.getNextEpisode() {
+            episode = nextEpisode
             player?.replaceCurrentItem(with: AVPlayerItem(url: nextEpisode.video))
         }
     }
 
     private func skipToPreviousEpisode() {
-        let previousEpisode = episodeVM.getPreviousEpisode()
-        if let previousEpisode = previousEpisode {
+        if let previousEpisode = episodeVM.getPreviousEpisode() {
+            episode = previousEpisode
             player?.replaceCurrentItem(with: AVPlayerItem(url: previousEpisode.video))
         }
     }

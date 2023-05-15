@@ -77,7 +77,9 @@ class EpisodeManager: ObservableObject {
         episode.numOfRatings = self.data["numOfRatings"] as? Int ?? 0
         episode.totalRatings = self.data["totalRatings"] as? Int ?? 0
         episode.avgRating = self.data["avgRating"] as? Double ?? 0.0
-        episode.releaseDate = self.data["releaseDate"] as? Date ?? Date()
+        if let timestamp = self.data["releaseDate"] as? Timestamp {
+            episode.releaseDate = timestamp.dateValue()
+        }
         episode.video = URL(string: self.data["video"] as? String ?? "") ?? URL(filePath: "")
     }
     

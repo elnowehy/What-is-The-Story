@@ -48,7 +48,7 @@ struct SeriesView: View {
                     
                     Spacer()
                     NavigationLink("Create Episode") {
-                        EpisodeUpdate(episodeVM: episodeVM, mode: .add)
+                        EpisodeUpdate(episodeVM: episodeVM, mode: .add).environmentObject(seriesVM)
                     }
                     .font(.headline)
                     .padding(.vertical)

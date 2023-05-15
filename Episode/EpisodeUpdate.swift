@@ -16,6 +16,7 @@ enum Mode {
 
 struct EpisodeUpdate: View {
     @ObservedObject var episodeVM: EpisodeVM
+    @EnvironmentObject var seriesVM: SeriesVM
     var mode: Mode
     @State private var videoPicker: PhotosPickerItem?
     @Environment(\.dismiss) private var dismiss
@@ -45,7 +46,6 @@ struct EpisodeUpdate: View {
                 Spacer()
                 Button("Save") {
                     Task {
-                        let seriesVM = SeriesVM()
                         seriesVM.series.id = episodeVM.episode.series
                         if videoPicker != nil {
                             episodeVM.updateVideo = true
