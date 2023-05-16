@@ -102,10 +102,11 @@ class ViewRatingManager: ObservableObject {
     }
     
     @MainActor
-    func fetchUserHistory(pageSize: Int) async -> [ViewRating]{
+    func fetchUserHistory(pageSize: Int, userId: String) async -> [ViewRating]{
         selectedEpisodes = []
-        //var query = db.collection("ViewRating").whereField("userId", isEqualTo: viewRating.userId).limit(to: pageSize)
-        var query = db.collection("ViewRating").limit(to: pageSize)
+        // print("**\(userId)**")
+        var query = db.collection("ViewRating").whereField("userId", isEqualTo: userId).limit(to: pageSize)
+        // var query = db.collection("ViewRating").limit(to: pageSize)
         if let lastDocument = lastDocument {
             query = query.start(afterDocument: lastDocument)
         }

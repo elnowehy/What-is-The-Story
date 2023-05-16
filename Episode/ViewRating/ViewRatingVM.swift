@@ -16,6 +16,7 @@ class ViewRatingVM: ObservableObject {
     @Published var usersWhoRated: [String] = []
     @Published var isLoading: Bool = false
     @Published var firstView: Bool = false
+    @Published var userId: String = ""
     @Published var viewHistory: [ViewRating] = []
     public var paginator = Paginator<ViewRating>()
     
@@ -74,10 +75,9 @@ class ViewRatingVM: ObservableObject {
     
     @MainActor
     func fetchUserHistory(pageSize: Int) async {
-        viewRatingManager.viewRating.userId = viewRating.userId
-        
+        // print("VM:**\(self.userId)**")
         await paginator.loadMoreData(fetch: { page, pageSize in
-            await self.viewRatingManager.fetchUserHistory(pageSize: pageSize)
+            await self.viewRatingManager.fetchUserHistory(pageSize: pageSize, userId: self.userId)
         }, appendTo: &self.viewHistory)
         
         // viewHistory = viewRatingManager.selectedEpisodes

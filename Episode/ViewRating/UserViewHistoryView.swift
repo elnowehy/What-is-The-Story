@@ -55,17 +55,20 @@ struct UserViewHistoryView: View {
                         ProgressView() // Show a loading indicator while loading more data
                             .onAppear() {
                                 Task {
+                                    print(".onAppear1 User Id: \(viewRatingVM.userId)")
                                     await viewRatingVM.fetchUserHistory(pageSize: pageSize) // Load more data when the user scrolls to the bottom
                                     let snapshot = viewHistoryList
                                     episodeVM.episodeIds = snapshot.map { $0.episodeId }
                                     await episodeVM.fetch()
                                     print("Episode List: \(episodeVM.episodeIds.count)")
+
                                 }
                             }
                     }
                 }
                 .onAppear {
                     Task {
+                        print(".onAppear2 User Id: \(viewRatingVM.userId)")
                         let snapshot = viewHistoryList
                         episodeVM.episodeIds = snapshot.map { $0.episodeId }
                         await episodeVM.fetch()
@@ -75,10 +78,10 @@ struct UserViewHistoryView: View {
             }
             .navigationTitle("View History")
             .task {
-                await userVM.currentUserData()
-                viewRatingVM.viewRating.userId = userVM.user.id
+                print("userVM: \(userVM.user.id)")
+                viewRatingVM.userId = userVM.user.id
+                print(".task user Id: \(viewRatingVM.userId)")
                 await viewRatingVM.fetchUserHistory(pageSize: pageSize)
-                print("View List: \(viewRatingVM.viewHistory.count)")
             }
         }
     }
@@ -103,6 +106,9 @@ struct UserViewHistoryView: View {
                 viewRatingVM.viewRating = viewRating
                 await viewRatingVM.delete()
             }
+            let snapshot = viewHistoryList
+            episodeVM.episodeIds = snapshot.map { $0.episodeId }
+            await episodeVM.fetch()
         }
     }
 }

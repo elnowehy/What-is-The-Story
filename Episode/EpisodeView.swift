@@ -77,7 +77,7 @@ struct EpisodeView: View {
     }
 
 
-    private func bookmark() {
+    private func bookmarkEpisode() {
         // update bookmarks
     }
 
@@ -140,7 +140,7 @@ struct EpisodeView: View {
                         }
                         .disabled(episodeVM.hasNextEpisode() == false)
 
-                        Button(action: bookmark) {
+                        Button(action: bookmarkEpisode) {
                             Image(systemName: "bookmark")
                         }
 
@@ -179,14 +179,7 @@ struct EpisodeView: View {
                 }
             }
         }
-//        .task {
-//            await userVM.currentUserData()
-//            viewRatingVM.viewRating.episodeId = episodeVM.episode.id
-//            viewRatingVM.viewRating.userId = userVM.user.id
-//            print(".task \(viewRatingVM.viewRating.userId)")
-//            print(".task \(viewRatingVM.viewRating.episodeId)")
-//            await viewRatingVM.fetchViewRating()
-//        }
+
         .onDisappear {
             print("onDisappear \(episode.title)")
             if let observer = timeObserver {
