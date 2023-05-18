@@ -102,11 +102,22 @@ class ViewRatingManager: ObservableObject {
     }
     
     @MainActor
-    func fetchUserHistory(pageSize: Int, userId: String) async -> [ViewRating]{
+    func fetchUserHistory(userId: String, sortOrder: ViewRatingVM.SortOrder, pageSize: Int) async -> [ViewRating]{
         selectedEpisodes = []
         // print("**\(userId)**")
         var query = db.collection("ViewRating").whereField("userId", isEqualTo: userId).limit(to: pageSize)
-        // var query = db.collection("ViewRating").limit(to: pageSize)
+        
+        switch sortOrder {
+        case .timestampAscending:
+            query = query.order(by: "timestamp")
+        case .timestampDescending:
+            query = query.order(by: "timestamp", descending: true)
+        case .ratingAscending:
+            query = query.order(by: "rating")
+        case .ratingDescending:
+            query = query.order(by: "rating", descending: true)
+        }
+        
         if let lastDocument = lastDocument {
             query = query.start(afterDocument: lastDocument)
         }

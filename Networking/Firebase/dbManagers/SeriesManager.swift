@@ -160,7 +160,7 @@ class SeriesManager: ObservableObject {
     }
     
     @MainActor
-    func fetchAllSeries(vm: LandingPageVM, listType: LandingPageVM.SeriesListType, category: Category? = nil, page: Int, pageSize: Int) async throws -> [Series] {
+    func fetchAllSeries(listType: AppSettings.SeriesListType, category: Category? = nil, pageSize: Int) async throws -> [Series] {
         var fetchedSeries: [Series] = []
         var query: Query
         
@@ -179,12 +179,7 @@ class SeriesManager: ObservableObject {
             query = query.whereField("categories", arrayContains: category)
         }
         
-        // Add pagination
-        if let lastDocument = vm.lastFetchedDocuments[listType] {
-            query = query.start(afterDocument: lastDocument)
-        }
         query = query.limit(to: pageSize)
-        
         let querySnapshot = try await query.getDocuments()
         
         await withTaskGroup(of: Series.self) { group in
@@ -193,8 +188,10 @@ class SeriesManager: ObservableObject {
                     let seriesId = document.documentID
                     let seriesManager = SeriesManager()
                     await seriesManager.fetch(id: seriesId)
+                    print("series - fetch: \(seriesId)")
                     return seriesManager.series
                 }
+                print("group - fetchAllSeries: \(listType)")
             }
             
             for await result in group {
@@ -204,6 +201,5 @@ class SeriesManager: ObservableObject {
         
         return fetchedSeries
     }
-
 }
 

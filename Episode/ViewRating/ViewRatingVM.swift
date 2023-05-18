@@ -20,6 +20,14 @@ class ViewRatingVM: ObservableObject {
     @Published var viewHistory: [ViewRating] = []
     public var paginator = Paginator<ViewRating>()
     
+    enum SortOrder {
+        case timestampAscending
+        case timestampDescending
+        case ratingAscending
+        case ratingDescending
+    }
+
+    
     
     func add() {
         // Add an entry to the Views database
@@ -61,12 +69,6 @@ class ViewRatingVM: ObservableObject {
         isLoading = false
     }
 
-//    func fetchAllEpisodesRatedByUser() async {
-//        viewRatingManager.viewRating.userId = viewRating.userId
-//        await viewRatingManager.fetchUserHistory()
-//        ratedEpisodes = viewRatingManager.ratedEpisodes
-//    }
-
     func fetchAllUsersWhoRatedEpisode() async {
         viewRatingManager.viewRating.episodeId = viewRating.episodeId
         await viewRatingManager.fetchAllUsersWhoRatedEpisode()
@@ -74,37 +76,16 @@ class ViewRatingVM: ObservableObject {
     }
     
     @MainActor
-    func fetchUserHistory(pageSize: Int) async {
-        // print("VM:**\(self.userId)**")
+    func fetchUserHistory(pageSize: Int, sortOrder: SortOrder) async {
+ 
         await paginator.loadMoreData(fetch: { page, pageSize in
-            await self.viewRatingManager.fetchUserHistory(pageSize: pageSize, userId: self.userId)
+            await self.viewRatingManager.fetchUserHistory( userId: self.userId, sortOrder: sortOrder, pageSize: pageSize)
         }, appendTo: &self.viewHistory)
-        
-        // viewHistory = viewRatingManager.selectedEpisodes
+
     }
     
     func delete() async {
         await viewRatingManager.delete()
-
-        // Delete the corresponding documents from Firestore
-//        let db = Firestore.firestore()
-//
-//        let sourceDocument = db.collection("sourceCollection").document("sourceDocumentID")
-//        let destinationDocument = db.collection("destinationCollection").document("destinationDocumentID")
-//
-//        do {
-//            let documentSnapshot = try await sourceDocument.getDocument()
-//            if let data = documentSnapshot.data() {
-//                do {
-//                    try await destinationDocument.setData(data)
-//                } catch {
-//                    print("Error writing document: \(error)")
-//                }
-//            }
-//        } catch {
-//            print("Error reading document: \(error)")
-//        }
-
     }
     
 }

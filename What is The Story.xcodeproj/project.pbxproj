@@ -76,6 +76,7 @@
 		C5E2140D29F05D2D00292118 /* CategoryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E2140C29F05D2D00292118 /* CategoryVM.swift */; };
 		C5E2140F29F05E5400292118 /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E2140E29F05E5400292118 /* CategoryManager.swift */; };
 		C5E2141129F0649A00292118 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E2141029F0649A00292118 /* CategoryView.swift */; };
+		C5E290422A143B21005C3A07 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E290412A143B21005C3A07 /* AppSettings.swift */; };
 		C5E9FBBF2975CF6A00121C45 /* Encryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBBE2975CF6A00121C45 /* Encryption.swift */; };
 		C5E9FBC129770FC300121C45 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBC029770FC300121C45 /* SignInView.swift */; };
 		C5E9FBCF2979EA8900121C45 /* Idea.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBCE2979EA8900121C45 /* Idea.swift */; };
@@ -160,6 +161,7 @@
 		C5E2140C29F05D2D00292118 /* CategoryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryVM.swift; sourceTree = "<group>"; };
 		C5E2140E29F05E5400292118 /* CategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManager.swift; sourceTree = "<group>"; };
 		C5E2141029F0649A00292118 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
+		C5E290412A143B21005C3A07 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		C5E9FBBE2975CF6A00121C45 /* Encryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encryption.swift; sourceTree = "<group>"; };
 		C5E9FBC029770FC300121C45 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		C5E9FBCE2979EA8900121C45 /* Idea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Idea.swift; sourceTree = "<group>"; };
@@ -466,6 +468,7 @@
 			isa = PBXGroup;
 			children = (
 				C5E2140929F055D900292118 /* Category */,
+				C5E290412A143B21005C3A07 /* AppSettings.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -695,6 +698,7 @@
 				C576222C29F707D5005C41D7 /* VideoPlayerView.swift in Sources */,
 				C583A4F529D87DEC00CE9319 /* PhotoSelector.swift in Sources */,
 				C5E2140D29F05D2D00292118 /* CategoryVM.swift in Sources */,
+				C5E290422A143B21005C3A07 /* AppSettings.swift in Sources */,
 				C59E4E5B29D2519F00D9577E /* SeriesLIstView.swift in Sources */,
 				C59404E7296DD2E2003F0FB7 /* SignUpView.swift in Sources */,
 				C5660F2C29929B530079CBF1 /* Profile.swift in Sources */,

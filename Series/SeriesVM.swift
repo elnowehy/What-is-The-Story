@@ -15,16 +15,9 @@ class SeriesVM: ObservableObject{
     public var updatePoster = false
     public var trailerData = Data()
     public var updateTrailer = false
-    private var seriesManager: SeriesManager
+    private var seriesManager = SeriesManager()
 
-    init() {
-        seriesManager = SeriesManager()
-    }
 
-    // fetch data from Firebase and populate "profile"
-    // input: Profile struct with the profile id populated
-    // output: profile struc is populated
-    // return: Void
     @MainActor
     func fetch() async {
         self.seriesList = []
@@ -42,10 +35,17 @@ class SeriesVM: ObservableObject{
         }
     }
     
-    // create Series document in Firebase and
-    // input: empty Series struct
-    // output: Series struct is populated
-    // return: series Id
+    @MainActor
+    func fetchSeriesList(listType: AppSettings.SeriesListType) async -> [Series] {
+        seriesList = []
+        do {
+            seriesList = try await self.seriesManager.fetchAllSeries(listType: listType, pageSize: AppSettings.pageSize)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return seriesList
+    }
+ 
     @MainActor
     func create() async -> String {
         seriesManager.posterImage = posterImage

@@ -1,11 +1,10 @@
-//
-//  UserViewHistory.swift
-//  What is The Story
-//
-//  Created by Amr El-Nowehy on 2023-05-12.
-//
-
 import SwiftUI
+
+struct ViewHistoryItem: Identifiable {
+    let id = UUID()
+    let viewRating: ViewRating
+    let episode: Episode
+}
 
 struct UserViewHistoryView: View {
     @StateObject var viewRatingVM = ViewRatingVM()
@@ -13,11 +12,9 @@ struct UserViewHistoryView: View {
     @EnvironmentObject var userVM: UserVM
     @State private var sortOption = 0
     @State private var ascendingOrder = false
-    var viewHistoryList: [ViewRating] {
-        return sortedViewRatings()
-    }
+    @State private var viewHistoryItems: [ViewHistoryItem] = []
     
-    let pageSize = 3
+    let pageSize = AppSettings.pageSize
     
     let sortOptions = ["Timestamp", "Rating"]
 
@@ -31,48 +28,31 @@ struct UserViewHistoryView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
+                .onChange(of: sortOption) { _ in
+                    fetchAndSortViewHistory()
+                }
                 
                 Toggle(isOn: $ascendingOrder) {
                     Text("Ascending Order")
                 }
                 .padding()
+                .onChange(of: ascendingOrder) { _ in
+                    fetchAndSortViewHistory()
+                }
 
                 List {
-                    ForEach(viewHistoryList.indices, id: \.self) { index in
+                    ForEach(viewHistoryItems.indices, id: \.self) { index in
                         VStack(alignment: .leading) {
-                            if index < episodeVM.episodeList.count {
-                                Text("Episode Title: \(episodeVM.episodeList[index].title)")
-                            } else {
-                                Text("Loading Episode...")
-                            }
-                            Text("Rating: \(viewHistoryList[index].rating)")
-                            Text("Timestamp: \(viewHistoryList[index].timestamp)")
+                            Text("Episode Title: \(viewHistoryItems[index].episode.title)")
+                            Text("Rating: \(viewHistoryItems[index].viewRating.rating)")
+                            Text("Timestamp: \(viewHistoryItems[index].viewRating.timestamp)")
                         }
                     }
                     .onDelete(perform: delete)
 
                     if viewRatingVM.paginator.hasMoreData && !viewRatingVM.paginator.isLoading {
                         ProgressView() // Show a loading indicator while loading more data
-                            .onAppear() {
-                                Task {
-                                    print(".onAppear1 User Id: \(viewRatingVM.userId)")
-                                    await viewRatingVM.fetchUserHistory(pageSize: pageSize) // Load more data when the user scrolls to the bottom
-                                    let snapshot = viewHistoryList
-                                    episodeVM.episodeIds = snapshot.map { $0.episodeId }
-                                    await episodeVM.fetch()
-                                    print("Episode List: \(episodeVM.episodeIds.count)")
-
-                                }
-                            }
-                    }
-                }
-                .onAppear {
-                    Task {
-                        print(".onAppear2 User Id: \(viewRatingVM.userId)")
-                        let snapshot = viewHistoryList
-                        episodeVM.episodeIds = snapshot.map { $0.episodeId }
-                        await episodeVM.fetch()
-                        print("Episode List: \(episodeVM.episodeIds.count)")
+                            .onAppear(perform: fetchAndSortViewHistory)
                     }
                 }
             }
@@ -81,34 +61,46 @@ struct UserViewHistoryView: View {
                 print("userVM: \(userVM.user.id)")
                 viewRatingVM.userId = userVM.user.id
                 print(".task user Id: \(viewRatingVM.userId)")
-                await viewRatingVM.fetchUserHistory(pageSize: pageSize)
+                fetchAndSortViewHistory()
             }
         }
     }
     
-    func sortedViewRatings() -> [ViewRating] {
-        var sortedViewRatings: [ViewRating] = []
-        switch sortOptions[sortOption] {
-        case "Timestamp":
-            sortedViewRatings = viewRatingVM.viewHistory.sorted(by: { ascendingOrder ? $0.timestamp < $1.timestamp : $0.timestamp > $1.timestamp })
-        case "Rating":
-            sortedViewRatings = viewRatingVM.viewHistory.sorted(by: { ascendingOrder ? $0.rating < $1.rating : $0.rating > $1.rating })
-        default:
-            break
+    private func fetchAndSortViewHistory() {
+        Task {
+            let sortOrder = ascendingOrder
+            ? (sortOption == 0 ? ViewRatingVM.SortOrder.timestampAscending : ViewRatingVM.SortOrder.ratingAscending)
+            : (sortOption == 0 ? ViewRatingVM.SortOrder.timestampDescending : ViewRatingVM.SortOrder.ratingDescending)
+            
+            await viewRatingVM.fetchUserHistory(pageSize: pageSize, sortOrder: sortOrder)
+            
+            let snapshot = viewRatingVM.viewHistory.sorted(by: {
+                if sortOption == 0 {
+                    return ascendingOrder ? $0.timestamp < $1.timestamp : $0.timestamp > $1.timestamp
+                } else {
+                    return ascendingOrder ? $0.rating < $1.rating : $0.rating > $1.rating
+                }
+            })
+
+            episodeVM.episodeIds = snapshot.map { $0.episodeId }
+            await episodeVM.fetch()
+            viewHistoryItems = zip(snapshot, episodeVM.episodeList).map(ViewHistoryItem.init)
         }
-        return sortedViewRatings
     }
     
     func delete(at offsets: IndexSet) {
         Task {
-            let viewRatingsToDelete = offsets.map { sortedViewRatings()[$0] }
-            for viewRating in viewRatingsToDelete {
-                viewRatingVM.viewRating = viewRating
+            let itemsToDelete = offsets.map { viewHistoryItems[$0] }
+            for item in itemsToDelete {
+                // Remove from ViewRating
+                viewRatingVM.viewRating = item.viewRating
                 await viewRatingVM.delete()
+                
+                // Remove from viewHistoryItems
+                if let first = offsets.first {
+                    viewHistoryItems.remove(at: first)
+                }
             }
-            let snapshot = viewHistoryList
-            episodeVM.episodeIds = snapshot.map { $0.episodeId }
-            await episodeVM.fetch()
         }
     }
 }
@@ -119,3 +111,4 @@ struct UserViewHistory_Previews: PreviewProvider {
         UserViewHistoryView()
     }
 }
+

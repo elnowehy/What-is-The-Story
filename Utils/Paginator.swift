@@ -12,7 +12,7 @@ class Paginator<T>: ObservableObject {
     @Published private(set) var hasMoreData: Bool = true
 
     private var currentPage: Int = 0
-    private var pageSize: Int = 3
+    private var pageSize: Int = AppSettings.pageSize
 
     func loadMoreData(fetch: @escaping (Int, Int) async throws -> [T], appendTo data: inout [T]) async {
         guard !isLoading, hasMoreData else { return }

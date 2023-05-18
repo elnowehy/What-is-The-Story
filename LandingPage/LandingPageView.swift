@@ -35,25 +35,25 @@ struct LandingPageView: View {
                 Text("Featured Series")
                     .font(.title)
                     .padding(.horizontal)
-                SeriesListView(seriesList: $landingPageVM.featuredSeries, landingPageVM: landingPageVM, listType: .featured)
+                SeriesListView(seriesList: $landingPageVM.featuredSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.featured)
 
                 // Popular series
                 Text("Popular Series")
                     .font(.title)
                     .padding(.horizontal)
-                SeriesListView(seriesList: $landingPageVM.popularSeries, landingPageVM: landingPageVM, listType: .popular)
+                SeriesListView(seriesList: $landingPageVM.popularSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.popular)
 
                 // New series
                 Text("New Series")
                     .font(.title)
                     .padding(.horizontal)
-                SeriesListView(seriesList: $landingPageVM.newSeries, landingPageVM: landingPageVM, listType: .new)
+                SeriesListView(seriesList: $landingPageVM.newSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.new)
 
                 // Trending series
                 Text("Trending Series")
                     .font(.title)
                     .padding(.horizontal)
-                SeriesListView(seriesList: $landingPageVM.trendingSeries, landingPageVM: landingPageVM, listType: .trending)
+                SeriesListView(seriesList: $landingPageVM.trendingSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.trending)
             }
         }
     }
@@ -62,7 +62,7 @@ struct LandingPageView: View {
 struct SeriesListView: View {
     @Binding var seriesList: [Series]
     @ObservedObject var landingPageVM: LandingPageVM
-    let listType: LandingPageVM.SeriesListType
+    let listType: AppSettings.SeriesListType
 
     @State private var lastDisplayedSeries: Series?
 
@@ -76,19 +76,33 @@ struct SeriesListView: View {
             }
         }
         .onChange(of: lastDisplayedSeries) { lastSeries in
-            if lastSeries == seriesList.last && landingPageVM.hasMoreData {
-                Task {
-                    await landingPageVM.loadMoreSeries(for: listType)
-                }
+            var paginator =  landingPageVM.newPaginator
+            switch listType {
+            case .featured:
+                paginator = landingPageVM.featuredPaginator
+            case .new:
+                paginator = landingPageVM.newPaginator
+            case .popular:
+                paginator = landingPageVM.popularPaginator
+            case .trending:
+                paginator = landingPageVM.trendingPaginator
+            }
+
+            if paginator.hasMoreData &&
+                !paginator.isLoading {
+                ProgressView() // Show a loading indicator while loading more data
+                    .onAppear{ fetchSeries(listType: listType)}
             }
         }
         .padding(.horizontal)
     }
+    
+    private func fetchSeries(listType: AppSettings.SeriesListType) {
+        Task {
+            await landingPageVM.seriesVM.fetchSeriesList(listType: listType)
+        }
+    }
 }
-
-
-
-
 
 
 struct SeriesRow: View {
