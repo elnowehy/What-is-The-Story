@@ -165,14 +165,14 @@ class SeriesManager: ObservableObject {
         var query: Query
         
         switch listType {
-        case .featured:
-            query = db.collection("Series").whereField("featured", isEqualTo: true)
+        case .featured: // this will be moved to episodes
+            query = db.collection("Series").whereField("numberOfRatings", isEqualTo: true)
         case .popular:
-            query = db.collection("Series").order(by: "totalRatings", descending: true)
+            query = db.collection("Series").order(by: "populatScore", descending: true)
         case .new:
-            query = db.collection("Series").order(by: "releaseDate", descending: true)
+            query = db.collection("Series").order(by: "newScore", descending: true)
         case .trending:
-            query = db.collection("Series").order(by: "viewsIncrease", descending: true)
+            query = db.collection("Series").order(by: "trendingScore", descending: true)
         }
         
         if let category = category {

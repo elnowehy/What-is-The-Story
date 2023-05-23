@@ -42,11 +42,11 @@ struct AccountMenu: View {
                     Label("Create", systemImage: "pencil.and.outline")
                 }
                 
-                NavigationLink(destination: BookmarksView()) {
+                NavigationLink(destination: BookmarkListView()) {
                     Label("Messages", systemImage: "envelope.badge")
                 }
                 
-                NavigationLink(destination: BookmarksView()) {
+                NavigationLink(destination: BookmarkListView()) {
                     Label("Bookmarks", systemImage: "bookmark")
                 }
                 

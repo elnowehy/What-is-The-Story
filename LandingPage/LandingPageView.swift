@@ -31,19 +31,16 @@ struct LandingPageView: View {
                     .padding(.horizontal)
                 }
 
-                // Featured series
-                Text("Featured Series")
+                Text("Featured Episodes")
                     .font(.title)
                     .padding(.horizontal)
                 SeriesListView(seriesList: $landingPageVM.featuredSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.featured)
 
-                // Popular series
                 Text("Popular Series")
                     .font(.title)
                     .padding(.horizontal)
                 SeriesListView(seriesList: $landingPageVM.popularSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.popular)
 
-                // New series
                 Text("New Series")
                     .font(.title)
                     .padding(.horizontal)
@@ -77,31 +74,31 @@ struct SeriesListView: View {
         }
         .onChange(of: lastDisplayedSeries) { lastSeries in
             var paginator =  landingPageVM.newPaginator
+            var fetchSeries = landingPageVM.fetchNewSeries
             switch listType {
             case .featured:
                 paginator = landingPageVM.featuredPaginator
+                fetchSeries = landingPageVM.fetchFeaturedSeries
             case .new:
                 paginator = landingPageVM.newPaginator
+                fetchSeries = landingPageVM.fetchNewSeries
             case .popular:
                 paginator = landingPageVM.popularPaginator
+                fetchSeries = landingPageVM.fetchPopularSeries
             case .trending:
                 paginator = landingPageVM.trendingPaginator
+                fetchSeries = landingPageVM.fetchTrendingSeries
             }
 
             if paginator.hasMoreData &&
                 !paginator.isLoading {
                 ProgressView() // Show a loading indicator while loading more data
-                    .onAppear{ fetchSeries(listType: listType)}
+                    .task{ await fetchSeries() }
             }
         }
         .padding(.horizontal)
     }
     
-    private func fetchSeries(listType: AppSettings.SeriesListType) {
-        Task {
-            await landingPageVM.seriesVM.fetchSeriesList(listType: listType)
-        }
-    }
 }
 
 

@@ -14,6 +14,7 @@ struct CreateView: View {
     
     var body: some View {
         NavigationStack {
+            Text(profileVM.profile.id)
             if profileVM.profile.seriesIds.isEmpty {
                 VStack {
                     Spacer()
@@ -24,13 +25,13 @@ struct CreateView: View {
             
             Spacer()
             NavigationLink(
-                destination: SeriesUpdate(seriesVM: seriesVM),
+                destination: SeriesUpdate(seriesVM: seriesVM).environmentObject(profileVM),
                 label: { Text("Create Series") }
             )
             Divider()
             
             List(seriesVM.seriesList) { series in
-                NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series))
+                NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series).environmentObject(profileVM))
                 {
                     AsyncImage(url: series.poster, content: { image in
                         image
@@ -47,6 +48,7 @@ struct CreateView: View {
         }
         .task {
             await profileVM.fetch()
+            print(profileVM.profile.id)
             if !profileVM.profile.seriesIds.isEmpty {
                 seriesVM.seriesIds = profileVM.profile.seriesIds
                 await seriesVM.fetch()

@@ -17,6 +17,7 @@ struct EpisodeView: View {
     @EnvironmentObject var seriesVM: SeriesVM
     @State var episode: Episode
     @StateObject var viewRatingVM = ViewRatingVM()
+    @StateObject var bookmarkVM = BookmarkVM()
     @State private var isFullScreen = false
     @State private var player: AVPlayer?
     @State private var timeObserver: Any?
@@ -26,6 +27,7 @@ struct EpisodeView: View {
     @State private var playbackPercentage: Double = 0.0
     @State private var showRating = false
     @State private var countViews = true
+    @State private var isBookmarked = false
     @EnvironmentObject var userVM: UserVM
 
 
@@ -77,8 +79,14 @@ struct EpisodeView: View {
     }
 
 
-    private func bookmarkEpisode() {
-        // update bookmarks
+    private func updateBookmark() {
+        if isBookmarked {
+            bookmarkVM.delete()
+            isBookmarked = false
+        } else {
+            bookmarkVM.add()
+            isBookmarked = true
+        }
     }
 
 //    private func share() {
@@ -140,8 +148,8 @@ struct EpisodeView: View {
                         }
                         .disabled(episodeVM.hasNextEpisode() == false)
 
-                        Button(action: bookmarkEpisode) {
-                            Image(systemName: "bookmark")
+                        Button(action: updateBookmark) {
+                            Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
                         }
 
 //                        Button(action: share) {
@@ -170,6 +178,16 @@ struct EpisodeView: View {
         .onAppear{
             print(".onAppear \(episode.video)")
             episodeVM.episode = episode
+            bookmarkVM.bookmark.contentId = episode.id
+            bookmarkVM.bookmark.userId = userVM.user.id
+            Task {
+                await bookmarkVM.fetch()
+                if bookmarkVM.bookmark.id.isEmpty {
+                    isBookmarked = false
+                } else {
+                    isBookmarked = true
+                }
+            }
             player = AVPlayer(url: episodeVM.episode.video)
             if player != nil {
                 player!.replaceCurrentItem(with: AVPlayerItem(url: episodeVM.episode.video))

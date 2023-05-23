@@ -76,9 +76,12 @@ class LandingPageVM: ObservableObject {
         }, appendTo: &self.trendingSeries)
     }
 
-
     func selectCategory(_ category: Category) {
         selectedCategory = category
+        self.featuredPaginator = Paginator<Series>()
+        self.popularPaginator = Paginator<Series>()
+        self.newPaginator = Paginator<Series>()
+        self.trendingPaginator = Paginator<Series>()
         fetchInitialData()
     }
 }
