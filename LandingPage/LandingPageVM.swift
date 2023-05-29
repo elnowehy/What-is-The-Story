@@ -19,10 +19,7 @@ class LandingPageVM: ObservableObject {
     @Published public var popularPaginator = Paginator<Series>()
     @Published public var newPaginator = Paginator<Series>()
     @Published public var trendingPaginator = Paginator<Series>()
-    // Flags for pagination
-    // @Published private(set) var isLoading: Bool = false
-    // @Published private(set) var hasMoreData: Bool = true
-    //private var currentPage: Int = 0
+
 
     public var seriesVM = SeriesVM()
     private var categoryVM = CategoryManager()

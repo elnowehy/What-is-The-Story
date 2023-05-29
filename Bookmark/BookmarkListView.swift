@@ -29,17 +29,6 @@ struct BookmarkListView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Picker("Sort by", selection: $sortOption) {
-                    ForEach(0..<sortOptions.count) {
-                        Text(self.sortOptions[$0])
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-                .onChange(of: sortOption) { _ in
-                    fetchAndSortBookmarks()
-                }
-                
                 Toggle(isOn: $ascendingOrder) {
                     Text("Ascending Order")
                 }
@@ -52,8 +41,10 @@ struct BookmarkListView: View {
                     ForEach(bookmarkItems.indices, id: \.self) { index in
                         VStack(alignment: .leading) {
                             if let episode = bookmarkItems[index].content as? Episode {
+                                Text("Episode")
                                 Text("Title: \(episode.title)")
                             } else if let series = bookmarkItems[index].content as? Series {
+                                Text("Series")
                                 Text("Title: \(series.title)")
                             }
                             Text("Timestamp: \(bookmarkItems[index].bookmark.timestamp)")
@@ -83,40 +74,45 @@ struct BookmarkListView: View {
             let snapshot = bookmarkVM.bookmarks.sorted(by: {
                 return ascendingOrder ? $0.timestamp < $1.timestamp : $0.timestamp > $1.timestamp
             })
-            
-            var bookmarkItemsTemp: [BookmarkItem] = []
+
             for bookmark in snapshot {
                 switch bookmark.contentType {
                 case .episode:
-                    episodeVM.episode.id = bookmark.contentId
-                    await episodeVM.fetch()
-                    let bookmarkItem = BookmarkItem(bookmark: bookmark, content: episodeVM.episode)
-                    bookmarkItemsTemp.append(bookmarkItem)
+                    episodeVM.episodeIds.append(bookmark.contentId)
                     
                 case .series:
-                    seriesVM.series.id = bookmark.contentId
-                    await seriesVM.fetch()
-                    let bookmarkItem = BookmarkItem(bookmark: bookmark, content: seriesVM.series)
-                    bookmarkItemsTemp.append(bookmarkItem)
+                    seriesVM.seriesIds.append(bookmark.contentId)
                 }
             }
-            bookmarkItems = bookmarkItemsTemp
+            
+            await episodeVM.fetch()
+            await seriesVM.fetch()
+
+            let contentItems: [Any] = snapshot.map { bookmark in
+                switch bookmark.contentType {
+                case .episode:
+                    return episodeVM.episodeList.first(where: { $0.id == bookmark.contentId })
+                case .series:
+                    return seriesVM.seriesList.first(where: { $0.id == bookmark.contentId })
+                }
+            }
+
+            bookmarkItems = zip(snapshot, contentItems).map(BookmarkItem.init)
         }
     }
 
+
     
     func delete(at offsets: IndexSet) {
-        Task {
-            let itemsToDelete = offsets.map { bookmarkItems[$0] }
-            for item in itemsToDelete {
-                // Remove from bookmarkVM
-                bookmarkVM.bookmark = item.bookmark
-                await bookmarkVM.delete()
-                
-                // Remove from bookmarkItems
-                if let first = offsets.first {
-                    bookmarkItems.remove(at: first)
-                }
+        let itemsToDelete = offsets.map { bookmarkItems[$0] }
+        for item in itemsToDelete {
+            // Remove from bookmarkVM
+            bookmarkVM.bookmark = item.bookmark
+            bookmarkVM.delete()
+            
+            // Remove from bookmarkItems
+            if let first = offsets.first {
+                bookmarkItems.remove(at: first)
             }
         }
     }

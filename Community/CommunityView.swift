@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct CommunityView: View {
+    @EnvironmentObject var theme: Theme
+    
     var body: some View {
         Text("Hello, Community!")
+            .modifier(LargeTitleStyle())
     }
 }
 

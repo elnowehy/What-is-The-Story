@@ -21,6 +21,7 @@ class EpisodeManager: ObservableObject {
     private var storage: Storage
     private var videoRef: StorageReference?
     private var data: [String: Any]
+    private var lastDocument: DocumentSnapshot?
     
     
     init() {
@@ -97,6 +98,39 @@ class EpisodeManager: ObservableObject {
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    @MainActor
+    func fetchByQuery(field: String, prefix: String, pageSize: Int) async -> [Episode] {
+        var episodeList = [Episode]()
+        let endValue = prefix + "\u{f8ff}"
+        var query = db.collection("Episode")
+            .whereField(field, isGreaterThan: prefix)
+            .whereField(field, isLessThan: endValue)
+            .limit(to: pageSize)
+        
+        if let lastDocument = lastDocument {
+            query = query.start(afterDocument: lastDocument)
+        }
+        
+        do {
+            let documents = try await query.getDocuments()
+            for document in documents.documents {
+                let data = document.data()
+                if !data.isEmpty {
+                    self.data = data
+                    self.populateStruct()
+                    episodeList.append(self.episode)
+                }
+            }
+            
+            lastDocument = documents.documents.last
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        return episodeList
     }
     
     @MainActor

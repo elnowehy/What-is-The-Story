@@ -24,6 +24,7 @@ class SeriesManager: ObservableObject {
     private var posterRef: StorageReference?
     private var trailerRef: StorageReference?
     private var data: [String: Any]
+    private var lastDocument: DocumentSnapshot?
     
     
     init() {
@@ -60,7 +61,7 @@ class SeriesManager: ObservableObject {
             "numberOfRatings": self.series.numberOfRatings,
             "totalViews": self.series.totalViews,
             "avgRating": self.series.averageRating,
-            "trendingScore": self.series.trendingScore, 
+            "trendingScore": self.series.trendingScore,
             "populatScore": self.series.popularScore,
             "newScore": self.series.newScore
         ]
@@ -108,6 +109,39 @@ class SeriesManager: ObservableObject {
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    @MainActor
+    func fetchByQuery(field: String, prefix: String, pageSize: Int) async -> [Series] {
+        var serieslist = [Series]()
+        let endValue = prefix + "\u{f8ff}"
+        var query = db.collection("Series")
+            .whereField(field, isGreaterThan: prefix)
+            .whereField(field, isLessThan: endValue)
+            .limit(to: pageSize)
+        
+        if let lastDocument = lastDocument {
+            query = query.start(afterDocument: lastDocument)
+        }
+        
+        do {
+            let documents = try await query.getDocuments()
+            for document in documents.documents {
+                let data = document.data()
+                if !data.isEmpty {
+                    self.data = data
+                    self.populateStruct()
+                    serieslist.append(self.series)
+                }
+            }
+            
+            lastDocument = documents.documents.last
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        return serieslist
     }
     
     @MainActor
@@ -192,6 +226,37 @@ class SeriesManager: ObservableObject {
                     return seriesManager.series
                 }
                 print("group - fetchAllSeries: \(listType)")
+            }
+            
+            for await result in group {
+                fetchedSeries.append(result)
+            }
+        }
+        
+        return fetchedSeries
+    }
+    
+    
+    @MainActor
+    func fetchSeriesByCategory(category: String, pageSize: Int) async throws -> [Series] {
+        var fetchedSeries: [Series] = []
+        var query: Query
+        
+        query = db.collection("Series")
+        query = query.whereField("categories", arrayContains: category)
+        query = query.limit(to: pageSize)
+        
+        let querySnapshot = try await query.getDocuments()
+        
+        await withTaskGroup(of: Series.self) { group in
+            for document in querySnapshot.documents {
+                group.addTask {
+                    let seriesId = document.documentID
+                    let seriesManager = SeriesManager()
+                    await seriesManager.fetch(id: seriesId)
+                    print("series - fetch: \(seriesId)")
+                    return seriesManager.series
+                }
             }
             
             for await result in group {

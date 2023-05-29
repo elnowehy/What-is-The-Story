@@ -45,6 +45,26 @@ class SeriesVM: ObservableObject{
         }
         return seriesList
     }
+    
+    @MainActor
+    func fetchSeriesByCategory(category: String) async -> [Series] {
+        seriesList = []
+        do {
+            seriesList = try await self.seriesManager.fetchSeriesByCategory(category: category, pageSize: AppSettings.pageSize)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return seriesList
+    }
+    
+    @MainActor
+    func fetchSeriesByTitle(title: String) async -> [Series] {
+        seriesList = []
+        
+        seriesList = await self.seriesManager.fetchByQuery(field: "title", prefix: title, pageSize: AppSettings.pageSize)
+        
+        return seriesList
+    }
  
     @MainActor
     func create() async -> String {

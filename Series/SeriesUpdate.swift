@@ -85,6 +85,7 @@ struct SeriesUpdate: View {
                 }
                 .font(.headline)
                 .padding(.vertical)
+                .buttonStyle(GoofyButtonStyle())
                 Spacer()
             }
         }

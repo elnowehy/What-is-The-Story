@@ -18,27 +18,6 @@ class EpisodeVM: ObservableObject{
     init() {
         episodeManager = EpisodeManager()
     }
-
-    // fetch data from Firebase and populate "profile"
-    // input: Profile struct with the profile id populated
-    // output: profile struc is populated
-    // return: Void
-//    @MainActor
-//    func fetch() async {
-//        self.episodeList = []
-//        await withTaskGroup(of: Episode.self) { group in
-//            for id in episodeIds {
-//                group.addTask {
-//                    self.episodeManager.episode = Episode()
-//                    await self.episodeManager.fetch(id: id)
-//                    return self.episodeManager.episode
-//                }
-//            }
-//            for await episode in group {
-//                self.episodeList.append(episode)
-//            }
-//        }
-//    }
     
     @MainActor
     func fetch() async {
@@ -58,12 +37,16 @@ class EpisodeVM: ObservableObject{
         }
         self.episodeList = fetchedEpisodes.sorted(by: { $0.index < $1.index }).map { $0.episode }
     }
-
     
-    // create Series document in Firebase and
-    // input: empty Series struct
-    // output: Series struct is populated
-    // return: series Id
+    @MainActor
+    func fetchEpisodeByTitle(title: String) async -> [Episode] {
+        episodeList = []
+        
+        episodeList = await self.episodeManager.fetchByQuery(field: "title", prefix: title, pageSize: AppSettings.pageSize)
+        
+        return episodeList
+    }
+
     @MainActor
     func create() async -> String {
         episodeManager.videoData = videoData
@@ -74,10 +57,6 @@ class EpisodeVM: ObservableObject{
         return await episodeId
     }
     
-    // updates a profile with the profile data
-    // input: a populated Profile struct
-    // output: an updaetd Profile struct
-    // return: Void
     @MainActor
     func update() async {
         episodeManager.videoData = videoData
@@ -86,10 +65,6 @@ class EpisodeVM: ObservableObject{
         await episodeManager.update()
     }
     
-    // remove a profile from Firebase
-    // input: Profile struct with witht he profile id populated
-    // output: no ouput
-    // retrun: Void
     func remove() {
         episodeManager.episode = episode
         episodeManager.remove()

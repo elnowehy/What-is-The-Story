@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeTabView: View {
     @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var theme: Theme
     @State private var selection: Tab = .home
     @State private var showSignInSheet = false
     @EnvironmentObject var userVM: UserVM
@@ -29,7 +30,7 @@ struct HomeTabView: View {
                 }
                 .tag(Tab.home)
             
-            FindView()
+            SearchView()
                 .tabItem {
                     Label("Find", systemImage: "magnifyingglass")
                 }
@@ -47,9 +48,9 @@ struct HomeTabView: View {
                 }
                 .tag(Tab.account)
             
-            AboutView()
+            BookmarkListView()
                 .tabItem {
-                    Label("About", systemImage: "info.circle")
+                    Label("About", systemImage: "bookmark")
                 }
                 .tag(Tab.signout)
         }
@@ -59,6 +60,7 @@ struct HomeTabView: View {
         .onChange(of: selection) { newValue in
             showSignInSheet = selection == .account && !authManager.isLoggedIn
         }
+        .modifier(GoofyStyle())
     }
 }
     

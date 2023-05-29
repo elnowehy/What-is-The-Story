@@ -45,7 +45,7 @@ class BookmarkManager: ObservableObject {
     func populateData() async {
         self.data = [
             "id": self.ref?.documentID as? String ?? "",
-            "contenId": self.bookmark.contentId,
+            "contentId": self.bookmark.contentId,
             "userId": self.bookmark.userId,
             "contenType": self.bookmark.contentType.rawValue,
             "timestamp": Date(),
@@ -55,7 +55,7 @@ class BookmarkManager: ObservableObject {
     
     func populateStruct() {
         bookmark.id = self.data["id"] as? String ?? ""
-        bookmark.contentId = self.data["conentId"] as? String ?? ""
+        bookmark.contentId = self.data["contentId"] as? String ?? ""
         bookmark.userId = self.data["userId"] as? String ?? ""
         if let contentTypeString = self.data["contentType"] as? String {
             bookmark.contentType = ContentType(rawValue: contentTypeString) ?? .episode // Defaulting to .episode if conversion fails
@@ -100,7 +100,7 @@ class BookmarkManager: ObservableObject {
     func fetchUserBookmarks(userId: String, sortOrder: BookmarkVM.SortOrder, pageSize: Int) async -> [Bookmark]{
         bookmarked = []
         // print("**\(userId)**")
-        var query = db.collection("Book").whereField("userId", isEqualTo: userId).limit(to: pageSize)
+        var query = db.collection("Bookmark").whereField("userId", isEqualTo: userId).limit(to: pageSize)
         
         switch sortOrder {
         case .timestampAscending:

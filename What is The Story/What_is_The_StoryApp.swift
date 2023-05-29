@@ -37,6 +37,7 @@ struct What_is_The_StoryApp: App {
     @StateObject var pathRouter = PathRouter()
     @StateObject var authManager = AuthManager()
     @StateObject var userVM = UserVM()
+    @StateObject var themeManager = ThemeManager()
     
     var body: some Scene {
         WindowGroup {
@@ -44,6 +45,7 @@ struct What_is_The_StoryApp: App {
                 .environmentObject(authManager)
                 .environmentObject(pathRouter)
                 .environmentObject(userVM)
+                .environmentObject(themeManager.current)
         }
     }
 }
