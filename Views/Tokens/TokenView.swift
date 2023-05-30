@@ -14,7 +14,6 @@ import SwiftUI
 struct TokenView: View {
     var body: some View {
         Text("Hello, Tokens!")
-            .applyGlobalTheme()
     }
  
 }

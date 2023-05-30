@@ -13,6 +13,7 @@ struct SearchView: View {
     @State var searchBy: SearchVM.SearchAttribute = .all
     @State var selectedCategories = Set<String>()
     @StateObject var categoryVM = CategoryVM()
+    @EnvironmentObject var theme: Theme
 
     var body: some View {
         VStack {
@@ -42,6 +43,7 @@ struct SearchView: View {
 
         }
         .navigationTitle("Search")
+        .modifier(NavigationLinkStyle(theme: theme))
     }
 }
 

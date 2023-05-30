@@ -14,6 +14,7 @@ struct SignInView: View {
     @StateObject var userVM: UserVM
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var theme: Theme
     
     var body: some View {
         NavigationStack {
@@ -63,6 +64,7 @@ struct SignInView: View {
                 .frame(width: 350, height: 400)
                 .foregroundColor(.black)
             }
+            .modifier(NavigationLinkStyle(theme: theme))
         }
     }
 }

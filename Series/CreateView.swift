@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CreateView: View {
     @EnvironmentObject var profileVM: ProfileVM
+    @EnvironmentObject var theme: Theme
     @StateObject var seriesVM = SeriesVM()
     @State var series = Series()
     
@@ -54,6 +55,7 @@ struct CreateView: View {
                 await seriesVM.fetch()
             }
         }
+        .modifier(NavigationLinkStyle(theme: theme))
     }
 }
 

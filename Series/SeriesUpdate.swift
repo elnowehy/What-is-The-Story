@@ -16,6 +16,7 @@ import PhotosUI
 struct SeriesUpdate: View {
     @ObservedObject var seriesVM: SeriesVM
     @EnvironmentObject var profileVM: ProfileVM
+    @EnvironmentObject var theme: Theme
     @StateObject var categoryVM = CategoryVM()
     @State private var posterPicker: PhotosPickerItem?
     @State private var trailerPicker: PhotosPickerItem?
@@ -85,7 +86,7 @@ struct SeriesUpdate: View {
                 }
                 .font(.headline)
                 .padding(.vertical)
-                .buttonStyle(GoofyButtonStyle())
+                .buttonStyle(VideoButtonStyle(theme: theme))
                 Spacer()
             }
         }

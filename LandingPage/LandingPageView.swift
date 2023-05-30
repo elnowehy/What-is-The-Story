@@ -8,6 +8,7 @@ import SwiftUI
 
 struct LandingPageView: View {
     @StateObject private var landingPageVM = LandingPageVM()
+    @EnvironmentObject var theme: Theme
 
     var body: some View {
         ScrollView {
@@ -52,6 +53,7 @@ struct LandingPageView: View {
                     .padding(.horizontal)
                 SeriesListView(seriesList: $landingPageVM.trendingSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.trending)
             }
+            .modifier(NavigationLinkStyle(theme: theme))
         }
     }
 }

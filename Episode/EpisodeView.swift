@@ -17,18 +17,15 @@ struct EpisodeView: View {
     @EnvironmentObject var seriesVM: SeriesVM
     @State var episode: Episode
     @StateObject var viewRatingVM = ViewRatingVM()
-    @StateObject var bookmarkVM = BookmarkVM()
-    @State private var isFullScreen = false
-    @State private var player: AVPlayer?
+    @State var player: AVPlayer?
     @State private var timeObserver: Any?
     @Environment(\.dismiss) private var dismiss
-    @State private var autoPlayNextEpisode = false
     @State private var showShareSheet = false
     @State private var playbackPercentage: Double = 0.0
     @State private var showRating = false
     @State private var countViews = true
-    @State private var isBookmarked = false
     @EnvironmentObject var userVM: UserVM
+    @EnvironmentObject var theme: Theme
 
 
     private func handleViewCount() {
@@ -49,61 +46,6 @@ struct EpisodeView: View {
             }
         }
     }
-
-    private func rewindToBeginning() {
-        player?.seek(to: .zero)
-    }
-
-    private func skipToNextEpisode() {
-        if let nextEpisode = episodeVM.getNextEpisode() {
-            episode = nextEpisode
-            player?.replaceCurrentItem(with: AVPlayerItem(url: nextEpisode.video))
-        }
-    }
-
-    private func skipToPreviousEpisode() {
-        if let previousEpisode = episodeVM.getPreviousEpisode() {
-            episode = previousEpisode
-            player?.replaceCurrentItem(with: AVPlayerItem(url: previousEpisode.video))
-        }
-    }
-
-    private func playNextEpisodeAutomatically() {
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: .main) { _ in
-            if autoPlayNextEpisode, let nextEpisode = episodeVM.getNextEpisode() {
-                episode = nextEpisode
-                player?.replaceCurrentItem(with: AVPlayerItem(url: nextEpisode.video))
-                player?.play()
-            }
-        }
-    }
-
-
-    private func updateBookmark() {
-        if isBookmarked {
-            bookmarkVM.delete()
-            isBookmarked = false
-        } else {
-            bookmarkVM.add()
-            isBookmarked = true
-        }
-    }
-
-//    private func share() {
-//        showShareSheet = true
-//        onShareCompletion = { completed in
-//            if completed {
-//                // The user shared the URL
-//                print("URL shared")
-//                // Add your custom logic for sharing completion here
-//            } else {
-//                // The user canceled the sharing process
-//                print("URL sharing canceled")
-//                // Add your custom logic for sharing cancellation here
-//            }
-//        }
-//    }
-
     
     var body: some View {
         GeometryReader { geo in
@@ -119,45 +61,12 @@ struct EpisodeView: View {
                     }
                     .padding(.bottom)
                     
-                    VideoPlayer(player: player)
-                        .frame(width: geo.size.width, height: isFullScreen ?  geo.size.height : geo.size.height * 9/16)
-                        .clipped()
-                        .onTapGesture {
-                            isFullScreen.toggle()
-                        }
-                    
+                    VideoPlayerView(player: $player)
+        
                     ViewRatingView(episode: $episode, showRating: $showRating)
                         .environmentObject(viewRatingVM)
                         
-
-                    HStack {
-                        Toggle("Auto Play Next Episode", isOn: $autoPlayNextEpisode)
-                            .padding()
-
-                        Button(action: rewindToBeginning) {
-                            Image(systemName: "backward.end.fill")
-                        }
-
-                        Button(action: skipToPreviousEpisode) {
-                            Image(systemName: "backward.end.alt.fill")
-                        }
-                        .disabled(episodeVM.hasPreviousEpisode() == false)
-
-                        Button(action: skipToNextEpisode) {
-                            Image(systemName: "forward.end.alt.fill")
-                        }
-                        .disabled(episodeVM.hasNextEpisode() == false)
-
-                        Button(action: updateBookmark) {
-                            Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
-                        }
-
-//                        Button(action: share) {
-//                            Image(systemName: "square.and.arrow.up")
-//                        }
-                    }
-                    .padding()
-                    .foregroundColor(.blue)
+                    PlayerControlView(episodeVM: episodeVM, player: $player)
 
                     Divider()
                     ScrollView {
@@ -170,6 +79,7 @@ struct EpisodeView: View {
                     NavigationLink("Update") {
                         EpisodeUpdate(episodeVM: episodeVM, mode: .update)
                     }
+                    .modifier(NavigationLinkStyle(theme: theme))
                 }
             }
         }
@@ -178,16 +88,6 @@ struct EpisodeView: View {
         .onAppear{
             print(".onAppear \(episode.video)")
             episodeVM.episode = episode
-            bookmarkVM.bookmark.contentId = episode.id
-            bookmarkVM.bookmark.userId = userVM.user.id
-            Task {
-                await bookmarkVM.fetch()
-                if bookmarkVM.bookmark.id.isEmpty {
-                    isBookmarked = false
-                } else {
-                    isBookmarked = true
-                }
-            }
             player = AVPlayer(url: episodeVM.episode.video)
             if player != nil {
                 player!.replaceCurrentItem(with: AVPlayerItem(url: episodeVM.episode.video))

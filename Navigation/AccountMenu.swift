@@ -11,6 +11,7 @@ import SwiftUI
 struct AccountMenu: View {
     @StateObject var userVM:UserVM
     @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var theme: Theme
     @StateObject var profileVM = ProfileVM()
     @State var showLogIn = true
     
@@ -76,6 +77,7 @@ struct AccountMenu: View {
                 profileVM.profile.id = userVM.user.profileIds[0]
             } 
         }
+        .modifier(NavigationLinkStyle(theme: theme))
     }
 }
 

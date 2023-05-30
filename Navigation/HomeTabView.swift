@@ -60,7 +60,6 @@ struct HomeTabView: View {
         .onChange(of: selection) { newValue in
             showSignInSheet = selection == .account && !authManager.isLoggedIn
         }
-        .modifier(GoofyStyle())
     }
 }
     

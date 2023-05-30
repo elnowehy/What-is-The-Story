@@ -18,6 +18,7 @@ struct SeriesView: View {
     @State var series: Series
     @StateObject var episodeVM = EpisodeVM()
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var theme: Theme
     
 
     var body: some View {
@@ -75,6 +76,7 @@ struct SeriesView: View {
             }
         }
         .onAppear{ seriesVM.series = series}
+        .modifier(NavigationLinkStyle(theme: theme))
     }
 }
 
