@@ -17,3 +17,8 @@ struct AppSettings {
         case trending
     }
 }
+
+enum ContentType: String, CaseIterable {
+    case episode
+    case series
+}

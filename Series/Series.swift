@@ -12,6 +12,7 @@ struct Series: Identifiable, Codable, Equatable {
     var profile: String = ""
     var title: String = ""
     var categories: Set<String> = []
+    var tags: Set<String> = []
     var synopsis: String = ""
     var episodes = [String]()
     var poster = URL(filePath: "")

@@ -13,7 +13,7 @@ import SwiftUI
 import AVFAudio
 import PhotosUI
 
-struct SeriesUpdate: View {
+struct SeriesUpdateView: View {
     @ObservedObject var seriesVM: SeriesVM
     @EnvironmentObject var profileVM: ProfileVM
     @EnvironmentObject var theme: Theme
@@ -24,6 +24,11 @@ struct SeriesUpdate: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedCategories: Set<String>
     @StateObject var episodeVM = EpisodeVM()
+    private var initCategories = [String]()
+    @State var tagText = ""
+    @State var enteredTags = [String]()
+    @StateObject var searchVM = SearchVM()
+    @StateObject var tagVM = TagVM()
 
     init(seriesVM: SeriesVM) {
         self.seriesVM = seriesVM
@@ -49,6 +54,9 @@ struct SeriesUpdate: View {
                 .padding(.bottom)
 
             CategorySelectionView(selectedCategories: $selectedCategories).environmentObject(categoryVM)
+            
+            SearchBarView(searchText: $tagText, enteredTags: $enteredTags)
+                .environmentObject(searchVM)
 
             Divider()
                 .padding(.horizontal)
@@ -97,6 +105,11 @@ struct SeriesUpdate: View {
                 episodeVM.episodeIds = seriesVM.series.episodes
                 await episodeVM.fetch()
             }
+            if !seriesVM.series.tags.isEmpty {
+                for tag in seriesVM.series.tags {
+                    tagVM.tagList.append(Tag(id: tag))
+                }
+            }
         }
     }
     
@@ -126,6 +139,16 @@ struct SeriesUpdate: View {
                 }
             }
             
+            let oldCategories = seriesVM.series.categories
+            let added = selectedCategories.subtracting(oldCategories)
+            let addedCategoryIDs = Array(added)
+            let addedCategories: [Category] = addedCategoryIDs.map { Category(id: $0) }
+
+            let removed = oldCategories.subtracting(selectedCategories)
+            let removedCategoryIDs = Array(removed)
+            let removedCategories: [Category] = removedCategoryIDs.map { Category(id: $0) }
+
+            // now we can update the origial categories
             seriesVM.series.categories = selectedCategories
             
             if seriesVM.series.id.isEmpty {
@@ -135,6 +158,15 @@ struct SeriesUpdate: View {
             } else {
                 await seriesVM.update()
             }
+            
+            if !addedCategories.isEmpty {
+                categoryVM.addContents(categories: addedCategories, id: seriesVM.series.id, type: .series)
+            }
+            
+            if !removedCategories.isEmpty {
+                categoryVM.removeContents(categories: removedCategories, id: seriesVM.series.id, type: .series)
+            }
+            
         }
     }
 }

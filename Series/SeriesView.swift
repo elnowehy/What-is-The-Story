@@ -43,7 +43,7 @@ struct SeriesView: View {
                 HStack {
                     Spacer()
                     NavigationLink("Update") {
-                        SeriesUpdate(seriesVM: seriesVM)
+                        SeriesUpdateView(seriesVM: seriesVM)
                         // SeriesLIstView()
                     }
                     

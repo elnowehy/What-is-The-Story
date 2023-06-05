@@ -13,112 +13,149 @@ struct SearchResult: Hashable {
 
 class SearchVM: ObservableObject {
     @Published var searchResults: [SearchResult] = []  
-    @Published var paginator = Paginator<SearchResult>()
-    private let pageSize = 20
-
-    private var seriesVM = SeriesVM()  // assuming you have a SeriesVM
-    private var episodeVM = EpisodeVM()  // assuming you have an EpisodeVM
-    private var profileVM = ProfileVM()  // using your existing ProfileVM
+    @Published var seriesPaginator = Paginator<SearchResult>()
+    @Published var episodePaginator = Paginator<SearchResult>()
     
-    enum SearchAttribute {
-        case all, seriesTitle, episodeTitle, profile, category
-    }
+    @Published var categories = [Category]()
+    @Published var selectedCategories = [Category]()
+    private var categoryVM = CategoryVM()
+    
+    @Published var isSelected = false
+    @Published var tagSuggestions = [Tag]()
+    private var tagVM = TagVM()
+    
+    private var seriesVM = SeriesVM()
+    private var episodeVM = EpisodeVM()
 
 
-    // Search function
+
+
+//    @MainActor
+//    init() {
+//        Task {
+//            await categoryVM.fetchCategories()
+//            categories = categoryVM.categoryList
+//        }
+//    }
+    
     @MainActor
-    func search(query: String, by attribute: SearchAttribute) {
-        // Clear the previous results
-        resetSearch()
+    func fetchCategories() {
         Task {
-            switch attribute {
-            case .all:
-                await fetchAllByKeyword(keyword: query)
-            case .seriesTitle:
-                await fetchSeriesByTitle(title: query)
-            case .episodeTitle:
-                await fetchEpisodesByTitle(title: query)
-            case .profile:
-                await fetchProfileByBrand(brand: query)
-                
-            case .category:
-                await fetchSeriesByCategory(category: query)
-            }
+            await categoryVM.fetchCategories()
+            categories = categoryVM.categoryList
         }
     }
 
-    // Fetch all (series, episodes, profiles) by keyword
+    // Search function
     @MainActor
-    func fetchAllByKeyword(keyword: String) async {
-        // Here, you may fetch series, episodes, and profiles which title (or other related field) matches the keyword
-        // Fetch data, then add the results to searchResults
-        await fetchProfileByBrand(brand: keyword)
-        await fetchSeriesByTitle(title: keyword)
-        await fetchEpisodesByTitle(title: keyword)
-        // await fetchSeriesByCategory(category: keyword)
+    func search(tags: [String]) {
+        // Clear the previous results
+        resetSearch()
+        Task {
+            do {
+                let categories: [String] = selectedCategories.map { $0.id }
+                
+                var seriesList = Set<String>()
+                for category in categories {
+                    let list = try await categoryVM.fetchSeriesIds(category: category)
+                    seriesList.formUnion(list)
+                }
+                
+                for tag in tags {
+                    let list = try await tagVM.fetchSeriesIds(tag: tag)
+                    seriesList.formUnion(list)
+                    print("\(tag)")
+                    print("\(list.count)")
+                    print("\(seriesList.count)")
+                }
+                
+                var episodeList = Set<String>()
+                for category in categories {
+                    let list = try await categoryVM.fetchEpisodeIds(category: category)
+                    episodeList.formUnion(list)
+                }
+                
+                for tag in tags {
+                    let list = try await tagVM.fetchEpisodeIds(tag: tag)
+                    episodeList.formUnion(list)
+                }
+                
+                seriesResult(seriesList: Array(seriesList))
+                
+                episodeResult(episodeList: Array(episodeList))
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
         
     }
-
-    // Fetch series by title
+    
     @MainActor
-    func fetchSeriesByTitle(title: String) async {
-        await paginator.loadMoreData(fetch: { [self] page, pageSize in
-            let list = await seriesVM.fetchSeriesByTitle(title: title)
-            var results = [SearchResult]()
-            for series in list {
-                let searchResult = SearchResult(title: series.title, description: series.synopsis)
-                results.append(searchResult)
-            }
-            return results
-        }, appendTo: &self.searchResults)
-    }
-
-    // Fetch episodes by title
-    @MainActor
-    func fetchEpisodesByTitle(title: String) async {
-        // Fetch episodes from Firebase where title starts with title
-        await paginator.loadMoreData(fetch: { [self] page, pageSize in
-            let list = await self.episodeVM.fetchEpisodeByTitle(title: title)
-            let results = [SearchResult]()
-            for episode in list {
-                let searchResult = SearchResult(title: episode.title, description: episode.synopsis)
-                searchResults.append(searchResult)
-            }
-            return results
-        }, appendTo: &self.searchResults)
-    }
-
-    // Fetch series by category
-    @MainActor
-    func fetchSeriesByCategory(category: String) async {
-        await paginator.loadMoreData(fetch: { [self] page, pageSize in
-            let list = await seriesVM.fetchSeriesByCategory(category: category)
-            let results = [SearchResult]()
-            for series in list {
-                let searchResult = SearchResult(title: series.title, description: series.synopsis)
-                searchResults.append(searchResult)
-            }
-            return results
-        }, appendTo: &self.searchResults)
+    func seriesResult(seriesList: [String]) {
+        seriesVM.seriesIds = seriesList
+        Task {
+            await seriesPaginator.loadMoreData(fetch: { [self] page, pageSize in
+                await seriesVM.fetch()
+                let list = seriesVM.seriesList
+                var results = [SearchResult]()
+                
+                for series in list {
+                    let searchResult = SearchResult(title: series.title, description: series.synopsis)
+                    results.append(searchResult)
+                }
+                return results
+            }, appendTo: &self.searchResults)
+        }
     }
     
-    // Fetch profiles by brand
     @MainActor
-    func fetchProfileByBrand(brand: String) async {
-        await paginator.loadMoreData(fetch: { [self] page, pageSize in
-            let list = await profileVM.fetchProfileByBrand(brand: brand)
-            var results = [SearchResult]()
-            for (profile, statement) in list {
-                let searchResult = SearchResult(title: profile.brand, description: statement)
-                results.append(searchResult)
-            }
-            return results
-        }, appendTo: &self.searchResults)
+    func episodeResult(episodeList: [String]) {
+        episodeVM.episodeIds = episodeList
+        Task {
+            await episodePaginator.loadMoreData(fetch: { [self] page, pageSize in
+                await episodeVM.fetch()
+                let list = episodeVM.episodeList
+                var results = [SearchResult]()
+                
+                for episode in list {
+                    let searchResult = SearchResult(title: episode.title, description: episode.synopsis)
+                    results.append(searchResult)
+                }
+                return results
+            }, appendTo: &self.searchResults)
+        }
     }
 
     // Reset search
     func resetSearch() {
         searchResults = []
+        seriesPaginator.reset()
+        episodePaginator.reset()
+    }
+    
+    func isSelectedCategory(_ category: Category) -> Bool {
+        selectedCategories.contains(category)
+    }
+
+    
+    func toggleCategorySelection(_ category: Category) {
+        if isSelectedCategory(category) {
+            // If the category is already selected, remove it from the selectedCategories array
+            selectedCategories.removeAll { $0 == category }
+        } else {
+            // If the category is not selected, add it to the selectedCategories array
+            selectedCategories.append(category)
+        }
+    }
+    
+    @MainActor
+    func fetchTagSuggestions(tagPrefix: String) async throws -> [Tag] {
+        do {
+            tagSuggestions = try await tagVM.fetchTagSuggestions(prefix: tagPrefix)
+            return tagSuggestions
+        } catch {
+            throw error
+        }
     }
 }
 

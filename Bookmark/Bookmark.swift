@@ -14,8 +14,3 @@ struct Bookmark: Identifiable {
     var contentId: String = ""
     var timestamp = Date()
 }
-
-enum ContentType: String {
-    case episode
-    case series
-}

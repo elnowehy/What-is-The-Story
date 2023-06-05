@@ -9,69 +9,97 @@ import SwiftUI
 
 struct SearchView: View {
     @StateObject var searchVM = SearchVM()
-    @State var searchText: String = ""
-    @State var searchBy: SearchVM.SearchAttribute = .all
-    @State var selectedCategories = Set<String>()
-    @StateObject var categoryVM = CategoryVM()
-    @EnvironmentObject var theme: Theme
+    @State var tagText = ""
+    @State var enteredTags = [String]()
 
     var body: some View {
         VStack {
-            CategorySelectionView(selectedCategories: $selectedCategories).environmentObject(categoryVM)
+            SearchBarView(searchText: $tagText, enteredTags: $enteredTags)
+                .environmentObject(searchVM)
             
-            Picker("Search by", selection: $searchBy) {
-                Text("All").tag(SearchVM.SearchAttribute.all)
-                Text("Series Title").tag(SearchVM.SearchAttribute.seriesTitle)
-                Text("Episode Title").tag(SearchVM.SearchAttribute.episodeTitle)
-                Text("Profile").tag(SearchVM.SearchAttribute.profile)
+            CategoryGridView().environmentObject(searchVM)
+            
+            Button("Search") {
+                performSearch()
             }
-            .pickerStyle(SegmentedPickerStyle())
-            
-//            TextField("Search", text: $searchText, onCommit: {
-//                if searchBy == .category {
-//                    searchVM.searchByCategories(categories: selectedCategories)
-//                } else {
-//                    searchVM.search(query: searchText, by: searchBy)
-//                }
-//            })
-//            .textFieldStyle(RoundedBorderTextFieldStyle())
-//            .padding()
-            
-            ForEach(searchVM.searchResults, id: \.self) { searchResult in
-                SearchResultRow(searchResult: searchResult)
-            }
+            .buttonStyle(.bordered)
+            .padding()
 
+            SearchResultView(searchResults: searchVM.searchResults)
         }
         .navigationTitle("Search")
-        .modifier(NavigationLinkStyle(theme: theme))
+    }
+
+    func performSearch() {
+        // Send search parameters to `searchVM`
+        searchVM.search(tags: enteredTags)
     }
 }
 
-enum SearchAttribute {
-    case all, seriesTitle, episodeTitle, category, profile, hashtag
+
+
+struct CategoryGridView: View {
+    @EnvironmentObject var searchVM: SearchVM
+    
+    let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
+    
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(searchVM.categories) { category in
+                    CategoryButton(category: category)
+                        .padding(8)
+                        .background(searchVM.isSelectedCategory(category) ? Color.blue.opacity(0.5) : Color.clear)
+                        .cornerRadius(8)
+                        .onTapGesture {
+                            searchVM.toggleCategorySelection(category)
+                        }
+                }
+            }
+            .padding()
+        }
+        .frame(maxHeight: .infinity)
+        .background(Color.white) // Add background color if needed
+        .onAppear {
+            searchVM.fetchCategories()
+        }
+    }
 }
 
 
-struct SearchResultRow: View {
-    var searchResult: SearchResult  // now a SearchResult instead of Any
+struct CategoryButton: View {
+    var category: Category
+    @EnvironmentObject var searchVM: SearchVM
+    
+    var body: some View {
+        Text(category.id)
+            .font(.headline)
+            .foregroundColor(.white)
+            .padding(8)
+            .background(Color.blue)
+            .cornerRadius(8)
+    }
+    
+}
+
+
+struct SearchResultView: View {
+    var searchResults: [SearchResult]
 
     var body: some View {
-        VStack(alignment: .leading) {
+        // Display the search results here using data from `searchResults`
+        // Customize the view based on your desired UI representation for search results
+        List(searchResults, id: \.self) { searchResult in
             Text(searchResult.title)
-                .font(.headline)
-            Text(searchResult.description)  // or whatever property you use to store the description
-                .font(.subheadline)
-            // ...any other properties you want to display...
+            Text(searchResult.description)
         }
     }
 }
 
 
 
-
-
-//struct SearchView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SearchViews()
-//    }
-//}
+struct SearchView_Previews: PreviewProvider {
+    static var previews: some View {
+        SearchView()
+    }
+}

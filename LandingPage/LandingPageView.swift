@@ -20,7 +20,7 @@ struct LandingPageView: View {
                             Button(action: {
                                 landingPageVM.selectCategory(category)
                             }) {
-                                Text(category.name)
+                                Text(category.id)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
                                     .background(landingPageVM.selectedCategory == category ? Color.blue : Color.clear)

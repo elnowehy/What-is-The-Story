@@ -15,16 +15,16 @@ struct CategorySelectionView: View {
         Menu {
             ForEach(categoryVM.categoryList) { category in
                 Button(action: {
-                    if selectedCategories.contains(category.name) {
-                        selectedCategories.remove(category.name)
+                    if selectedCategories.contains(category.id) {
+                        selectedCategories.remove(category.id)
                     } else {
-                        selectedCategories.insert(category.name)
+                        selectedCategories.insert(category.id)
                     }
                 }) {
                     HStack {
-                        Text(category.name)
+                        Text(category.id)
                         Spacer()
-                        if selectedCategories.contains(category.name) {
+                        if selectedCategories.contains(category.id) {
                             Image(systemName: "checkmark")
                                 .foregroundColor(.blue)
                         }
@@ -43,8 +43,8 @@ struct CategorySelectionView: View {
                 RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
             )
         }
-        .onAppear {
-            categoryVM.fetch()
+        .task {
+            await categoryVM.fetchCategories()
             print(categoryVM.categoryList.count)
         }
     }

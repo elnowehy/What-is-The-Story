@@ -26,7 +26,7 @@ struct CreateView: View {
             
             Spacer()
             NavigationLink(
-                destination: SeriesUpdate(seriesVM: seriesVM).environmentObject(profileVM),
+                destination: SeriesUpdateView(seriesVM: seriesVM).environmentObject(profileVM),
                 label: { Text("Create Series") }
             )
             Divider()

@@ -32,5 +32,11 @@ class Paginator<T>: ObservableObject {
         }
 
         isLoading = false
+        print("current page: \(currentPage)")
+    }
+    
+    func reset() {
+        currentPage = 0
+        hasMoreData = true
     }
 }
