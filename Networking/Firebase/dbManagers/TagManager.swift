@@ -11,19 +11,15 @@ import FirebaseFirestoreSwift
 
 class TagManager {
     private let db = Firestore.firestore()
-    private let batch = db.batch()
-    private let ref = db.collection("Tags")
+    private let batch = Firestore.firestore().batch()
+    private let ref = Firestore.firestore().collection("Tags")
     
     func addContentId(tag: Tag, id: String, type: String) async throws {
         let tagRef = ref.document(tag.id)
         let contentRef = tagRef.collection(type)
         
         do {
-            let snapshot = try await tagRef.getDocument()
-            
-            if snapshot.data.isEmpty {
-                try await tagRef.setData([:])
-            }
+            try await tagRef.setData(["id" : tag.id])
             try await contentRef.document(id).setData([:])
         } catch {
             throw error
@@ -94,34 +90,18 @@ class TagManager {
         return tags
     }
     
-    func lastTag(tagId: String) async throws -> Bool {
+    func emptyTag(tagId: String) async throws -> Bool {
         let seriesSnapshot = try await Firestore.firestore().collection("Tags").document(tagId).collection("series").getDocuments()
         let episodesSnapshot = try await Firestore.firestore().collection("Tags").document(tagId).collection("episodes").getDocuments()
 
         return seriesSnapshot.isEmpty && episodesSnapshot.isEmpty
     }
     
-    func deleteTag(tagId: String) -> Void {
-        // Delete the tag document
-        let tagRef = db.collection("Tags").document(tagId)
-        batch.deleteDocument(tagRef)
-
-        // Delete the "series" subcollection and its documents
-        let seriesRef = tagRef.collection("series")
-        batch.deleteDocuments(seriesRef)
-
-        // Delete the "episodes" subcollection and its documents
-        let episodesRef = tagRef.collection("episodes")
-        batch.deleteDocuments(episodesRef)
-
-        // Commit the batched write operation
-        batch.commit { error in
-            if let error = error {
-                print("Error deleting tag and subcollections: \(error.localizedDescription)")
-            } else {
-                print("Tag and subcollections deleted successfully")
-            }
+    func deleteTag(tagId: String) throws -> Void {
+        do {
+            try ref.document(tagId).delete()
+        } catch {
+            throw error
         }
-
     }
 }

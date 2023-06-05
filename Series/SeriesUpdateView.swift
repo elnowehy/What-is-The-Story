@@ -115,60 +115,95 @@ struct SeriesUpdateView: View {
     
     private func SaveSeries() {
         Task {
-            if posterPicker != nil {
-                seriesVM.updatePoster = true
-                do {
-                    if let data = try await posterPicker?.loadTransferable(type: Data.self) {
-                        if let uiImage = UIImage(data: data) {
-                            seriesVM.posterImage = uiImage
-                        }
-                    }
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-            
-            if trailerPicker != nil {
-                seriesVM.updateTrailer = true
-                do {
-                    if let data = try await trailerPicker?.loadTransferable(type: Data.self) {
-                        seriesVM.trailerData = data
-                    }
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-            
-            let oldCategories = seriesVM.series.categories
-            let added = selectedCategories.subtracting(oldCategories)
-            let addedCategoryIDs = Array(added)
-            let addedCategories: [Category] = addedCategoryIDs.map { Category(id: $0) }
-
-            let removed = oldCategories.subtracting(selectedCategories)
-            let removedCategoryIDs = Array(removed)
-            let removedCategories: [Category] = removedCategoryIDs.map { Category(id: $0) }
-
-            // now we can update the origial categories
-            seriesVM.series.categories = selectedCategories
-            
-            if seriesVM.series.id.isEmpty {
-                seriesVM.series.profile = profileVM.profile.id
-                let seriesId = await seriesVM.create()
-                await profileVM.addSeries(seriesId: seriesId)
-            } else {
-                await seriesVM.update()
-            }
-            
-            if !addedCategories.isEmpty {
-                categoryVM.addContents(categories: addedCategories, id: seriesVM.series.id, type: .series)
-            }
-            
-            if !removedCategories.isEmpty {
-                categoryVM.removeContents(categories: removedCategories, id: seriesVM.series.id, type: .series)
-            }
-            
+            await updatePoster()
+            await updateTrailer()
+            await updateCategories()
+            await updateTags()
+            await updateSeries()
         }
     }
+
+    private func updatePoster() async {
+        guard let picker = posterPicker else { return }
+        seriesVM.updatePoster = true
+        
+        do {
+            if let data = try await picker.loadTransferable(type: Data.self) {
+                if let uiImage = UIImage(data: data) {
+                    seriesVM.posterImage = uiImage
+                }
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+
+    private func updateTrailer() async {
+        guard let picker = trailerPicker else { return }
+        seriesVM.updateTrailer = true
+        
+        do {
+            if let data = try await picker.loadTransferable(type: Data.self) {
+                seriesVM.trailerData = data
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+
+    private func updateCategories() {
+        let oldCategories = seriesVM.series.categories
+        let added = selectedCategories.subtracting(oldCategories)
+        let addedCategoryIDs = Array(added)
+        let addedCategories: [Category] = addedCategoryIDs.map { Category(id: $0) }
+
+        let removed = oldCategories.subtracting(selectedCategories)
+        let removedCategoryIDs = Array(removed)
+        let removedCategories: [Category] = removedCategoryIDs.map { Category(id: $0) }
+
+        seriesVM.series.categories = selectedCategories
+
+        if !addedCategories.isEmpty {
+            categoryVM.addContents(categories: addedCategories, id: seriesVM.series.id, type: .series)
+        }
+
+        if !removedCategories.isEmpty {
+            categoryVM.removeContents(categories: removedCategories, id: seriesVM.series.id, type: .series)
+        }
+    }
+    
+    private func updateTags() {
+        let oldTags = seriesVM.series.tags
+        let selectedTags = Set(enteredTags)
+        let added = selectedTags.subtracting(oldTags)
+        let addedTagIDs = Array(added)
+        let addedTags: [Tag] = addedTagIDs.map { Tag(id: $0) }
+
+        let removed = oldTags.subtracting(selectedTags)
+        let removedTagIDs = Array(removed)
+        let removedTags: [Tag] = removedTagIDs.map { Tag(id: $0) }
+
+        seriesVM.series.tags = selectedTags
+
+        if !addedTags.isEmpty {
+            tagVM.addContents(tags: addedTags, id: seriesVM.series.id, type: .series)
+        }
+
+        if !removedTags.isEmpty {
+            tagVM.removeContents(tags: removedTags, id: seriesVM.series.id, type: .series)
+        }
+    }
+    
+    private func updateSeries() async {
+        if seriesVM.series.id.isEmpty {
+            seriesVM.series.profile = profileVM.profile.id
+            let seriesId = await seriesVM.create()
+            await profileVM.addSeries(seriesId: seriesId)
+        } else {
+            await seriesVM.update()
+        }
+    }
+
 }
 
 

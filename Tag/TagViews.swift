@@ -48,7 +48,7 @@ struct SearchBarView: View {
      }
     
     func addTag() {
-        let trimmedText = searchText.trimmingCharacters(in: .whitespaces)
+        let trimmedText = searchText.trimmingCharacters(in: .whitespaces).lowercased()
         if !trimmedText.isEmpty && !enteredTags.contains(trimmedText) {
             enteredTags.append(trimmedText)
         }

@@ -54,6 +54,7 @@ class SeriesManager: ObservableObject {
             "profile": self.series.profile,
             "title": self.series.title,
             "categories": Array(self.series.categories),
+            "tags": Array(self.series.tags),
             "synopsis": self.series.synopsis,
             "initialReleaseDate": Date(),
             "latestReleseDate": Date(), //should be updated by Episodes when added
@@ -80,6 +81,7 @@ class SeriesManager: ObservableObject {
         series.profile = self.data["profile"] as? String ?? ""
         series.title = self.data["title"] as? String ?? ""
         series.categories = Set(self.data["categories"] as? [String] ?? [])
+        series.tags = Set(self.data["tags"] as? [String] ?? [])
         series.synopsis = self.data["synopsis"] as? String ?? ""
         if let timestamp = self.data["releaseDate"] as? Timestamp {
             series.initialReleaseDate = timestamp.dateValue()

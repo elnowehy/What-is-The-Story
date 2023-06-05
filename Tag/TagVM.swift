@@ -87,7 +87,7 @@ class TagVM: ObservableObject{
     @MainActor
     func fetchTagSuggestions(prefix: String) async throws -> [Tag] {
         do {
-            let suggestions = try await tagManager.fetchTagSuggestions(prefix: prefix)
+            let suggestions = try await tagManager.fetchTagSuggestions(prefix: prefix.lowercased())
             return suggestions
         } catch {
             throw error
@@ -96,10 +96,14 @@ class TagVM: ObservableObject{
 
     @MainActor
     func removeTag(tag: Tag, contentId: String, type: ContentType) async throws -> Void {
-        if tagManager.lastTag(tagId: tag.id) {
-            tagManager.deleteTag(tagId: tag.id)
-        } else {
-            tagManager.removeContentId(tag: tag, id: contentId, type: type.rawValue)
+        do {
+            if try await tagManager.emptyTag(tagId: tag.id) {
+                try tagManager.deleteTag(tagId: tag.id)
+            } else {
+                try await tagManager.removeContentId(tag: tag, id: contentId, type: type.rawValue)
+            }
+        } catch {
+            throw error
         }
     }
 }
