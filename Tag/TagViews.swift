@@ -11,6 +11,7 @@ struct SearchBarView: View {
     @Binding var searchText: String
     @Binding var enteredTags: [String]
     @EnvironmentObject var searchVM: SearchVM
+    @State private var showSuggestions = false
 
     var body: some View {
         VStack {
@@ -24,12 +25,20 @@ struct SearchBarView: View {
                         Task {
                             do {
                                 try await searchVM.fetchTagSuggestions(tagPrefix: newValue)
+                                showSuggestions = !searchVM.tagSuggestions.isEmpty
                             } catch {
                                 print(error.localizedDescription)
                             }
                         }
                     }
                 }
+            
+            if showSuggestions {
+                TagSuggestionsView(tagSuggestions: searchVM.tagSuggestions, onSuggestionTap: { tag in
+                    selectTag(tag)
+                    showSuggestions = false
+                })
+            }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 8) {
@@ -41,9 +50,7 @@ struct SearchBarView: View {
                 .frame(maxWidth: .infinity)
             }
             
-            if !searchVM.tagSuggestions.isEmpty {
-                TagSuggestionsView(tagSuggestions: searchVM.tagSuggestions, onSuggestionTap: addTag)
-            }
+
         }
      }
     
@@ -57,6 +64,10 @@ struct SearchBarView: View {
     
     func removeTag(_ tag: String) {
         enteredTags.removeAll { $0 == tag }
+    }
+    
+    func selectTag(_ tag: String) {
+        searchText = tag
     }
 }
 
@@ -87,27 +98,32 @@ struct TagView: View {
 
 struct TagSuggestionsView: View {
     let tagSuggestions: [Tag]
-    let onSuggestionTap: () -> Void
+    let onSuggestionTap: (String) -> Void
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 8) {
+        ScrollView {
+            VStack(spacing: 0) {
                 ForEach(tagSuggestions) { tag in
                     Button(action: {
-                        onSuggestionTap()
+                        onSuggestionTap(tag.id)
                     }) {
                         Text(tag.id)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
                     }
+                    .foregroundColor(.primary)
+                    .background(Color.secondary.opacity(0.1))
                 }
             }
-            .padding(.horizontal)
             .frame(maxWidth: .infinity)
+            .background(Color.secondary.colorInvert())
+            .cornerRadius(8)
+            .padding(.horizontal)
         }
     }
 }
+
+
+
+
 

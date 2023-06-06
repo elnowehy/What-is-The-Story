@@ -108,6 +108,7 @@ struct SeriesUpdateView: View {
             if !seriesVM.series.tags.isEmpty {
                 for tag in seriesVM.series.tags {
                     tagVM.tagList.append(Tag(id: tag))
+                    enteredTags.append(tag)
                 }
             }
         }

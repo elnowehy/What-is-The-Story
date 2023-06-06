@@ -73,7 +73,7 @@ class TagVM: ObservableObject{
                 for tag in tags {
                     group.addTask {
                         do {
-                            try await self.tagManager.removeContentId(tag: tag, id: id, type: type.rawValue)
+                            try await self.removeTag(tag: tag, contentId: id, type: type)
                         } catch {
                             print(error.localizedDescription)
                         }
@@ -97,10 +97,10 @@ class TagVM: ObservableObject{
     @MainActor
     func removeTag(tag: Tag, contentId: String, type: ContentType) async throws -> Void {
         do {
+            try await tagManager.removeContentId(tag: tag, id: contentId, type: type.rawValue)
+            
             if try await tagManager.emptyTag(tagId: tag.id) {
                 try tagManager.deleteTag(tagId: tag.id)
-            } else {
-                try await tagManager.removeContentId(tag: tag, id: contentId, type: type.rawValue)
             }
         } catch {
             throw error
