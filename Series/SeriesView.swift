@@ -19,6 +19,7 @@ struct SeriesView: View {
     @StateObject var episodeVM = EpisodeVM()
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: Theme
+    @EnvironmentObject var profileVM: ProfileVM
     
 
     var body: some View {
@@ -40,6 +41,7 @@ struct SeriesView: View {
                 Divider()
                 Text(seriesVM.series.synopsis)
                 Spacer()
+                
                 HStack {
                     Spacer()
                     NavigationLink("Update") {

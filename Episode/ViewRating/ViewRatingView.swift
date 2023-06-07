@@ -38,7 +38,7 @@ struct AvgRatingView: View {
     var body: some View {
         VStack {
             Text("Average Rating")
-            ratingStars(rating: avgRating, isInteractive: false, onTap: nil)
+            ratingStarsView(rating: avgRating, isInteractive: false, onTap: nil)
         }
     }
 }
@@ -54,7 +54,7 @@ struct UserRatingView: View {
             if viewRatingVM.isLoading {
                 ProgressView()
             } else {
-                ratingStars(rating: Double(viewRatingVM.viewRating.rating), isInteractive: true) { selectedRating in
+                ratingStarsView(rating: Double(viewRatingVM.viewRating.rating), isInteractive: true) { selectedRating in
                     Task {
                         if viewRatingVM.firstView {
                             await episodeVM.addRating(rating: selectedRating)

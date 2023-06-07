@@ -60,18 +60,9 @@ struct HomeTabView: View {
         .onChange(of: selection) { newValue in
             showSignInSheet = selection == .account && !authManager.isLoggedIn
         }
+        .modifier(GenTabViewStyle(theme: theme))
     }
 }
-    
 
-    
-    /*
-     struct HomeTabView_Previews: PreviewProvider {
-     static var previews: some View {
-     @Binding var isShowingAccountTab: Bool
-     HomeTabView(isShowingAccountTab: $isShowingAccountTab)
-     }
-     }
-     */
     
     

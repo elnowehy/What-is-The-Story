@@ -22,7 +22,7 @@ class LandingPageVM: ObservableObject {
 
 
     public var seriesVM = SeriesVM()
-    private var categoryVM = CategoryManager()
+    private var categoryVM = CategoryVM()
 
     private var currentPage: Int = 0
     private var pageSize: Int = AppSettings.pageSize
@@ -33,7 +33,7 @@ class LandingPageVM: ObservableObject {
 
     private func fetchInitialData() {
         Task {
-            fetchCategories()
+            await fetchCategories()
             await fetchFeaturedSeries()
             await fetchPopularSeries()
             await fetchNewSeries()
@@ -41,8 +41,10 @@ class LandingPageVM: ObservableObject {
         }
     }
 
-    func fetchCategories() {
-        // Fetch categories
+    @MainActor
+    func fetchCategories() async {
+        await categoryVM.fetchCategories()
+        categories = await categoryVM.categoryList
     }
     
     @MainActor

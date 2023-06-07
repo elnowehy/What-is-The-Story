@@ -11,8 +11,8 @@ struct LandingPageView: View {
     @EnvironmentObject var theme: Theme
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+        NavigationView {
+            LazyVStack(alignment: .leading, spacing: 16) {
                 // Category selection
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
@@ -21,36 +21,29 @@ struct LandingPageView: View {
                                 landingPageVM.selectCategory(category)
                             }) {
                                 Text(category.id)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(landingPageVM.selectedCategory == category ? Color.blue : Color.clear)
-                                    .foregroundColor(landingPageVM.selectedCategory == category ? Color.white : Color.primary)
-                                    .cornerRadius(4)
                             }
+                            .buttonStyle(CategoryButtonStyle(theme: theme, isSelected: landingPageVM.selectedCategory == category))
                         }
                     }
                     .padding(.horizontal)
                 }
 
                 Text("Featured Episodes")
-                    .font(.title)
-                    .padding(.horizontal)
+                    .modifier(SeriesTitleStyle(theme: theme))
                 SeriesListView(seriesList: $landingPageVM.featuredSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.featured)
+        
 
                 Text("Popular Series")
-                    .font(.title)
-                    .padding(.horizontal)
+                    .modifier(SeriesTitleStyle(theme: theme))
                 SeriesListView(seriesList: $landingPageVM.popularSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.popular)
 
                 Text("New Series")
-                    .font(.title)
-                    .padding(.horizontal)
+                    .modifier(SeriesTitleStyle(theme: theme))
                 SeriesListView(seriesList: $landingPageVM.newSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.new)
 
                 // Trending series
                 Text("Trending Series")
-                    .font(.title)
-                    .padding(.horizontal)
+                    .modifier(SeriesTitleStyle(theme: theme))
                 SeriesListView(seriesList: $landingPageVM.trendingSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.trending)
             }
             .modifier(NavigationLinkStyle(theme: theme))
@@ -62,16 +55,18 @@ struct SeriesListView: View {
     @Binding var seriesList: [Series]
     @ObservedObject var landingPageVM: LandingPageVM
     let listType: AppSettings.SeriesListType
+    @EnvironmentObject var theme: Theme
 
     @State private var lastDisplayedSeries: Series?
 
     var body: some View {
         LazyVStack(spacing: 16) {
             ForEach(seriesList) { series in
-                SeriesRow(series: series)
+                SeriesRow(series: series, seriesVM: landingPageVM.seriesVM)
                     .onAppear {
                         lastDisplayedSeries = series
                     }
+                    .modifier(GenRowStyle(theme: theme))
             }
         }
         .onChange(of: lastDisplayedSeries) { lastSeries in
@@ -98,7 +93,7 @@ struct SeriesListView: View {
                     .task{ await fetchSeries() }
             }
         }
-        .padding(.horizontal)
+        .modifier(GenListViewStyle(theme: theme))
     }
     
 }
@@ -106,25 +101,14 @@ struct SeriesListView: View {
 
 struct SeriesRow: View {
     let series: Series
+    let seriesVM: SeriesVM
+    @EnvironmentObject var theme: Theme
 
     var body: some View {
-        HStack {
-            // Series image
-            AsyncImage(url: series.poster)
-                .scaledToFit()
-                .frame(width: 80, height: 120)
-                .cornerRadius(4)
-            
-            // Series details
-            VStack(alignment: .leading, spacing: 8) {
-                Text(series.title)
-                    .font(.headline)
-                Text(series.synopsis)
-                    .font(.subheadline)
-                    .lineLimit(2)
-                    .foregroundColor(.secondary)
-            }
+        NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series)) {
+            SeriesNavigationLinkView(series: series)
         }
+       // .modifier(GenRowStyle(theme: theme))
     }
 }
 

@@ -4,7 +4,7 @@
 //
 //  Created by Amr El-Nowehy on 2023-01-05.
 //
-// Private user information
+// ** data model **
 
 import Foundation
 
@@ -41,12 +41,5 @@ struct Contribution {
     var commentIds = [String]()
 }
 
-// read: user, write: user
-// Firestore path: /Users/<documentID>/History/<main>
-struct History {
-    var id: String = "main"
-    var likeIds = [String]()
-    var viewIds = [String]()
-    var bookMarkedIds = [String]()
-}
+
 

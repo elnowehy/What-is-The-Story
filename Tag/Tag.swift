@@ -4,8 +4,8 @@
 //
 //  Created by Amr El-Nowehy on 2023-05-30.
 //
+// ** data model **
 
-import Foundation
 import Foundation
 
 struct Tag: Identifiable {

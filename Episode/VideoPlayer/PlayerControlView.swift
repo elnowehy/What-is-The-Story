@@ -90,9 +90,11 @@ struct PlayerControlView: View {
             }
             .disabled(episodeVM.hasNextEpisode() == false)
             
-            Button(action: updateBookmark) {
+            if(!userVM.user.id.isEmpty) {
+                Button(action: updateBookmark) {
                 Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
             }
+        }
             
             //                        Button(action: share) {
             //                            Image(systemName: "square.and.arrow.up")
@@ -100,14 +102,16 @@ struct PlayerControlView: View {
         }
         .buttonStyle(VideoButtonStyle(theme: theme))
         .task {
-            bookmarkVM.bookmark.contentId = episodeVM.episode.id
-            bookmarkVM.bookmark.userId = userVM.user.id
-            Task {
-                await bookmarkVM.fetch()
-                if bookmarkVM.bookmark.id.isEmpty {
-                    isBookmarked = false
-                } else {
-                    isBookmarked = true
+            if(!userVM.user.id.isEmpty) {
+                bookmarkVM.bookmark.userId = userVM.user.id
+                bookmarkVM.bookmark.contentId = episodeVM.episode.id
+                Task {
+                    await bookmarkVM.fetch()
+                    if bookmarkVM.bookmark.id.isEmpty {
+                        isBookmarked = false
+                    } else {
+                        isBookmarked = true
+                    }
                 }
             }
         }

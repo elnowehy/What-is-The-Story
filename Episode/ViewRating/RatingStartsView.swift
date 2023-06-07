@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension View {
-    func ratingStars(rating: Double, isInteractive: Bool, onTap: ((Int) -> Void)?) -> some View {
+    func ratingStarsView(rating: Double, isInteractive: Bool, onTap: ((Int) -> Void)?) -> some View {
         HStack {
             ForEach(1...5, id: \.self) { index in
                 let doubleIndex = Double(index)

@@ -40,19 +40,42 @@ struct Typography{
 }
 
 struct Colors {
-    var primary: Color
-    var secondary: Color
-    var primaryVariant: Color
-    var backGround: Color
-    var surface: Color
-    var onPrimary: Color
-    var onBackGround: Color
-    var onSurface : Color
-    var onError: Color
-    var error: Color
-    var warning: Color
-    var success: Color
-    
+    var mainTitle: Color
+    var secondaryTitle: Color
+    var menuBackground: Color
+    var menuForeground: Color
+    var menuText: Color
+    var buttonBackground: Color
+    var buttonForeground: Color
+    var buttonText: Color
+    var navBarBackground: Color
+    var navBarForeground: Color
+    var navBarText: Color
+    var tableBackground: Color
+    var tableForeground: Color
+    var tableText: Color
+    var playerBackground: Color
+    var playerControlsBackground: Color
+    var playerControlsForeground: Color
+    var playerControlsText: Color
+    var videoBackground: Color
+    var videoForeground: Color
+    var videoText: Color
+    var ratingBackground: Color
+    var ratingForeground: Color
+    var ratingText: Color
+    var toggleBackground: Color
+    var toggleForeground: Color
+    var toggleText: Color
+    var errorBackground: Color
+    var errorForeground: Color
+    var errorText: Color
+    var warningBackground: Color
+    var warningForeground: Color
+    var warningText: Color
+    var successBackground: Color
+    var successForeground: Color
+    var successText: Color
 }
 
 struct Spacing{
@@ -141,41 +164,44 @@ class Theme : ObservableObject{
 }
 
 extension Theme {
-//    static let dark = Theme(
-//
-//        colors: Colors(primary: Color("Primary"), secondary: Color("Secondary"), primaryVariant: Color("PrimaryVariant"), backGround: Color("Background"), surface: Color("Surface"), onPrimary: Color("OnPrimary"), onBackGround: Color("OnBackGround"), onSurface: Color("OnSurface"), onError: Color("OnError"), error: Color("Error"), warning: Color("Warning"), success: Color("Success")),
-//
-//        shapes: Shapes(largeCornerRadius: 16, mediumCornerRadius: 12, smallCornerRadius: 8),
-//
-//        spacing: Spacing(largeSpacing: 24, mediumSpacing: 16, smallSpacing: 8, extraLargeSpacing: 32),
-//
-//        typography: Typography(h1: Font.custom("NunitoSans-Bold", size: 3), h2:Font.custom("NunitoSans-Bold", size: 24), h3: Font.custom("NunitoSans-Bold", size: 18), h4: Font.custom("NunitoSans-Bold", size: 14), h5: Font.custom("NunitoSans-Bold", size: 12), h6: Font.custom("NunitoSans-Bold", size: 10), body1: Font.custom("NunitoSans-Regular", size: 14), body2: Font.custom("NunitoSans-Regular", size: 14))
-//    )
-//
-//    static let light = Theme(
-//
-//        colors: Colors(primary: Color("Primary"), secondary: Color("Secondary"), primaryVariant: Color("PrimaryVariant"), backGround: Color("Background"), surface: Color("Surface"), onPrimary: Color("OnPrimary"), onBackGround: Color("OnBackGround"), onSurface: Color("OnSurface"), onError: Color("OnError"), error: .green, warning: Color("Warning"), success: Color("Success")),
-//
-//        shapes: Shapes(largeCornerRadius: 16, mediumCornerRadius: 12, smallCornerRadius: 8),
-//
-//        spacing: Spacing(largeSpacing: 24, mediumSpacing: 16, smallSpacing: 8, extraLargeSpacing: 32),
-//
-//        typography: Typography(h1: Font.custom("NunitoSans-Bold", size: 32), h2:Font.custom("NunitoSans-Bold", size: 24), h3: Font.custom("NunitoSans-Bold", size: 18), h4: Font.custom("NunitoSans-Bold", size: 14), h5: Font.custom("NunitoSans-Bold", size: 12), h6: Font.custom("NunitoSans-Bold", size: 10), body1: Font.custom("NunitoSans-Regular", size: 14), body2: Font.custom("NunitoSans-Regular", size: 14)))
-    
-    static let goofy = Theme(
+    static let wits = Theme(
         colors: Colors(
-            primary: Color(.red), // vibrant red
-            secondary: Color(.green), // bright yellow
-            primaryVariant: Color(.brown), // deep blue
-            backGround: Color(.cyan), // soft yellow background
-            surface: Color(.cyan), // soft yellow surface
-            onPrimary: Color.white,
-            onBackGround: Color(.darkGray), // deep blue text on yellow
-            onSurface: Color(.orange), // deep blue text on yellow
-            onError: Color.red,
-            error: Color.red,
-            warning: Color.orange,
-            success: Color.green
+            mainTitle: Color(red: 70/255, green: 70/255, blue: 70/255),
+            secondaryTitle: Color(.gray),
+            menuBackground: Color(.gray),
+            menuForeground: Color(.blue),
+            menuText: Color(.white),
+            buttonBackground: Color(.blue),
+            buttonForeground: Color(.gray),
+            buttonText: Color(.white),
+            navBarBackground: Color(.black),
+            navBarForeground: Color(.blue),
+            navBarText: Color(.white),
+            tableBackground: Color(.white),
+            tableForeground: Color(.gray),
+            tableText: Color(.black),
+            playerBackground: Color(.black),
+            playerControlsBackground: Color(.gray),
+            playerControlsForeground: Color(.blue),
+            playerControlsText: Color(.white),
+            videoBackground: Color(.black),
+            videoForeground: Color(.blue),
+            videoText: Color(.white),
+            ratingBackground: Color(.gray),
+            ratingForeground: Color(.yellow),
+            ratingText: Color(.white),
+            toggleBackground: Color(.gray),
+            toggleForeground: Color(.blue),
+            toggleText: Color(.white),
+            errorBackground: Color(.red),
+            errorForeground: Color(.black),
+            errorText: Color(.white),
+            warningBackground: Color(.orange),
+            warningForeground: Color(.black),
+            warningText: Color(.white),
+            successBackground: Color(.green),
+            successForeground: Color(.black),
+            successText: Color(.white)
         ),
         
         shapes: Shapes(
@@ -217,7 +243,7 @@ extension Theme {
 }
 
 class ThemeManager: ObservableObject {
-    @Published var current: Theme = .goofy
+    @Published var current: Theme = .wits
 }
 
 
@@ -232,7 +258,7 @@ struct LargeTitleStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(theme.typography.text)
-            .foregroundColor(defaultTextColor ?? theme.colors.primaryVariant)
+            .foregroundColor(defaultTextColor ?? theme.colors.navBarText)
             .multilineTextAlignment(.leading)
     }
 }
@@ -249,7 +275,7 @@ struct H6Style :  ViewModifier {
     
     func body(content: Content) -> some View {
         
-        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.primaryVariant).multilineTextAlignment(.leading)
+        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.buttonText).multilineTextAlignment(.leading)
     }
 }
 struct H5Style :  ViewModifier {
@@ -262,7 +288,7 @@ struct H5Style :  ViewModifier {
     
     func body(content: Content) -> some View {
         
-        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.primaryVariant).multilineTextAlignment(.leading)
+        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.buttonText).multilineTextAlignment(.leading)
     }
 }
 struct H4Style :  ViewModifier {
@@ -275,7 +301,7 @@ struct H4Style :  ViewModifier {
     
     func body(content: Content) -> some View {
         
-        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.primaryVariant).multilineTextAlignment(.leading)
+        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.buttonText).multilineTextAlignment(.leading)
     }
 }
 struct H3Style :  ViewModifier {
@@ -288,7 +314,7 @@ struct H3Style :  ViewModifier {
     
     func body(content: Content) -> some View {
         
-        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.primaryVariant).multilineTextAlignment(.leading)
+        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.buttonText).multilineTextAlignment(.leading)
     }
 }
 struct H2Style : ViewModifier {
@@ -301,7 +327,7 @@ struct H2Style : ViewModifier {
     
     func body(content: Content) -> some View {
         
-        return content.font(theme.typography.body).foregroundColor(defaultTextColor ?? theme.colors.primaryVariant).multilineTextAlignment(.leading)
+        return content.font(theme.typography.body).foregroundColor(defaultTextColor ?? theme.colors.buttonText).multilineTextAlignment(.leading)
     }
 }
 struct H1Style : ViewModifier {
@@ -314,7 +340,7 @@ struct H1Style : ViewModifier {
     
     func body(content: Content) -> some View {
         
-        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.primaryVariant).multilineTextAlignment(.leading)
+        return content.font(theme.typography.title).foregroundColor(defaultTextColor ?? theme.colors.buttonText).multilineTextAlignment(.leading)
     }
 }
 

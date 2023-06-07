@@ -8,7 +8,8 @@
 import SwiftUI
 
 // read: pubic write: user
-// Firestore path: /Profiles/<documentID>
+// ** data model **
+
 struct Profile {
     var id: String = "" // profileId
     var brand: String = ""

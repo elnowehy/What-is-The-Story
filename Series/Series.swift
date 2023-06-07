@@ -4,6 +4,7 @@
 //
 //  Created by Amr El-Nowehy on 2023-01-06.
 //
+// ** data model **
 
 import Foundation
 

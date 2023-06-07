@@ -123,7 +123,3 @@ struct TagSuggestionsView: View {
     }
 }
 
-
-
-
-
