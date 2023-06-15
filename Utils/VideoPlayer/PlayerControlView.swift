@@ -74,7 +74,7 @@ struct PlayerControlView: View {
         HStack {
             Toggle("Auto Play Next Episode", isOn: $autoPlayNextEpisode)
                 .padding()
-                .toggleStyle(GenToggleStyle(theme: theme))
+                .toggleStyle(ToggleBaseStyle(theme: theme))
             
             Button(action: rewindToBeginning) {
                 Image(systemName: "backward.end.fill")
@@ -100,7 +100,7 @@ struct PlayerControlView: View {
             //                            Image(systemName: "square.and.arrow.up")
             //                        }
         }
-        .buttonStyle(VideoButtonStyle(theme: theme))
+        .buttonStyle(ButtonBaseStyle(theme: theme))
         .task {
             if(!userVM.user.id.isEmpty) {
                 bookmarkVM.bookmark.userId = userVM.user.id

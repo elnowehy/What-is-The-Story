@@ -46,7 +46,7 @@ class ProfileVM: ObservableObject{
         for profile in profiles {
             profileInfoManager.profileId = profile.id
             await profileInfoManager.fetch()
-            results.append((profile, profileInfoManager.info.statement))
+            results.append((profile, profileInfoManager.profile.tagline))
         }
         
         return results

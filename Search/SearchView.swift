@@ -11,75 +11,59 @@ struct SearchView: View {
     @StateObject var searchVM = SearchVM()
     @State var tagText = ""
     @State var enteredTags = [String]()
-
+    @EnvironmentObject var theme: Theme
+    
     var body: some View {
-        VStack {
-            SearchBarView(searchText: $tagText, enteredTags: $enteredTags)
-                .environmentObject(searchVM)
-            
+        VStack(alignment: .leading, spacing: theme.spacing.medium) {
             CategoryGridView().environmentObject(searchVM)
             
-            Button("Search") {
-                performSearch()
+            HStack(alignment: .top) {
+                TagSearchBarView(searchText: $tagText, enteredTags: $enteredTags)
+                    .environmentObject(searchVM)
+                    .frame(maxWidth: .infinity)
+                
+                Button("Search") {
+                    performSearch()
+                }
+                .buttonStyle(ButtonBaseStyle(theme: theme))
             }
-            .buttonStyle(.bordered)
-            .padding()
-
+            .frame(maxWidth: .infinity)
+            
+            
             SearchResultView(searchResults: searchVM.searchResults)
         }
-        .navigationTitle("Search")
+        .padding()
     }
-
+    
     func performSearch() {
-        // Send search parameters to `searchVM`
         searchVM.search(tags: enteredTags)
     }
 }
 
-
-
 struct CategoryGridView: View {
     @EnvironmentObject var searchVM: SearchVM
+    @EnvironmentObject var theme: Theme
     
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 16) {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: theme.spacing.button) {
                 ForEach(searchVM.categories) { category in
-                    CategoryButton(category: category)
-                        .padding(8)
-                        .background(searchVM.isSelectedCategory(category) ? Color.blue.opacity(0.5) : Color.clear)
-                        .cornerRadius(8)
-                        .onTapGesture {
-                            searchVM.toggleCategorySelection(category)
-                        }
+                    Button(action: {
+                        searchVM.toggleCategorySelection(category)
+                    }) {
+                        Text(category.id)
+                    }
+                    .buttonStyle(CategoryButtonStyle(theme: theme, isSelected: searchVM.isSelectedCategory(category)))
                 }
             }
-            .padding()
-        }
-        .frame(maxHeight: .infinity)
-        .background(Color.white) // Add background color if needed
-        .onAppear {
-            searchVM.fetchCategories()
+            .padding(.horizontal)
+            .onAppear {
+                searchVM.fetchCategories()
+            }
         }
     }
-}
-
-
-struct CategoryButton: View {
-    var category: Category
-    @EnvironmentObject var searchVM: SearchVM
-    
-    var body: some View {
-        Text(category.id)
-            .font(.headline)
-            .foregroundColor(.white)
-            .padding(8)
-            .background(Color.blue)
-            .cornerRadius(8)
-    }
-    
 }
 
 
@@ -95,7 +79,6 @@ struct SearchResultView: View {
         }
     }
 }
-
 
 
 struct SearchView_Previews: PreviewProvider {

@@ -25,7 +25,7 @@ struct ProfileUpdate: View {
         VStack {
             TextField("Your Brand", text: $profileVM.profile.brand)
                 .padding(.top, 20)
-            TextField("You in one sentence", text: $profileVM.info.statement)
+            TextField("You in one sentence", text: $profileVM.profile.tagline)
             Text("Tell us more:")
             TextEditor(text: $profileVM.info.bio)
             Divider()

@@ -13,6 +13,7 @@ struct UserViewHistoryView: View {
     @State private var sortOption = 0
     @State private var ascendingOrder = false
     @State private var viewHistoryItems: [ViewHistoryItem] = []
+    @EnvironmentObject var theme: Theme
     
     let pageSize = AppSettings.pageSize
     
@@ -55,6 +56,7 @@ struct UserViewHistoryView: View {
                             .onAppear(perform: fetchAndSortViewHistory)
                     }
                 }
+                .font(theme.typography.subtitle)
             }
             .navigationTitle("View History")
             .task {

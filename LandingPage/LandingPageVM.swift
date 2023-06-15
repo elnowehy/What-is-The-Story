@@ -44,43 +44,45 @@ class LandingPageVM: ObservableObject {
     @MainActor
     func fetchCategories() async {
         await categoryVM.fetchCategories()
-        categories = await categoryVM.categoryList
+        categories = categoryVM.categoryList
     }
     
     @MainActor
     func fetchFeaturedSeries() async {
-        await featuredPaginator.loadMoreData(fetch: {page, pageSize in
-            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.featured)
+        await featuredPaginator.loadMoreData(fetch: { page, pageSize in
+            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.featured, category: self.selectedCategory)
         }, appendTo: &self.featuredSeries)
     }
 
     @MainActor
     func fetchPopularSeries() async {
         await popularPaginator.loadMoreData(fetch: {page, pageSize in
-            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.popular)
+            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.popular, category: self.selectedCategory)
         }, appendTo: &self.popularSeries)
     }
 
     @MainActor
     func fetchNewSeries() async {
         await newPaginator.loadMoreData(fetch: {page, pageSize in
-            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.new)
+            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.new, category: self.selectedCategory)
         }, appendTo: &self.newSeries)
     }
 
     @MainActor
     func fetchTrendingSeries() async {
         await trendingPaginator.loadMoreData(fetch: {page, pageSize in
-            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.trending)
+            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.trending, category: self.selectedCategory)
         }, appendTo: &self.trendingSeries)
     }
 
+    @MainActor
     func selectCategory(_ category: Category) {
         selectedCategory = category
-        self.featuredPaginator = Paginator<Series>()
-        self.popularPaginator = Paginator<Series>()
-        self.newPaginator = Paginator<Series>()
-        self.trendingPaginator = Paginator<Series>()
+        self.featuredPaginator.reset()
+        self.popularPaginator.reset()
+        self.newPaginator.reset()
+        self.trendingPaginator.reset()
         fetchInitialData()
+        
     }
 }

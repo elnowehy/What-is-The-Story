@@ -12,7 +12,9 @@ import SwiftUI
 
 struct Profile {
     var id: String = "" // profileId
+    var userId: String = ""
     var brand: String = ""
+    var tagline: String = ""
     var avatar = URL(filePath: "")
     var imgQlty = 0.2
     var seriesIds = [String]()
@@ -21,7 +23,6 @@ struct Profile {
 
 struct ProfileInfo {
     var id: String = "" // profileId
-    var statement: String = ""
     var bio: String = ""
     var photo = URL(filePath: "")
     var background = URL(filePath: "")

@@ -12,7 +12,7 @@ struct CommunityView: View {
     
     var body: some View {
         Text("Hello, Community!")
-            .modifier(LargeTitleStyle())
+            .modifier(LargeTitleStyle(theme: theme))
     }
 }
 

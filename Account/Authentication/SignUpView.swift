@@ -14,6 +14,7 @@ struct SignUpView: View {
     @ObservedObject var userVM: UserVM
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var theme: Theme
     
     var body: some View {
         VStack  {
@@ -22,28 +23,25 @@ struct SignUpView: View {
                     Spacer()
                     
                     Text("Welcome to WITS")
-                        .font(.headline)
-                        .padding()
-                        .offset(x: -100, y: -100)
+                        .modifier(LargeTitleStyle(theme: theme))
                     
                     
                     TextField("Email", text: $user.email)
-                        .offset(x: 50, y: -50)
+                        .textFieldStyle(TextFieldBaseStyle(theme: theme))
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .submitLabel(.next)
                     
                     
                     SecureField("Password", text: $user.password)
-                        .offset(x: 50, y: -50)
+                        .textFieldStyle(TextFieldBaseStyle(theme: theme))
                         .submitLabel(.done)
                     
                     
                     TextField("User Name", text: $user.name)
-                    //.frame(width: .infinity, height: 50)
+                        .textFieldStyle(TextFieldBaseStyle(theme: theme))
                         .textInputAutocapitalization(.never)
                         .submitLabel(.done)
-                        .offset(x: 50, y: -50)
                     
                 }
                 .padding()
@@ -51,6 +49,8 @@ struct SignUpView: View {
             }
             
             HStack {
+                Spacer()
+                
                 Button (action: {
                     Task {
                         await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
@@ -67,14 +67,18 @@ struct SignUpView: View {
                 }) {
                     Text("Save")
                 }
-                .padding()
+                .buttonStyle(ButtonBaseStyle(theme: theme))
+                
+                Spacer()
                 
                 Button (action: {
                     dismiss()
                 }) {
                     Text("Cancel")
                 }
-                .padding()
+                .buttonStyle(ButtonBaseStyle(theme: theme))
+                
+                Spacer()
             }
             
             .frame(width: 350, height: 300)

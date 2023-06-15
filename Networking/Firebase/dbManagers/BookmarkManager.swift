@@ -27,7 +27,7 @@ class BookmarkManager: ObservableObject {
     
     
     init() {
-        self.db = Firestore.firestore()
+        self.db = AppDelegate.db
         self.data = [:]
     }
         
@@ -47,7 +47,7 @@ class BookmarkManager: ObservableObject {
             "id": self.ref?.documentID as? String ?? "",
             "contentId": self.bookmark.contentId,
             "userId": self.bookmark.userId,
-            "contenType": self.bookmark.contentType.rawValue,
+            "contentType": self.bookmark.contentType.rawValue,
             "timestamp": Date(),
         ]
     }

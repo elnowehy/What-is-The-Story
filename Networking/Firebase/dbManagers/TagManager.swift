@@ -10,9 +10,8 @@ import Firebase
 import FirebaseFirestoreSwift
 
 class TagManager {
-    private let db = Firestore.firestore()
-    private let batch = Firestore.firestore().batch()
-    private let ref = Firestore.firestore().collection("Tags")
+    private let db = AppDelegate.db
+    private let ref = AppDelegate.db.collection("Tags")
     
     func addContentId(tag: Tag, id: String, type: String) async throws {
         let tagRef = ref.document(tag.id)

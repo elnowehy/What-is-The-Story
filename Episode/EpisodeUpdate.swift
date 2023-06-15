@@ -60,6 +60,7 @@ struct EpisodeUpdate: View {
                         
                         if episodeVM.episode.id.isEmpty {
                             episodeVM.episode.series = seriesVM.series.id
+                            episodeVM.episode.userId = seriesVM.series.userId
                             let id = await episodeVM.create()
                             await seriesVM.addEpisode(episodeId: id)
                         } else {

@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-struct SearchBarView: View {
+struct TagSearchBarView: View {
     @Binding var searchText: String
     @Binding var enteredTags: [String]
     @EnvironmentObject var searchVM: SearchVM
     @State private var showSuggestions = false
+    @EnvironmentObject var theme: Theme
 
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             TextField("Search", text: $searchText, onCommit: { addTag() })
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+                .textFieldStyle(TextFieldBaseStyle(theme: theme, maxWidth: 100))
                 .onChange(of: searchText) { newValue in
                     if newValue.last == " " {
                         addTag()
@@ -32,12 +32,12 @@ struct SearchBarView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             if showSuggestions {
                 TagSuggestionsView(tagSuggestions: searchVM.tagSuggestions, onSuggestionTap: { tag in
                     selectTag(tag)
-                    showSuggestions = false
-                })
+                }, showSuggestions: $showSuggestions)
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -46,12 +46,11 @@ struct SearchBarView: View {
                         TagView(tag: tag, onRemove: removeTag)
                     }
                 }
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity)
+                // .padding(.horizontal)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            
-
         }
+        .frame(minHeight: 0, maxHeight: .infinity, alignment: .top)
      }
     
     func addTag() {
@@ -75,23 +74,21 @@ struct SearchBarView: View {
 struct TagView: View {
     let tag: String
     let onRemove: (String) -> Void
+    @EnvironmentObject var theme: Theme
     
     var body: some View {
         HStack {
             Text(tag)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(8)
+                .modifier(TagTextBaseStyle(theme: theme))
             
             Button(action: {
                 onRemove(tag)
             }) {
                 Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.blue)
-                    .padding(.leading, 4)
+                    .foregroundColor(theme.colors.text)
+                    .padding(.leading, 0)
             }
+            .buttonStyle(ButtonBaseStyle(theme: theme))
         }
     }
 }
@@ -99,6 +96,7 @@ struct TagView: View {
 struct TagSuggestionsView: View {
     let tagSuggestions: [Tag]
     let onSuggestionTap: (String) -> Void
+    @Binding var showSuggestions: Bool
 
     var body: some View {
         ScrollView {
@@ -106,6 +104,7 @@ struct TagSuggestionsView: View {
                 ForEach(tagSuggestions) { tag in
                     Button(action: {
                         onSuggestionTap(tag.id)
+                        showSuggestions = false
                     }) {
                         Text(tag.id)
                             .padding(.vertical, 8)

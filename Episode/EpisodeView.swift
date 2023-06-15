@@ -75,11 +75,12 @@ struct EpisodeView: View {
                     .padding(.bottom)
 
                     Spacer()
-                    
-                    NavigationLink("Update") {
-                        EpisodeUpdate(episodeVM: episodeVM, mode: .update)
+                    if episodeVM.episode.userId == userVM.user.id {
+                        NavigationLink("Update") {
+                            EpisodeUpdate(episodeVM: episodeVM, mode: .update)
+                        }
+                        .modifier(NavigationLinkStyle(theme: theme))
                     }
-                    .modifier(NavigationLinkStyle(theme: theme))
                 }
             }
         }
@@ -89,7 +90,7 @@ struct EpisodeView: View {
             print(".onAppear \(episode.video)")
             episodeVM.episode = episode
             player = AVPlayer(url: episodeVM.episode.video)
-            if player != nil {
+            if player != nil && !userVM.user.id.isEmpty {
                 player!.replaceCurrentItem(with: AVPlayerItem(url: episodeVM.episode.video))
                 let interval = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
                 timeObserver = player!.addPeriodicTimeObserver(forInterval: interval, queue: .main) { _ in
@@ -107,25 +108,6 @@ struct EpisodeView: View {
     }
 }
 
-//struct ShareSheet: UIViewControllerRepresentable {
-//    var items: [Any]
-//    @Binding var isPresented: Bool
-//    var onShareCompletion: (Bool) -> Void
-//
-//    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
-//        // No update needed
-//    }
-//
-//    func makeUIViewController(context: Context) -> UIActivityViewController {
-//        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
-//        controller.completionWithItemsHandler = { _, completed, _, _ in
-//            onShareCompletion(completed)
-//            isPresented = false
-//        }
-//        return controller
-//    }
-//}
-//
 
 
 

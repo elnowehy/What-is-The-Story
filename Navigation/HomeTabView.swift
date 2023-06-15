@@ -13,6 +13,7 @@ struct HomeTabView: View {
     @State private var selection: Tab = .home
     @State private var showSignInSheet = false
     @EnvironmentObject var userVM: UserVM
+    @StateObject var profileVM = ProfileVM()
     
     enum Tab {
         case home
@@ -42,25 +43,19 @@ struct HomeTabView: View {
                 }
                 .tag(Tab.community)
             
-            AccountMenu(userVM: userVM)
+            AccountMenu()
                 .tabItem {
                     Label("Account", systemImage: "person")
                 }
                 .tag(Tab.account)
             
-            BookmarkListView()
+            CreateView().environmentObject(profileVM)
                 .tabItem {
-                    Label("About", systemImage: "bookmark")
+                    Label("Create", systemImage: "pencil.and.outline")
                 }
                 .tag(Tab.signout)
         }
-        .sheet(isPresented: $showSignInSheet) {
-            SignInView(showLogIn: $showSignInSheet, userVM: userVM)
-        }
-        .onChange(of: selection) { newValue in
-            showSignInSheet = selection == .account && !authManager.isLoggedIn
-        }
-        .modifier(GenTabViewStyle(theme: theme))
+        .modifier(TabViewBaseStyle(theme: theme))
     }
 }
 

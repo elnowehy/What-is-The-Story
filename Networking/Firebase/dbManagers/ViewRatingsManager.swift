@@ -26,7 +26,7 @@ class ViewRatingManager: ObservableObject {
     
     
     init() {
-        self.db = Firestore.firestore()
+        self.db = AppDelegate.db
         self.data = [:]
     }
         

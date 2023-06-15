@@ -40,8 +40,8 @@ struct SeriesUpdateView: View {
         VStack {
             TextField("Title", text: $seriesVM.series.title)
                 .padding(.top, 20)
-                .font(.title)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .font(theme.typography.text)
+                .textFieldStyle(TextFieldBaseStyle(theme: theme))
                 .padding(.horizontal)
 
             TextEditor(text: $seriesVM.series.synopsis)
@@ -52,32 +52,37 @@ struct SeriesUpdateView: View {
                         .stroke(Color.gray, lineWidth: 1)
                 )
                 .padding(.bottom)
+                .textFieldStyle(TextFieldBaseStyle(theme: theme))
 
             CategorySelectionView(selectedCategories: $selectedCategories).environmentObject(categoryVM)
             
-            SearchBarView(searchText: $tagText, enteredTags: $enteredTags)
+            TagSearchBarView(searchText: $tagText, enteredTags: $enteredTags)
                 .environmentObject(searchVM)
 
             Divider()
                 .padding(.horizontal)
-
-            PhotosPicker(selection: $posterPicker, matching: .images) {
-                Label("Select a Poster", systemImage: "photo")
-                    .font(.headline)
-                    .padding(.vertical)
+            
+            HStack {
+                Spacer()
+                
+                PhotosPicker(selection: $posterPicker, matching: .images) {
+                    Label("Select Poster", systemImage: "photo")
+                        .font(theme.typography.body)
+                        .padding(.vertical)
+                }
+                .padding(.horizontal)
+                
+                Spacer()
+                
+                PhotosPicker(selection: $trailerPicker, matching: .videos) {
+                    Label("Select Trailer", systemImage: "film")
+                        .font(theme.typography.body)
+                        .padding(.vertical)
+                }
+                .padding(.horizontal)
+                
+                Spacer()
             }
-            .padding(.horizontal)
-
-            Spacer()
-
-            PhotosPicker(selection: $trailerPicker, matching: .videos) {
-                Label("Select a Trailer", systemImage: "film")
-                    .font(.headline)
-                    .padding(.vertical)
-            }
-            .padding(.horizontal)
-
-            Spacer()
 
             HStack {
                 Spacer()
@@ -85,19 +90,18 @@ struct SeriesUpdateView: View {
                     SaveSeries()
                     dismiss()
                 }
-                .font(.headline)
-                .padding(.vertical)
+                .buttonStyle(ButtonBaseStyle(theme: theme))
 
                 Spacer()
                 Button("Cancel") {
                     dismiss()
                 }
-                .font(.headline)
-                .padding(.vertical)
-                .buttonStyle(VideoButtonStyle(theme: theme))
+                .buttonStyle(ButtonBaseStyle(theme: theme))
                 Spacer()
             }
+            
         }
+        .background(theme.colors.primaryBackground)
         .task {
             episodeVM.episode.series = seriesVM.series.id
             selectedCategories = seriesVM.series.categories
@@ -116,11 +120,13 @@ struct SeriesUpdateView: View {
     
     private func SaveSeries() {
         Task {
+            let oldCategories = Set(seriesVM.series.categories)
+            let oldTags = Set(seriesVM.series.tags)
             await updatePoster()
             await updateTrailer()
-            await updateCategories()
-            await updateTags()
             await updateSeries()
+            await updateCategories(oldCategories: oldCategories)
+            await updateTags(oldTags: oldTags)
         }
     }
 
@@ -152,8 +158,7 @@ struct SeriesUpdateView: View {
         }
     }
 
-    private func updateCategories() {
-        let oldCategories = seriesVM.series.categories
+    private func updateCategories(oldCategories: Set<String>) {
         let added = selectedCategories.subtracting(oldCategories)
         let addedCategoryIDs = Array(added)
         let addedCategories: [Category] = addedCategoryIDs.map { Category(id: $0) }
@@ -173,8 +178,7 @@ struct SeriesUpdateView: View {
         }
     }
     
-    private func updateTags() {
-        let oldTags = seriesVM.series.tags
+    private func updateTags(oldTags: Set<String>) {
         let selectedTags = Set(enteredTags)
         let added = selectedTags.subtracting(oldTags)
         let addedTagIDs = Array(added)
@@ -198,6 +202,7 @@ struct SeriesUpdateView: View {
     private func updateSeries() async {
         if seriesVM.series.id.isEmpty {
             seriesVM.series.profile = profileVM.profile.id
+            seriesVM.series.userId = profileVM.profile.userId
             let seriesId = await seriesVM.create()
             await profileVM.addSeries(seriesId: seriesId)
         } else {

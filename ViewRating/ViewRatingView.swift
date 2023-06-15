@@ -16,7 +16,7 @@ struct ViewRatingView: View {
     var body: some View {
         VStack {
             AvgRatingView(avgRating: $episode.avgRating)
-            if showRating {
+            if showRating && !userVM.user.id.isEmpty {
                 UserRatingView()
                     .opacity(showRating ? 1 : 0)
                     .animation(.easeInOut(duration: 0.4), value: showRating)
@@ -24,9 +24,11 @@ struct ViewRatingView: View {
         }
         .task {
             await userVM.currentUserData()
-            viewRatingVM.viewRating.episodeId = episode.id
-            viewRatingVM.viewRating.userId = userVM.user.id
-            await viewRatingVM.fetch()
+            if !userVM.user.id.isEmpty {
+                viewRatingVM.viewRating.episodeId = episode.id
+                viewRatingVM.viewRating.userId = userVM.user.id
+                await viewRatingVM.fetch()
+            }
         }
     }
 }

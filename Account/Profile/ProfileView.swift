@@ -10,68 +10,83 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var profileVM: ProfileVM
+    @EnvironmentObject var userVM: UserVM
+    @EnvironmentObject var theme: Theme
     @State private var isPresentingProfileEdit = false
     
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading) {
-                HStack(alignment: .center) {
-                    AsyncImage(url: profileVM.profile.avatar, content: { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                    }) {
-                        ProgressView()
-                    }
-                    
-                    Text(profileVM.profile.brand)
-                }
-                Text(profileVM.info.statement)
-                HStack {
-                    AsyncImage(url: profileVM.info.photo, content: { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 250)
-                    }) {
-                        ProgressView()
-                    }
-                    Text(profileVM.info.bio)
-                }
+        ZStack {
+            AsyncImage(url: profileVM.info.background, content: { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }) {
+                ProgressView()
             }
-            .foregroundColor(.black)
 
-            .navigationBarTitle("Profile")
-            .navigationBarItems(
-                trailing:
-                Button(action: {
-                    self.isPresentingProfileEdit = true
-                }) {
-                    Text("Edit")
+
+            NavigationStack {
+                VStack(alignment: .leading) {
+                    Spacer().frame(height: theme.dimensions.cardHieght)
+                    
+                    HStack(alignment: .center) {
+                        AsyncImage(url: profileVM.profile.avatar, content: { image in
+                            image
+                                .resizable()
+                                .thumbStyle(theme: theme)
+                        }) {
+                            ProgressView()
+                        }
+
+                        Text(profileVM.profile.tagline)
+                            .modifier(TextBaseStyle(theme: theme))
+
+                    }
+                    .background(theme.colors.accent.opacity(0.5))
+                    
+                    ScrollView {
+                        HStack {
+                            Text(profileVM.info.bio)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding()
+                                .background(theme.colors.accent.opacity(0.5))
+                                .frame(maxWidth: 150)
+                                .cornerRadius(theme.shapes.largeCornerRadius)
+                            
+                            AsyncImage(url: profileVM.info.photo, content: { image in
+                                image
+                                    .resizable()
+                                    .photoStyle(theme: theme)
+                            }) {
+                                ProgressView()
+                            }
+                            .padding(theme.spacing.medium)
+                        }
+                    }
+
                 }
-            )
-        }
-        .sheet(isPresented: $isPresentingProfileEdit) {
-            ProfileUpdate(presentationMode: $isPresentingProfileEdit)
-        }
-        .background(Color.blue)
-        //        .background(
-        //            AsyncImage(url: profileVM.info.background, content: { image in
-        //                image
-        //                    .resizable()
-        //                    .aspectRatio(contentMode: .fill)
-        //            }) {
-        //                ProgressView()
-        //            }
-        //        )
-        .onAppear{
-            Task {
-                // for some reason this code is executed AFTER the view is rendered.
-                // The view is rendered properly after I click Edit then cancel
-                await profileVM.fetch()
-                await profileVM.fetchInfo()
+                .foregroundColor(theme.colors.text)
+                .navigationBarTitle(profileVM.profile.brand)
+                
+                .navigationBarItems(
+                    trailing: profileVM.profile.userId == userVM.user.id ? AnyView(
+                        Button(action: {
+                            self.isPresentingProfileEdit = true
+                        }) {
+                            Text("Edit")
+                        }
+                    ) : AnyView(EmptyView())
+                )
+                
+            }
+            .sheet(isPresented: $isPresentingProfileEdit) {
+                ProfileUpdate(presentationMode: $isPresentingProfileEdit)
+            }
+            .onAppear{
+                Task {
+                    await profileVM.fetch()
+                    await profileVM.fetchInfo()
+                }
             }
         }
     }
@@ -79,8 +94,8 @@ struct ProfileView: View {
 
 
 
-//struct ProfileView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ProfileView()
-//    }
-//}
+struct ProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProfileView()
+    }
+}

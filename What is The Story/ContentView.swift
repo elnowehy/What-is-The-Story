@@ -9,12 +9,14 @@ import SwiftUI
    
 
 struct ContentView: View {
+    @EnvironmentObject var theme: Theme
     
     var body: some View {
         HomeTabView()
-            .edgesIgnoringSafeArea(.all)
+            .background(theme.colors.primaryBackground.edgesIgnoringSafeArea(.all))
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

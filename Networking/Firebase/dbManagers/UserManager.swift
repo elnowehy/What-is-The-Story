@@ -25,7 +25,7 @@ class UserManager: ObservableObject {
   
     
     init() {
-        self.db = Firestore.firestore()
+        self.db = AppDelegate.db
         self.data = [:] // to be populated
     }
     
@@ -115,10 +115,14 @@ class UserManager: ObservableObject {
     @MainActor
     func currentUserData() async -> User {
         async let user = Auth.auth().currentUser
-        self.user.id = await user!.uid
-        self.user.email = await user!.email!
-        await fetch()
-        populateStruct()
+        if let user = await user {
+            self.user.id = user.uid
+            self.user.email = user.email!
+            await fetch()
+            populateStruct()
+        } else {
+            self.user = User()
+        }
         return self.user
     }
     

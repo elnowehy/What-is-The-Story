@@ -24,8 +24,8 @@ class ProfileManager: ObservableObject {
     
     
     init() {
-        self.db = Firestore.firestore()
-        self.storage = Storage.storage()
+        self.db = AppDelegate.db
+        self.storage = AppDelegate.storage
         self.data = [:]
     }
         
@@ -46,7 +46,9 @@ class ProfileManager: ObservableObject {
     func populateData() async {
         self.data = [
             "id": self.profile.id,
+            "userId": self.profile.userId,
             "brand": self.profile.brand,
+            "tagline": self.profile.tagline,
             "avatar": await storeImage(ref: storageRef!, uiImage: avatarImage, quality: profile.imgQlty).absoluteString
         ]
     }
@@ -54,7 +56,9 @@ class ProfileManager: ObservableObject {
     
     func populateStruct() {
         profile.id = self.data["id"] as? String ?? ""
+        profile.userId = self.data["userId"] as? String ?? ""
         profile.brand = self.data["brand"] as? String ?? ""
+        profile.tagline = self.data["tagline"] as? String ?? ""
         profile.avatar = URL(string: self.data["avatar"] as? String ?? "") ?? URL(filePath: "")
         profile.seriesIds = self.data["seriesIds"] as? [String] ?? []
     }
@@ -193,7 +197,6 @@ class ProfileInfoManager: ObservableObject {
     func populateData() async {
         self.data = [
             "id": profileId,
-            "statement": info.statement,
             "bio": info.bio,
         ]
         if updatePhoto {
@@ -206,7 +209,6 @@ class ProfileInfoManager: ObservableObject {
     
     func populateStruct() {
         info.id = profileId
-        info.statement = self.data["statement"] as? String ?? ""
         info.bio = self.data["bio"] as? String ?? ""
         info.photo = URL(string: self.data["photo"] as? String ?? "") ?? URL(filePath: "")
         info.background = URL(string: self.data["background"] as? String ?? "") ?? URL(filePath: "")

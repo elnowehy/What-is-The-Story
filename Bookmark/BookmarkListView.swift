@@ -10,7 +10,7 @@ import SwiftUI
 struct BookmarkItem: Identifiable {
     let id = UUID()
     let bookmark: Bookmark
-    let content: Any // This could be an Episode or a Series
+    let contentType: Any // This could be an Episode or a Series
 }
 
 struct BookmarkListView: View {
@@ -18,6 +18,7 @@ struct BookmarkListView: View {
     @StateObject var episodeVM = EpisodeVM()
     @StateObject var seriesVM = SeriesVM()
     @EnvironmentObject var userVM: UserVM
+    @EnvironmentObject var theme: Theme
     @State private var sortOption = 0
     @State private var ascendingOrder = false
     @State private var bookmarkItems: [BookmarkItem] = []
@@ -32,26 +33,41 @@ struct BookmarkListView: View {
                 Toggle(isOn: $ascendingOrder) {
                     Text("Ascending Order")
                 }
+                .toggleStyle(ToggleBaseStyle(theme: theme))
                 .padding()
                 .onChange(of: ascendingOrder) { _ in
                     fetchAndSortBookmarks()
                 }
-
+                
                 List {
                     ForEach(bookmarkItems.indices, id: \.self) { index in
                         VStack(alignment: .leading) {
-                            if let episode = bookmarkItems[index].content as? Episode {
-                                Text("Episode")
-                                Text("Title: \(episode.title)")
-                            } else if let series = bookmarkItems[index].content as? Series {
-                                Text("Series")
-                                Text("Title: \(series.title)")
+                            if let episode = bookmarkItems[index].contentType as? Episode {
+                                
+                                NavigationLink(destination: EpisodeView(episode: episode)
+                                    .environmentObject(episodeVM)
+                                    .environmentObject(seriesVM)
+                                ) {
+                                    Text(episode.title)
+                                        .font(theme.typography.subtitle)
+                                }
+                            } else if let series = bookmarkItems[index].contentType as? Series {
+                                NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series))
+                                {
+
+                                    Text(series.title)
+                                        .font(theme.typography.subtitle)
+                                }
                             }
-                            Text("Timestamp: \(bookmarkItems[index].bookmark.timestamp)")
+                            Text("\(formattedTimestamp(for: bookmarkItems[index].bookmark.timestamp))")
+                                .font(theme.typography.text)
+                                .foregroundColor(theme.colors.accent)
+
                         }
+                        .font(theme.typography.subtitle)
                     }
                     .onDelete(perform: delete)
-
+                    
                     if bookmarkVM.paginator.hasMoreData && !bookmarkVM.paginator.isLoading {
                         ProgressView() // Show a loading indicator while loading more data
                             .onAppear(perform: fetchAndSortBookmarks)
@@ -97,7 +113,20 @@ struct BookmarkListView: View {
                 }
             }
 
-            bookmarkItems = zip(snapshot, contentItems).map(BookmarkItem.init)
+            // bookmarkItems = zip(snapshot, contentItems).map(BookmarkItem.init)
+            
+            bookmarkItems = zip(snapshot, contentItems).map { bookmark, contentItem in
+                let contentType: Any = {
+                    switch bookmark.contentType {
+                    case .episode:
+                        return contentItem as? Episode ?? Episode()
+                    case .series:
+                        return contentItem as? Series ?? Series()
+                    }
+                }()
+
+                return BookmarkItem(bookmark: bookmark, contentType: contentType)
+            }
         }
     }
 

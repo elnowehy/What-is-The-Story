@@ -10,6 +10,7 @@ import Foundation
 
 struct Episode: Identifiable {
     var id: String = ""
+    var userId: String = ""
     var title: String = ""
     // let duration: TimeInterval
     var synopsis: String = ""

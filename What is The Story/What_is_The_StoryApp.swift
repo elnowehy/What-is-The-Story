@@ -12,6 +12,9 @@ import FirebaseStorage
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
+    static var db: Firestore!
+    static var storage: Storage!
+    
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
@@ -23,7 +26,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         settings.host = "localhost:8080"
         settings.isPersistenceEnabled = true
         settings.isSSLEnabled = false
-        Firestore.firestore().settings = settings
+        AppDelegate.db = Firestore.firestore()
+        AppDelegate.db.settings = settings
+        AppDelegate.storage = Storage.storage()
+        Storage.storage().useEmulator(withHost: "localhost", port: 9199)
+
 #elseif DEBUG
         print("****** DEBIGGER *******")
 #endif

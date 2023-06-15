@@ -11,6 +11,7 @@ import Foundation
 struct Series: Identifiable, Codable, Equatable {
     var id: String = ""
     var profile: String = ""
+    var userId: String = ""
     var title: String = ""
     var categories: Set<String> = []
     var tags: Set<String> = []

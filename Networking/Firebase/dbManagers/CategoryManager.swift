@@ -10,7 +10,7 @@ import Firebase
 import FirebaseFirestoreSwift
 
 class CategoryManager {
-    private let ref = Firestore.firestore().collection("Categories")
+    private let ref = AppDelegate.db.collection("Categories")
 
     
     func addContentId(category: Category, id: String, type: String) async throws {

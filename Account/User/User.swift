@@ -10,7 +10,7 @@ import Foundation
 
 // read and write for user only
 // Firestore path: /User/<documentID>
-struct User: Identifiable {
+struct User: Identifiable, Codable {
     var id: String = ""
     var name: String = ""
     var email: String = ""

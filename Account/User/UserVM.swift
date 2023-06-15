@@ -48,7 +48,10 @@ class UserVM: ObservableObject{
         async let profileId = await profileVM.create()
         await user.profileIds.append(profileId)
         userManager.user = user
-        await userManager.create()        
+        await userManager.create()
+        profileVM.profile.userId = userManager.user.id
+        profileVM.profile.brand = user.name
+        await profileVM.update()
     }
     
     // updates a user with the user data. ** this ideally shouldn't happen, but maybe if they want to change their email?

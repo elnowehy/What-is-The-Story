@@ -10,27 +10,26 @@ import Firebase
 
 struct SignInView: View {
     @Binding var showLogIn: Bool
-    // @State var user = User()
     @StateObject var userVM: UserVM
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var theme: Theme
+    @EnvironmentObject var pathRouter: PathRouter
     
     var body: some View {
         NavigationStack {
             VStack {
                 Text("Welcome Back")
-                    .font(.headline)
-                    .offset(x: -100, y: -100)
+                    .modifier(LargeTitleStyle(theme: theme))
                 
                 TextField("Email", text: $userVM.user.email)
-                    .offset(x: 50, y: -50)
+                    .textFieldStyle(TextFieldBaseStyle(theme: theme))
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .submitLabel(.next)
                 
                 SecureField("Password", text: $userVM.user.password)
-                    .offset(x: 50, y: -50)
+                    .textFieldStyle(TextFieldBaseStyle(theme: theme))
                     .submitLabel(.done)
                 
             }
@@ -40,7 +39,6 @@ struct SignInView: View {
                     Button(action: {
                         Task {
                             await userVM.user.id = authManager.signIn(emailAddress: userVM.user.email, password: userVM.user.password)
-                            // userVM.user = user
                             await userVM.fetch()
                             showLogIn = false
                             authManager.isLoggedIn = true
@@ -50,21 +48,12 @@ struct SignInView: View {
                     {
                         Text("Sign In")
                     }
-                    .padding()
+                    .buttonStyle(ButtonBaseStyle(theme: theme))
                     
                     NavigationLink("SignUp", destination: SignUpView(showLogIn: $showLogIn, userVM: userVM))
-                        .padding()
-                    
-                    Button(action: { dismiss()} )
-                    {
-                        Text("Cancel")
-                    }
-                    .padding()
+                        .modifier(NavigationLinkStyle(theme: theme))
                 }
-                .frame(width: 350, height: 400)
-                .foregroundColor(.black)
             }
-            .modifier(NavigationLinkStyle(theme: theme))
         }
     }
 }

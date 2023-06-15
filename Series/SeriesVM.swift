@@ -36,10 +36,10 @@ class SeriesVM: ObservableObject{
     }
     
     @MainActor
-    func fetchSeriesList(listType: AppSettings.SeriesListType) async -> [Series] {
+    func fetchSeriesList(listType: AppSettings.SeriesListType, category: Category? = nil) async -> [Series] {
         seriesList = []
         do {
-            seriesList = try await self.seriesManager.fetchAllSeries(listType: listType, pageSize: AppSettings.pageSize)
+            seriesList = try await self.seriesManager.fetchAllSeries(listType: listType, category: category, pageSize: AppSettings.pageSize)
         } catch {
             print(error.localizedDescription)
         }
@@ -57,15 +57,15 @@ class SeriesVM: ObservableObject{
         return seriesList
     }
     
-    @MainActor
-    func fetchSeriesByTitle(title: String) async -> [Series] {
-        seriesList = []
-        
-        seriesList = await self.seriesManager.fetchByQuery(field: "title", prefix: title, pageSize: AppSettings.pageSize)
-        
-        return seriesList
-    }
- 
+//    @MainActor
+//    func fetchSeriesByTitle(title: String) async -> [Series] {
+//        seriesList = []
+//        
+//        seriesList = await self.seriesManager.fetchByQuery(field: "title", prefix: title, pageSize: AppSettings.pageSize)
+//        
+//        return seriesList
+//    }
+// 
     @MainActor
     func create() async -> String {
         seriesManager.posterImage = posterImage

@@ -7,42 +7,48 @@
 
 import SwiftUI
 
+struct TextFieldBaseStyle: TextFieldStyle {
+    var theme: Theme
+    var maxWidth: CGFloat? = nil // Add this
+
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .font(theme.typography.text)
+            .padding(5)
+            .background(theme.colors.tertiaryBackground)
+            .foregroundColor(theme.colors.text)
+            .cornerRadius(8)
+            .shadow(color: theme.colors.shadow, radius: theme.shapes.shadowRadius)
+            .frame(maxWidth: maxWidth)
+    }
+}
+
+
+struct TagTextBaseStyle: ViewModifier {
+    var theme: Theme
+    
+    func body(content: Content) -> some View {
+        content
+            .font(theme.typography.button)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(theme.colors.secondaryBackground)
+            .foregroundColor(theme.colors.text)
+            .cornerRadius(8)
+    }
+}
+
+
 struct ButtonBaseStyle: ButtonStyle {
     var theme: Theme
 
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .font(theme.typography.button)
-            .foregroundColor(theme.colors.buttonForeground)
-            .padding()
-            .background(configuration.isPressed ? theme.colors.buttonBackground.opacity(theme.opacity.enabled) : theme.colors.buttonBackground)
-            .cornerRadius(theme.shapes.largeCornerRadius)
-            .scaleEffect(configuration.isPressed ? theme.scales.button : theme.scales.full)
-    }
-}
-
-
-struct VideoButtonStyle: ButtonStyle {
-    var theme: Theme
-
-    func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .buttonStyle(ButtonBaseStyle(theme: theme))
-            .foregroundColor(theme.colors.videoForeground)
-            .background(configuration.isPressed ? theme.colors.videoBackground.opacity(theme.opacity.enabled) : theme.colors.videoBackground)
-    }
-}
-
-
-struct NavigationButtonStyle: ButtonStyle {
-    var theme: Theme
-
-    func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .font(theme.typography.button)
-            .foregroundColor(theme.colors.menuForeground)
-            .padding()
-            .background(configuration.isPressed ? theme.colors.buttonBackground.opacity(theme.opacity.enabled) : theme.colors.buttonBackground)
+            .foregroundColor(theme.colors.primaryBackground) // Text color for the button text
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(configuration.isPressed ? theme.colors.secondaryBackground.opacity(theme.opacity.enabled) : theme.colors.accent) // Secondary background for the button color
             .cornerRadius(theme.shapes.largeCornerRadius)
             .scaleEffect(configuration.isPressed ? theme.scales.button : theme.scales.full)
     }
@@ -54,24 +60,22 @@ struct NavigationLinkStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(theme.typography.button)
-            .foregroundColor(theme.colors.menuForeground)
-            .padding()
-            .background(theme.colors.menuBackground)
+            .foregroundColor(theme.colors.primaryBackground)
+            .padding(theme.spacing.button)
+            .background(theme.colors.accent) // Use secondary background for a slightly darker shade
             .cornerRadius(theme.shapes.largeCornerRadius)
             .scaleEffect(1.0) // Apply any desired scale effect
     }
 }
 
-
-struct GenToggleStyle: ToggleStyle {
+struct ToggleBaseStyle: ToggleStyle {
     var theme: Theme
 
     func makeBody(configuration: Configuration) -> some View {
         Toggle(isOn: configuration.$isOn) {
             configuration.label
         }
-        .font(theme.typography.button)
-        .toggleStyle(SwitchToggleStyle(tint: theme.colors.toggleBackground))
+        .toggleStyle(SwitchToggleStyle(tint: theme.colors.accent))
     }
 }
 
@@ -81,71 +85,56 @@ struct VideoPlayerStyle: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .accentColor(theme.colors.videoBackground)
-            .progressViewStyle(CircularProgressViewStyle(tint: theme.colors.videoBackground))
+            .accentColor(theme.colors.text)
+            .progressViewStyle(CircularProgressViewStyle(tint: theme.colors.text))
             .frame(maxWidth: .infinity, maxHeight: isFullScreen ? .infinity : UIScreen.main.bounds.height * 9/16)
             .clipped()
     }
 }
 
-
-
-struct GenTextFieldStyle: TextFieldStyle {
-    var theme: Theme
-
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration
-            .font(theme.typography.body)
-            .padding()
-            .background(theme.colors.buttonText)
-            .foregroundColor(theme.colors.buttonForeground)
-            .cornerRadius(8)
-    }
-}
-
-struct GenTabViewStyle: ViewModifier {
+struct TabViewBaseStyle: ViewModifier {
     var theme: Theme
     
     func body(content: Content) -> some View {
         content
-            .accentColor(theme.colors.menuForeground)
+            .accentColor(theme.colors.accent)
             .tabViewStyle(.automatic)
-            .listStyle(.inset)
-            .background(theme.colors.menuBackground)
+            .background(theme.colors.primaryBackground)
             .edgesIgnoringSafeArea(.top)
             .ignoresSafeArea(.keyboard)
     }
 }
 
-struct SeriesTitleStyle: ViewModifier {
+struct LargeTitleStyle: ViewModifier {
     var theme: Theme
 
     func body(content: Content) -> some View {
         content
             .font(theme.typography.title)
             .padding(.horizontal)
-            .foregroundColor(theme.colors.mainTitle)
+            .foregroundColor(theme.colors.text)
     }
 }
 
-struct GenRowStyle: ViewModifier {
+struct TextBaseStyle: ViewModifier {
+    var theme: Theme
+
+    func body(content: Content) -> some View {
+        content
+            .font(theme.typography.text)
+            .padding(.horizontal)
+            .foregroundColor(theme.colors.text)
+    }
+}
+
+struct RowBaseStyle: ViewModifier {
     var theme: Theme
 
     func body(content: Content) -> some View {
         content
             .padding(.horizontal)
-            .background(theme.colors.menuBackground)
-            .cornerRadius(theme.shapes.smallCornerRadius)
-    }
-}
-
-struct GenListViewStyle: ViewModifier {
-    var theme: Theme
-
-    func body(content: Content) -> some View {
-        content
-            .padding(.horizontal)
-            .background(theme.colors.menuBackground)
+            .background(theme.colors.primaryBackground)
+            .cornerRadius(8)
     }
 }
 
@@ -155,13 +144,69 @@ struct CategoryButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(isSelected ? theme.colors.tableBackground : theme.colors.menuBackground)
-            .foregroundColor(isSelected ? theme.colors.buttonForeground : theme.colors.buttonBackground)
-            .cornerRadius(theme.shapes.smallCornerRadius)
+            .font(theme.typography.button)
+            .padding(.horizontal, theme.spacing.button)
+            .padding(.vertical, theme.spacing.button)
+            .background(isSelected ? theme.colors.text : theme.colors.secondaryBackground)
+            .foregroundColor(isSelected ? theme.colors.primaryBackground : theme.colors.text)
+            .cornerRadius(theme.spacing.button)
     }
 }
+
+struct CardStyleModifier: ViewModifier {
+    var theme: Theme
+    
+    func body(content: Content) -> some View {
+        content
+            .aspectRatio(contentMode: .fill)
+            .frame(width: theme.dimensions.cardWidth, height: theme.dimensions.cardHieght)
+            //.clipped()
+            .cornerRadius(theme.spacing.cardPadding)
+            .background(theme.colors.tertiaryBackground)
+    }
+}
+
+struct ThumbStyleModifier: ViewModifier {
+    var theme: Theme
+    
+    func body(content: Content) -> some View {
+        content
+            .aspectRatio(contentMode: .fill)
+            .frame(width: theme.dimensions.thumbWidth, height: theme.dimensions.thumbHieght)
+            //.clipped()
+            .cornerRadius(theme.spacing.cardPadding)
+            .background(theme.colors.tertiaryBackground)
+    }
+}
+
+struct PhotoStyleModifier: ViewModifier {
+    var theme: Theme
+    
+    func body(content: Content) -> some View {
+        content
+            .aspectRatio(contentMode: .fill)
+            .frame(width: theme.dimensions.photoWidth, height: theme.dimensions.photoHeight)
+            // .clipped()
+            .cornerRadius(theme.spacing.cardPadding)
+            .border(theme.colors.accent, width: theme.spacing.small)
+            .background(theme.colors.tertiaryBackground)
+    }
+}
+
+extension View {
+    func cardStyle(theme: Theme) -> some View {
+        self.modifier(CardStyleModifier(theme: theme))
+    }
+    
+    func photoStyle(theme: Theme) -> some View {
+        self.modifier(PhotoStyleModifier(theme: theme))
+    }
+    
+    func thumbStyle(theme: Theme) -> some View {
+        self.modifier(ThumbStyleModifier(theme: theme))
+    }
+}
+
 
 
 

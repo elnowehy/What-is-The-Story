@@ -25,8 +25,8 @@ class EpisodeManager: ObservableObject {
     
     
     init() {
-        self.db = Firestore.firestore()
-        self.storage = Storage.storage()
+        self.db = AppDelegate.db
+        self.storage = AppDelegate.storage
         self.data = [:]
     }
         
@@ -46,6 +46,7 @@ class EpisodeManager: ObservableObject {
     func populateData() async {
         self.data = [
             "id": self.episode.id,
+            "userId": self.episode.userId,
             "title": self.episode.title,
             "synopsis": self.episode.synopsis,
             "question": self.episode.question,
@@ -68,6 +69,7 @@ class EpisodeManager: ObservableObject {
     
     func populateStruct() {
         episode.id = self.data["id"] as? String ?? ""
+        episode.userId = self.data["userId"] as? String ?? ""
         episode.title = self.data["title"] as? String ?? ""
         episode.synopsis = self.data["synopsis"] as? String ?? ""
         episode.question = self.data["question"] as? String ?? ""

@@ -38,5 +38,6 @@ class Paginator<T>: ObservableObject {
     func reset() {
         currentPage = 0
         hasMoreData = true
+        isLoading = false
     }
 }

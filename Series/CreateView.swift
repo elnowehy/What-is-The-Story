@@ -8,27 +8,41 @@
 import SwiftUI
 
 struct CreateView: View {
+    @EnvironmentObject var userVM:UserVM
+    @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var profileVM: ProfileVM
     @EnvironmentObject var theme: Theme
     @StateObject var seriesVM = SeriesVM()
-    @State var series = Series()
+    @StateObject var profile = ProfileVM()
+    @State var showLogIn = true
     
     var body: some View {
+        if authManager.isLoggedIn {
+            content
+        } else{
+            SignInView(showLogIn: $showLogIn, userVM: userVM)
+        }
+    }
+    
+    var content: some View {
         NavigationStack {
-            Text(profileVM.profile.id)
+            Text(profileVM.profile.brand)
             if profileVM.profile.seriesIds.isEmpty {
                 VStack {
                     Spacer()
                     Text("You haven't created any series yet.")
-                    
+                        .font(theme.typography.subtitle)
                 }
             }
             
             Spacer()
             NavigationLink(
                 destination: SeriesUpdateView(seriesVM: seriesVM).environmentObject(profileVM),
-                label: { Text("Create Series") }
+                label: {
+                    Text("Create Series")
+                }
             )
+            .modifier(NavigationLinkStyle(theme: theme))
             Divider()
             
             List(seriesVM.seriesList) { series in
@@ -44,18 +58,22 @@ struct CreateView: View {
                     }
                     Text(series.title)
                 }
+                .font(theme.typography.subtitle)
+                // .modifier(NavigationLinkStyle(theme: theme))
             }
             
         }
         .task {
-            await profileVM.fetch()
-            print(profileVM.profile.id)
-            if !profileVM.profile.seriesIds.isEmpty {
-                seriesVM.seriesIds = profileVM.profile.seriesIds
-                await seriesVM.fetch()
+            if authManager.isLoggedIn {
+                profileVM.profile.id = userVM.user.profileIds[0]
+                await profileVM.fetch()
+                print(profileVM.profile.id)
+                if !profileVM.profile.seriesIds.isEmpty {
+                    seriesVM.seriesIds = profileVM.profile.seriesIds
+                    await seriesVM.fetch()
+                }
             }
         }
-        .modifier(NavigationLinkStyle(theme: theme))
     }
 }
 

@@ -10,6 +10,7 @@ import SwiftUI
 struct CategorySelectionView: View {
     @EnvironmentObject var categoryVM: CategoryVM
     @Binding var selectedCategories: Set<String>
+    @EnvironmentObject var theme: Theme
     
     var body: some View {
         Menu {
@@ -26,10 +27,10 @@ struct CategorySelectionView: View {
                         Spacer()
                         if selectedCategories.contains(category.id) {
                             Image(systemName: "checkmark")
-                                .foregroundColor(.blue)
                         }
                     }
                 }
+                .buttonStyle(ButtonBaseStyle(theme: theme))
             }
         } label: {
             HStack {
@@ -38,7 +39,6 @@ struct CategorySelectionView: View {
                 Image(systemName: "chevron.down")
             }
             .padding()
-            .foregroundColor(.primary)
             .overlay(
                 RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
             )

@@ -30,7 +30,7 @@ struct VideoPlayerView: View {
                 updateOrientation(newValue)
             }
         
-            .background(theme.colors.videoBackground)
+            .background(theme.colors.primaryBackground)
     }
     
     private func startDeviceMotionUpdates() {

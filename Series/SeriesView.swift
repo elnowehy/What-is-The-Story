@@ -17,48 +17,96 @@ struct SeriesView: View {
     @ObservedObject var seriesVM: SeriesVM
     @State var series: Series
     @StateObject var episodeVM = EpisodeVM()
+    @StateObject var bookmarkVM = BookmarkVM()
+    @State private var isBookmarked = false
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: Theme
     @EnvironmentObject var profileVM: ProfileVM
+    @EnvironmentObject var userVM: UserVM
+    @State private var isPlayingVideo = false
+    @State private var isSynopsisExpanded = false
+    @State private var averageRating: Double = 0
+    @State var player: AVPlayer?
     
-
+    private func updateBookmark() {
+        if isBookmarked {
+            bookmarkVM.delete()
+            isBookmarked = false
+        } else {
+            bookmarkVM.bookmark.contentType = ContentType.series
+            bookmarkVM.add()
+            isBookmarked = true
+        }
+    }
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                Spacer()
-                Text(seriesVM.series.title)
-                AsyncImage(url: seriesVM.series.poster, content: { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 150, height: 50)
-                }) {
-                    ProgressView()
-                }
-                VideoPlayer(player: AVPlayer(url: seriesVM.series.trailer))
-                    .frame(width: 300, height: 200)
-                    .clipped()
-                Divider()
-                Text(seriesVM.series.synopsis)
-                Spacer()
+            VStack(spacing: theme.spacing.medium) {
                 
                 HStack {
-                    Spacer()
-                    NavigationLink("Update") {
-                        SeriesUpdateView(seriesVM: seriesVM)
-                        // SeriesLIstView()
+                    Text(seriesVM.series.title)
+                    if(!userVM.user.id.isEmpty) {
+                        Spacer()
+                        Button(action: updateBookmark) {
+                            Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
+                        }
                     }
-                    
-                    Spacer()
-                    NavigationLink("Create Episode") {
-                        EpisodeUpdate(episodeVM: episodeVM, mode: .add).environmentObject(seriesVM)
-                    }
-                    .font(.headline)
-                    .padding(.vertical)
-                    
-                    Spacer()
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                ZStack {
+                    if isPlayingVideo {
+                        VideoPlayerView(player: $player)
+                    } else {
+                        AsyncImage(url: seriesVM.series.poster, content: { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(maxWidth: .infinity)
+                                .onTapGesture {
+                                    isPlayingVideo = true
+                                }
+                        }) {
+                            ProgressView()
+                        }
+                    }
+                }
+                
+                AvgRatingView(avgRating: $averageRating)
+                    .font(theme.typography.caption)
+                
+                Divider()
+                DisclosureGroup(isExpanded: $isSynopsisExpanded) {
+                    Text(seriesVM.series.synopsis)
+                        .font(theme.typography.body)
+                        .foregroundColor(theme.colors.text)
+                } label: {
+                    Text("Synopsis")
+                        .font(theme.typography.text)
+                        .foregroundColor(theme.colors.text)
+                }
+                
+                if seriesVM.series.userId == userVM.user.id {
+                    HStack {
+                        Spacer()
+                        NavigationLink("Update") {
+                            SeriesUpdateView(seriesVM: seriesVM)
+                        }
+                        .modifier(NavigationLinkStyle(theme: theme))
+                        
+                        Spacer()
+                        NavigationLink("Create Episode") {
+                            EpisodeUpdate(episodeVM: episodeVM, mode: .add).environmentObject(seriesVM)
+                        }
+                        .modifier(NavigationLinkStyle(theme: theme))
+                        .padding(.vertical)
+                        
+                        Spacer()
+                    }
+                }
+                // Spacer()
             }
+            .frame(maxWidth: .infinity, alignment: .top)
             
             List(episodeVM.episodeList) { episode in
                 NavigationLink(destination: EpisodeView(episode: episode)
@@ -68,19 +116,39 @@ struct SeriesView: View {
                     Text(episode.title)
                 }
                 .isDetailLink(false)
+                .font(theme.typography.subtitle)
             }
+            
+            Spacer()
         }
         .task {
             episodeVM.episode.series = seriesVM.series.id
+            player = AVPlayer(url: seriesVM.series.trailer)
             if !seriesVM.series.episodes.isEmpty {
                 episodeVM.episodeIds = seriesVM.series.episodes
                 await episodeVM.fetch()
             }
+            
+            if(!userVM.user.id.isEmpty) {
+                bookmarkVM.bookmark.userId = userVM.user.id
+                bookmarkVM.bookmark.contentId = seriesVM.series.id
+                Task {
+                    await bookmarkVM.fetch()
+                    if bookmarkVM.bookmark.id.isEmpty {
+                        isBookmarked = false
+                    } else {
+                        isBookmarked = true
+                    }
+                }
+            }
         }
-        .onAppear{ seriesVM.series = series}
-        .modifier(NavigationLinkStyle(theme: theme))
+        .onAppear{
+            seriesVM.series = series
+            averageRating = series.averageRating
+        }
     }
 }
+
 
 //struct SeriesView_Previews: PreviewProvider {
 //    static var previews: some View {
