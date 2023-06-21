@@ -100,7 +100,7 @@ class SeriesManager: ObservableObject {
     }
     
     @MainActor
-    func fetch(id: String) async {
+    func fetch(id: String) async -> Series {
         series.id = id
         setRef()
         do {
@@ -110,8 +110,10 @@ class SeriesManager: ObservableObject {
                 self.data = data!
                 self.populateStruct()
             }
+            return series
         } catch {
             print(error.localizedDescription)
+            return series
         }
     }
     
@@ -203,8 +205,8 @@ class SeriesManager: ObservableObject {
         var query: Query
         
         switch listType {
-        case .featured: // this will be moved to episodes
-            query = db.collection("Series").whereField("numberOfRatings", isEqualTo: true)
+//        case .featured: // this will be moved to episodes
+//            query = db.collection("Series").whereField("numberOfRatings", isEqualTo: true)
         case .popular:
             query = db.collection("Series").order(by: "populatScore", descending: true)
         case .new:
@@ -226,10 +228,8 @@ class SeriesManager: ObservableObject {
                     let seriesId = document.documentID
                     let seriesManager = SeriesManager()
                     await seriesManager.fetch(id: seriesId)
-                    print("series - fetch: \(seriesId)")
                     return seriesManager.series
                 }
-                print("group - fetchAllSeries: \(listType)")
             }
             
             for await result in group {
@@ -258,7 +258,6 @@ class SeriesManager: ObservableObject {
                     let seriesId = document.documentID
                     let seriesManager = SeriesManager()
                     await seriesManager.fetch(id: seriesId)
-                    print("series - fetch: \(seriesId)")
                     return seriesManager.series
                 }
             }

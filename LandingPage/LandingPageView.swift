@@ -29,9 +29,9 @@ struct LandingPageView: View {
                 }
                 
                 
-                Text("Featured Episodes")
-                    .modifier(LargeTitleStyle(theme: theme))
-                SeriesListView(seriesList: $landingPageVM.featuredSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.featured)
+//                Text("Featured Episodes")
+//                    .modifier(LargeTitleStyle(theme: theme))
+//                SeriesListView(seriesList: $landingPageVM.featuredSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.featured)
                 
                 
                 Text("Popular Series")
@@ -48,7 +48,7 @@ struct LandingPageView: View {
                 SeriesListView(seriesList: $landingPageVM.trendingSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.trending)
             }
         }
-        .padding()
+        //.padding()
     }
 }
 
@@ -64,38 +64,40 @@ struct SeriesListView: View {
         let uniqueSeriesList = seriesList.map { series in
             return (id: "\(series.id)_\(listType.hashValue)", series: series)
         }
-
-        LazyHStack(spacing: theme.spacing.cardPadding) {
-            ForEach(uniqueSeriesList, id: \.id) { item in
-                SeriesRow(series: item.series, seriesVM: landingPageVM.seriesVM)
-                    .onAppear {
-                        lastDisplayedSeries = item.series
-                    }
-                   .modifier(NavigationLinkStyle(theme: theme))
+        
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: theme.spacing.cardPadding) {
+                ForEach(uniqueSeriesList, id: \.id) { item in
+                    SeriesRow(series: item.series, seriesVM: landingPageVM.seriesVM)
+                        .onAppear {
+                            lastDisplayedSeries = item.series
+                        }
+                        .modifier(NavigationLinkStyle(theme: theme))
+                }
             }
-        }
-        .onChange(of: lastDisplayedSeries) { lastSeries in
-            var paginator =  landingPageVM.newPaginator
-            var fetchSeries = landingPageVM.fetchNewSeries
-            switch listType {
-            case .featured:
-                paginator = landingPageVM.featuredPaginator
-                fetchSeries = landingPageVM.fetchFeaturedSeries
-            case .new:
-                paginator = landingPageVM.newPaginator
-                fetchSeries = landingPageVM.fetchNewSeries
-            case .popular:
-                paginator = landingPageVM.popularPaginator
-                fetchSeries = landingPageVM.fetchPopularSeries
-            case .trending:
-                paginator = landingPageVM.trendingPaginator
-                fetchSeries = landingPageVM.fetchTrendingSeries
-            }
-
-            if paginator.hasMoreData &&
-                !paginator.isLoading {
-                ProgressView() // Show a loading indicator while loading more data
-                    .task{ await fetchSeries() }
+            .onChange(of: lastDisplayedSeries) { lastSeries in
+                var paginator =  landingPageVM.newPaginator
+                var fetchSeries = landingPageVM.fetchNewSeries
+                switch listType {
+//                case .featured:
+//                    paginator = landingPageVM.featuredPaginator
+//                    fetchSeries = landingPageVM.fetchFeaturedSeries
+                case .new:
+                    paginator = landingPageVM.newPaginator
+                    fetchSeries = landingPageVM.fetchNewSeries
+                case .popular:
+                    paginator = landingPageVM.popularPaginator
+                    fetchSeries = landingPageVM.fetchPopularSeries
+                case .trending:
+                    paginator = landingPageVM.trendingPaginator
+                    fetchSeries = landingPageVM.fetchTrendingSeries
+                }
+                
+                if paginator.hasMoreData &&
+                    !paginator.isLoading {
+                    ProgressView() // Show a loading indicator while loading more data
+                        .task{ await fetchSeries() }
+                }
             }
         }
     }

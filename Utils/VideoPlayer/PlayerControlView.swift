@@ -72,9 +72,12 @@ struct PlayerControlView: View {
     
     var body: some View {
         HStack {
+            Spacer()
             Toggle("Auto Play Next Episode", isOn: $autoPlayNextEpisode)
                 .padding()
                 .toggleStyle(ToggleBaseStyle(theme: theme))
+                .font(theme.typography.button)
+            Spacer()
             
             Button(action: rewindToBeginning) {
                 Image(systemName: "backward.end.fill")
@@ -92,15 +95,17 @@ struct PlayerControlView: View {
             
             if(!userVM.user.id.isEmpty) {
                 Button(action: updateBookmark) {
-                Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
+                    Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
+                }
             }
-        }
             
             //                        Button(action: share) {
             //                            Image(systemName: "square.and.arrow.up")
             //                        }
+            Spacer()
         }
         .buttonStyle(ButtonBaseStyle(theme: theme))
+        .background(theme.colors.tertiaryBackground)
         .task {
             if(!userVM.user.id.isEmpty) {
                 bookmarkVM.bookmark.userId = userVM.user.id

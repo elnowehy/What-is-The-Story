@@ -15,7 +15,7 @@
 		C51FC403299AF03B00D7D0C6 /* AccountMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC402299AF03B00D7D0C6 /* AccountMenu.swift */; };
 		C51FC405299AF2DC00D7D0C6 /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC404299AF2DC00D7D0C6 /* CommunityView.swift */; };
 		C523561D29A93AE600A079E8 /* SignOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523561C29A93AE600A079E8 /* SignOutView.swift */; };
-		C5379EB929A4078E009C0DD8 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = C5379EB829A4078E009C0DD8 /* Swinject */; };
+		C5383BD72A3F824600ADA8BB /* SavingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5383BD62A3F824600ADA8BB /* SavingProgressView.swift */; };
 		C538449129A5093900171A17 /* SwinjectAutoregistration in Frameworks */ = {isa = PBXBuildFile; productRef = C538449029A5093900171A17 /* SwinjectAutoregistration */; };
 		C53AE50F29F82C1B00F6B149 /* LandingPageVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53AE50E29F82C1B00F6B149 /* LandingPageVM.swift */; };
 		C55233B029F99562009C3CEE /* LandingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55233AF29F99562009C3CEE /* LandingPageView.swift */; };
@@ -32,7 +32,6 @@
 		C56B2E5129F969DB00EBF321 /* ViewRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56B2E5029F969DB00EBF321 /* ViewRating.swift */; };
 		C56E0DF62A17A76800A3DE56 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56E0DF52A17A76800A3DE56 /* Bookmark.swift */; };
 		C56E0DF82A17A8A300A3DE56 /* BookmarkVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56E0DF72A17A8A300A3DE56 /* BookmarkVM.swift */; };
-		C56E0DFA2A17A8DA00A3DE56 /* BookmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56E0DF92A17A8DA00A3DE56 /* BookmarkView.swift */; };
 		C56E0DFC2A17A99900A3DE56 /* BookmarkListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56E0DFB2A17A99900A3DE56 /* BookmarkListView.swift */; };
 		C56E0DFE2A17AC2800A3DE56 /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56E0DFD2A17AC2800A3DE56 /* BookmarkManager.swift */; };
 		C56E0E012A1D712500A3DE56 /* SearchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56E0E002A1D712500A3DE56 /* SearchVM.swift */; };
@@ -113,6 +112,7 @@
 		C51FC402299AF03B00D7D0C6 /* AccountMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountMenu.swift; sourceTree = "<group>"; };
 		C51FC404299AF2DC00D7D0C6 /* CommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
 		C523561C29A93AE600A079E8 /* SignOutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignOutView.swift; sourceTree = "<group>"; };
+		C5383BD62A3F824600ADA8BB /* SavingProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingProgressView.swift; sourceTree = "<group>"; };
 		C53AE50E29F82C1B00F6B149 /* LandingPageVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPageVM.swift; sourceTree = "<group>"; };
 		C55233AF29F99562009C3CEE /* LandingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPageView.swift; sourceTree = "<group>"; };
 		C55233B129FC245E009C3CEE /* ViewRatingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRatingVM.swift; sourceTree = "<group>"; };
@@ -127,7 +127,6 @@
 		C56B2E5029F969DB00EBF321 /* ViewRating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRating.swift; sourceTree = "<group>"; };
 		C56E0DF52A17A76800A3DE56 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		C56E0DF72A17A8A300A3DE56 /* BookmarkVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkVM.swift; sourceTree = "<group>"; };
-		C56E0DF92A17A8DA00A3DE56 /* BookmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkView.swift; sourceTree = "<group>"; };
 		C56E0DFB2A17A99900A3DE56 /* BookmarkListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkListView.swift; sourceTree = "<group>"; };
 		C56E0DFD2A17AC2800A3DE56 /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
 		C56E0E002A1D712500A3DE56 /* SearchVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVM.swift; sourceTree = "<group>"; };
@@ -203,7 +202,6 @@
 			files = (
 				C538449129A5093900171A17 /* SwinjectAutoregistration in Frameworks */,
 				C51FC3FB2996B2FE00D7D0C6 /* Algorithms in Frameworks */,
-				C5379EB929A4078E009C0DD8 /* Swinject in Frameworks */,
 				C59404DE296DCA88003F0FB7 /* FirebaseDatabaseSwift in Frameworks */,
 				C59404EE296E35B5003F0FB7 /* FirebaseAuth in Frameworks */,
 				C59404DC296DCA88003F0FB7 /* FirebaseDatabase in Frameworks */,
@@ -300,7 +298,6 @@
 			children = (
 				C56E0DF52A17A76800A3DE56 /* Bookmark.swift */,
 				C56E0DF72A17A8A300A3DE56 /* BookmarkVM.swift */,
-				C56E0DF92A17A8DA00A3DE56 /* BookmarkView.swift */,
 				C56E0DFB2A17A99900A3DE56 /* BookmarkListView.swift */,
 			);
 			path = Bookmark;
@@ -538,6 +535,7 @@
 				C5E00C162A0E7C3C00E37B0D /* RandomString.swift */,
 				C5E00C1A2A0EC0B500E37B0D /* Paginator.swift */,
 				C5B355A42A3B4257003CFAAD /* DateFormat.swift */,
+				C5383BD62A3F824600ADA8BB /* SavingProgressView.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -618,7 +616,6 @@
 				C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */,
 				C5A31655298B0DAA00D98972 /* FirebaseStorage */,
 				C51FC3FA2996B2FE00D7D0C6 /* Algorithms */,
-				C5379EB829A4078E009C0DD8 /* Swinject */,
 				C538449029A5093900171A17 /* SwinjectAutoregistration */,
 			);
 			productName = "What is The Story";
@@ -691,7 +688,6 @@
 				C5A6F1DB2A2509D10061A479 /* PlayerControlView.swift in Sources */,
 				C58F2397299D55A5009DA4BF /* SettingsView.swift in Sources */,
 				C5E2140F29F05E5400292118 /* CategoryManager.swift in Sources */,
-				C56E0DFA2A17A8DA00A3DE56 /* BookmarkView.swift in Sources */,
 				C59E4E5D29D2522800D9577E /* SeriesVM.swift in Sources */,
 				C5B7577E297EF9B200186852 /* AuthManager.swift in Sources */,
 				C56E0DFE2A17AC2800A3DE56 /* BookmarkManager.swift in Sources */,
@@ -732,6 +728,7 @@
 				C5E9FBD32979EC7F00121C45 /* Comment.swift in Sources */,
 				C51FC3FF299AEF3800D7D0C6 /* UserVM.swift in Sources */,
 				C5AFDC3E29BE850200B2F6E2 /* Image2Data.swift in Sources */,
+				C5383BD72A3F824600ADA8BB /* SavingProgressView.swift in Sources */,
 				C56E0E032A1D75A100A3DE56 /* SearchView.swift in Sources */,
 				C568046A2A0A868900094AC3 /* ViewRatingView.swift in Sources */,
 				C5E00C192A0E814600E37B0D /* UserViewHistoryView.swift in Sources */,
@@ -824,9 +821,9 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = "-D EMULATORS";
+				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = EMULATORS;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Emulators;
@@ -837,9 +834,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SQNNWLK4H9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "What-is-The-Story-Info.plist";
@@ -854,6 +854,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.elnowehy.wits.What-is-The-Story";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = FirstWITSaddHoc;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -980,9 +982,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SQNNWLK4H9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "What-is-The-Story-Info.plist";
@@ -997,6 +1002,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.elnowehy.wits.What-is-The-Story";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = FirstWITSaddHoc;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1009,9 +1016,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SQNNWLK4H9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "What-is-The-Story-Info.plist";
@@ -1026,6 +1036,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.elnowehy.wits.What-is-The-Story";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = FirstWITSaddHoc;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1097,11 +1109,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C51FC3F92996B2FE00D7D0C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
 			productName = Algorithms;
-		};
-		C5379EB829A4078E009C0DD8 /* Swinject */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C5379EB729A4078E009C0DD8 /* XCRemoteSwiftPackageReference "Swinject" */;
-			productName = Swinject;
 		};
 		C538449029A5093900171A17 /* SwinjectAutoregistration */ = {
 			isa = XCSwiftPackageProductDependency;

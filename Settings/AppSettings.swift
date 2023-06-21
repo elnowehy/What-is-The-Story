@@ -11,7 +11,7 @@ struct AppSettings {
     static let pageSize = 20
     
     enum SeriesListType {
-        case featured
+  //      case featured
         case popular
         case new
         case trending

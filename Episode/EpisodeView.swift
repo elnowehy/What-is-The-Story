@@ -26,7 +26,8 @@ struct EpisodeView: View {
     @State private var countViews = true
     @EnvironmentObject var userVM: UserVM
     @EnvironmentObject var theme: Theme
-
+    @State private var isSynopsisExpanded = false
+    @State private var isPollExpanded = false
 
     private func handleViewCount() {
         let duration = player?.currentItem?.duration.seconds ?? 0
@@ -48,44 +49,70 @@ struct EpisodeView: View {
     }
     
     var body: some View {
-        GeometryReader { geo in
-            NavigationStack {
-                VStack {
-                    Spacer()
-                    VStack {
-                        Text(episodeVM.episode.title)
-                        if episodeVM.episode.votingOpen {
-                            Text(episodeVM.episode.question)
-                            Text(episodeVM.episode.pollClosingDate.formatted())
+        NavigationStack {
+            VStack(spacing: theme.spacing.medium) {
+                
+                Text(episodeVM.episode.title)
+                
+                VideoPlayerView(player: $player)
+                
+                ViewRatingView(episode: $episode, showRating: $showRating)
+                    .environmentObject(viewRatingVM)
+                
+                PlayerControlView(episodeVM: episodeVM, player: $player)
+                
+                Divider()
+                DisclosureGroup(isExpanded: $isSynopsisExpanded) {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(episodeVM.episode.synopsis)
+                                .font(theme.typography.body)
+                                .foregroundColor(theme.colors.text)
+                                .multilineTextAlignment(.leading)
+                            Spacer()
                         }
+                        Spacer()
                     }
-                    .padding(.bottom)
-                    
-                    VideoPlayerView(player: $player)
-        
-                    ViewRatingView(episode: $episode, showRating: $showRating)
-                        .environmentObject(viewRatingVM)
-                        
-                    PlayerControlView(episodeVM: episodeVM, player: $player)
-
-                    Divider()
-                    ScrollView {
-                        Text(episodeVM.episode.synopsis)
-                    }
-                    .padding(.bottom)
-
-                    Spacer()
-                    if episodeVM.episode.userId == userVM.user.id {
-                        NavigationLink("Update") {
-                            EpisodeUpdate(episodeVM: episodeVM, mode: .update)
+                } label: {
+                    Text("Synopsis")
+                        .font(theme.typography.subtitle)
+                        .foregroundColor(theme.colors.text)
+                }
+                
+                
+                if episodeVM.episode.votingOpen {
+                    DisclosureGroup(isExpanded: $isPollExpanded) {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(episodeVM.episode.question)
+                                    .font(theme.typography.body)
+                                    .foregroundColor(theme.colors.text)
+                                    .multilineTextAlignment(.leading)
+                                Text("Closing Date: \(formattedTimestamp(for:  episodeVM.episode.pollClosingDate))")
+                                    .font(theme.typography.caption)
+                                    .foregroundColor(theme.colors.accent)
+                            }
+                            Spacer()
                         }
-                        .modifier(NavigationLinkStyle(theme: theme))
+                    } label: {
+                        Text("Poll")
+                            .font(theme.typography.subtitle)
+                            .foregroundColor(theme.colors.text)
                     }
+                }
+                
+                Spacer()
+                if episodeVM.episode.userId == userVM.user.id {
+                    NavigationLink("Update") {
+                        EpisodeUpdate(episodeVM: episodeVM, mode: .update)
+                            .environmentObject(seriesVM)
+                    }
+                    .modifier(NavigationLinkStyle(theme: theme))
                 }
             }
         }
-//        .background(ShareSheet(items: [episode.video.absoluteString], isPresented: $showShareSheet, onShareCompletion: onShareCompletion))
-
+        //        .background(ShareSheet(items: [episode.video.absoluteString], isPresented: $showShareSheet, onShareCompletion: onShareCompletion))
+        .padding()
         .onAppear{
             print(".onAppear \(episode.video)")
             episodeVM.episode = episode
@@ -98,7 +125,7 @@ struct EpisodeView: View {
                 }
             }
         }
-
+        
         .onDisappear {
             print("onDisappear \(episode.title)")
             if let observer = timeObserver {

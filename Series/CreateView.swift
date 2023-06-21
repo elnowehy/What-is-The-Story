@@ -37,12 +37,15 @@ struct CreateView: View {
             
             Spacer()
             NavigationLink(
-                destination: SeriesUpdateView(seriesVM: seriesVM).environmentObject(profileVM),
+                destination: SeriesUpdateView(seriesVM: seriesVM)
+                    .environmentObject(profileVM)
+                    .onAppear{ seriesVM.series = Series() },
                 label: {
                     Text("Create Series")
                 }
             )
             .modifier(NavigationLinkStyle(theme: theme))
+            
             Divider()
             
             List(seriesVM.seriesList) { series in
@@ -61,17 +64,29 @@ struct CreateView: View {
                 .font(theme.typography.subtitle)
                 // .modifier(NavigationLinkStyle(theme: theme))
             }
+            .padding()
             
         }
         .task {
-            if authManager.isLoggedIn {
-                profileVM.profile.id = userVM.user.profileIds[0]
-                await profileVM.fetch()
-                print(profileVM.profile.id)
-                if !profileVM.profile.seriesIds.isEmpty {
-                    seriesVM.seriesIds = profileVM.profile.seriesIds
-                    await seriesVM.fetch()
-                }
+            await loadSeries()
+        }
+        
+//        .onChange(of: profileVM.profile.seriesIds.last) { _ in
+//            Task {
+//                print("series count: \(seriesVM.seriesList.count)")
+//                await loadSeries()
+//            }
+//        }
+    }
+    
+    @MainActor
+    private func loadSeries() async {
+        if authManager.isLoggedIn {
+            profileVM.profile.id = userVM.user.profileIds[0]
+            await profileVM.fetch()
+            if !profileVM.profile.seriesIds.isEmpty {
+                seriesVM.seriesIds = profileVM.profile.seriesIds
+                await seriesVM.fetch()
             }
         }
     }

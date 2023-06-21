@@ -65,9 +65,11 @@ struct AccountMenu: View {
                 
             }
         }
-        .onAppear {
+        .task {
             if authManager.isLoggedIn {
                 profileVM.profile.id = userVM.user.profileIds[0]
+                await profileVM.fetch()
+                await profileVM.fetchInfo()
             } 
         }
         .font(theme.typography.subtitle)

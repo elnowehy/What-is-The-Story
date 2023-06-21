@@ -38,14 +38,14 @@ class EpisodeVM: ObservableObject{
         self.episodeList = fetchedEpisodes.sorted(by: { $0.index < $1.index }).map { $0.episode }
     }
     
-    @MainActor
-    func fetchEpisodeByTitle(title: String) async -> [Episode] {
-        episodeList = []
-        
-        episodeList = await self.episodeManager.fetchByQuery(field: "title", prefix: title, pageSize: AppSettings.pageSize)
-        
-        return episodeList
-    }
+//    @MainActor
+//    func fetchEpisodeByTitle(title: String) async -> [Episode] {
+//        episodeList = []
+//        
+//        episodeList = await self.episodeManager.fetchByQuery(field: "title", prefix: title, pageSize: AppSettings.pageSize)
+//        
+//        return episodeList
+//    }
 
     @MainActor
     func create() async -> String {

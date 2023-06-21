@@ -23,13 +23,13 @@ struct SignInView: View {
                     .modifier(LargeTitleStyle(theme: theme))
                 
                 TextField("Email", text: $userVM.user.email)
-                    .textFieldStyle(TextFieldBaseStyle(theme: theme))
+                    .textFieldStyle(TextFieldLoginStyle(theme: theme))
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .submitLabel(.next)
                 
                 SecureField("Password", text: $userVM.user.password)
-                    .textFieldStyle(TextFieldBaseStyle(theme: theme))
+                    .textFieldStyle(TextFieldLoginStyle(theme: theme))
                     .submitLabel(.done)
                 
             }

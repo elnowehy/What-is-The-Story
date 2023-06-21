@@ -45,7 +45,6 @@ struct CategorySelectionView: View {
         }
         .task {
             await categoryVM.fetchCategories()
-            print(categoryVM.categoryList.count)
         }
     }
 }

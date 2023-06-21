@@ -24,9 +24,9 @@ class SeriesVM: ObservableObject{
         await withTaskGroup(of: Series.self) { group in
             for id in seriesIds {
                 group.addTask {
-                    self.seriesManager.series = Series()
-                    await self.seriesManager.fetch(id: id)
-                    return self.seriesManager.series
+                    let seriesManager = SeriesManager()
+                    let series = await seriesManager.fetch(id: id)
+                    return series
                 }
             }
             for await series in group {
@@ -57,15 +57,6 @@ class SeriesVM: ObservableObject{
         return seriesList
     }
     
-//    @MainActor
-//    func fetchSeriesByTitle(title: String) async -> [Series] {
-//        seriesList = []
-//        
-//        seriesList = await self.seriesManager.fetchByQuery(field: "title", prefix: title, pageSize: AppSettings.pageSize)
-//        
-//        return seriesList
-//    }
-// 
     @MainActor
     func create() async -> String {
         seriesManager.posterImage = posterImage
@@ -75,13 +66,12 @@ class SeriesVM: ObservableObject{
         seriesManager.series = series
         async let seriesId = seriesManager.create()
         series.id = await seriesId
+        seriesList.append(series)
+        seriesIds.append(series.id)
         return await seriesId
     }
     
-    // updates a profile with the profile data
-    // input: a populated Profile struct
-    // output: an updaetd Profile struct
-    // return: Void
+
     @MainActor
     func update() async {
         seriesManager.posterImage = posterImage

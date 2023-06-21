@@ -23,6 +23,21 @@ struct TextFieldBaseStyle: TextFieldStyle {
     }
 }
 
+struct TextFieldLoginStyle: TextFieldStyle {
+    var theme: Theme
+    var maxWidth: CGFloat? = nil // Add this
+
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .font(theme.typography.subtitle)
+            .padding(5)
+            .background(theme.colors.tertiaryBackground)
+            .foregroundColor(theme.colors.text)
+            .cornerRadius(8)
+            .shadow(color: theme.colors.shadow, radius: theme.shapes.shadowRadius)
+            .frame(maxWidth: maxWidth)
+    }
+}
 
 struct TagTextBaseStyle: ViewModifier {
     var theme: Theme
@@ -62,7 +77,7 @@ struct NavigationLinkStyle: ViewModifier {
             .font(theme.typography.button)
             .foregroundColor(theme.colors.primaryBackground)
             .padding(theme.spacing.button)
-            .background(theme.colors.accent) // Use secondary background for a slightly darker shade
+            .background(theme.colors.accent) 
             .cornerRadius(theme.shapes.largeCornerRadius)
             .scaleEffect(1.0) // Apply any desired scale effect
     }
@@ -173,13 +188,27 @@ struct ThumbStyleModifier: ViewModifier {
         content
             .aspectRatio(contentMode: .fill)
             .frame(width: theme.dimensions.thumbWidth, height: theme.dimensions.thumbHieght)
-            //.clipped()
+            .clipShape(Circle())
             .cornerRadius(theme.spacing.cardPadding)
             .background(theme.colors.tertiaryBackground)
     }
 }
 
 struct PhotoStyleModifier: ViewModifier {
+    var theme: Theme
+    
+    func body(content: Content) -> some View {
+        content
+            .aspectRatio(contentMode: .fill)
+            .frame(width: theme.dimensions.photoWidth, height: theme.dimensions.photoHeight)
+            // .clipped()
+            .cornerRadius(theme.spacing.cardPadding)
+            .border(theme.colors.accent, width: theme.spacing.small)
+            .background(theme.colors.tertiaryBackground)
+    }
+}
+
+struct PosterStyleModifier: ViewModifier {
     var theme: Theme
     
     func body(content: Content) -> some View {

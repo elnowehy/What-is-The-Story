@@ -62,7 +62,6 @@ struct SeriesView: View {
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: .infinity)
                                 .onTapGesture {
                                     isPlayingVideo = true
                                 }
@@ -77,12 +76,18 @@ struct SeriesView: View {
                 
                 Divider()
                 DisclosureGroup(isExpanded: $isSynopsisExpanded) {
-                    Text(seriesVM.series.synopsis)
-                        .font(theme.typography.body)
-                        .foregroundColor(theme.colors.text)
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(seriesVM.series.synopsis)
+                                .font(theme.typography.body)
+                                .foregroundColor(theme.colors.text)
+                                .multilineTextAlignment(.leading)
+                        }
+                        Spacer()
+                    }
                 } label: {
                     Text("Synopsis")
-                        .font(theme.typography.text)
+                        .font(theme.typography.subtitle)
                         .foregroundColor(theme.colors.text)
                 }
                 
@@ -142,6 +147,7 @@ struct SeriesView: View {
                 }
             }
         }
+        .padding()
         .onAppear{
             seriesVM.series = series
             averageRating = series.averageRating

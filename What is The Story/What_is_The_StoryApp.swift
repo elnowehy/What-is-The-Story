@@ -18,6 +18,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
+        AppDelegate.db = Firestore.firestore()
+        AppDelegate.storage = Storage.storage()
+        
 #if EMULATORS
         print("******* EMULATOR *******")
         Auth.auth().useEmulator(withHost:"localhost", port:9099)
@@ -26,9 +29,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         settings.host = "localhost:8080"
         settings.isPersistenceEnabled = true
         settings.isSSLEnabled = false
-        AppDelegate.db = Firestore.firestore()
         AppDelegate.db.settings = settings
-        AppDelegate.storage = Storage.storage()
         Storage.storage().useEmulator(withHost: "localhost", port: 9199)
 
 #elseif DEBUG

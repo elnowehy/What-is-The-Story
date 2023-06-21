@@ -82,12 +82,6 @@ struct ProfileView: View {
             .sheet(isPresented: $isPresentingProfileEdit) {
                 ProfileUpdate(presentationMode: $isPresentingProfileEdit)
             }
-            .onAppear{
-                Task {
-                    await profileVM.fetch()
-                    await profileVM.fetchInfo()
-                }
-            }
         }
     }
 }

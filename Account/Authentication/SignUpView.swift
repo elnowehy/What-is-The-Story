@@ -27,14 +27,14 @@ struct SignUpView: View {
                     
                     
                     TextField("Email", text: $user.email)
-                        .textFieldStyle(TextFieldBaseStyle(theme: theme))
+                        .textFieldStyle(TextFieldLoginStyle(theme: theme))
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .submitLabel(.next)
                     
                     
                     SecureField("Password", text: $user.password)
-                        .textFieldStyle(TextFieldBaseStyle(theme: theme))
+                        .textFieldStyle(TextFieldLoginStyle(theme: theme))
                         .submitLabel(.done)
                     
                     

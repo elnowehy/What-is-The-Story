@@ -11,7 +11,7 @@ import FirebaseFirestore
 class LandingPageVM: ObservableObject {
     @Published var categories: [Category] = []
     @Published var selectedCategory: Category? = nil
-    @Published var featuredSeries: [Series] = []
+    //@Published var featuredSeries: [Series] = []
     @Published var popularSeries: [Series] = []
     @Published var newSeries: [Series] = []
     @Published var trendingSeries: [Series] = []
@@ -28,13 +28,15 @@ class LandingPageVM: ObservableObject {
     private var pageSize: Int = AppSettings.pageSize
 
     init() {
-        fetchInitialData()
+        Task {
+            await fetchCategories()
+            fetchInitialData()
+        }
     }
 
     private func fetchInitialData() {
         Task {
-            await fetchCategories()
-            await fetchFeaturedSeries()
+//            await fetchFeaturedSeries()
             await fetchPopularSeries()
             await fetchNewSeries()
             await fetchTrendingSeries()
@@ -47,12 +49,12 @@ class LandingPageVM: ObservableObject {
         categories = categoryVM.categoryList
     }
     
-    @MainActor
-    func fetchFeaturedSeries() async {
-        await featuredPaginator.loadMoreData(fetch: { page, pageSize in
-            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.featured, category: self.selectedCategory)
-        }, appendTo: &self.featuredSeries)
-    }
+//    @MainActor
+//    func fetchFeaturedSeries() async {
+//        await featuredPaginator.loadMoreData(fetch: { page, pageSize in
+//            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.featured, category: self.selectedCategory)
+//        }, appendTo: &self.featuredSeries)
+//    }
 
     @MainActor
     func fetchPopularSeries() async {
@@ -77,7 +79,14 @@ class LandingPageVM: ObservableObject {
 
     @MainActor
     func selectCategory(_ category: Category) {
-        selectedCategory = category
+        if selectedCategory == category {
+            selectedCategory = nil
+        } else {
+            selectedCategory = category
+        }
+        self.popularSeries = []
+        self.newSeries = []
+        self.trendingSeries = []
         self.featuredPaginator.reset()
         self.popularPaginator.reset()
         self.newPaginator.reset()

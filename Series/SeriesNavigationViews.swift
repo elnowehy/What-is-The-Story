@@ -16,8 +16,6 @@ struct SeriesRow: View {
         NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series)) {
             SeriesNavigationLinkView(series: series)
         }
-//        .modifier(NavigationLinkStyle(theme: theme))
-//        .padding(theme.spacing.cardPadding)
     }
 }
 
