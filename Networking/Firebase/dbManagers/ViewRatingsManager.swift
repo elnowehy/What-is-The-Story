@@ -102,10 +102,11 @@ class ViewRatingManager: ObservableObject {
     }
     
     @MainActor
-    func fetchUserHistory(userId: String, sortOrder: ViewRatingVM.SortOrder, pageSize: Int) async -> [ViewRating]{
+    func fetchUserHistory<PaginatableItem: Paginatable>(userId: String, sortOrder: ViewRatingVM.SortOrder) async throws -> PaginatedResult< ViewRating, PaginatableItem> {
+        
         selectedEpisodes = []
         // print("**\(userId)**")
-        var query = db.collection("ViewRating").whereField("userId", isEqualTo: userId).limit(to: pageSize)
+        var query = db.collection("ViewRating").whereField("userId", isEqualTo: userId).limit(to: AppSettings.pageSize)
         
         switch sortOrder {
         case .timestampAscending:
@@ -122,21 +123,18 @@ class ViewRatingManager: ObservableObject {
             query = query.start(afterDocument: lastDocument)
         }
         
-        do {
-            let documents = try await query.getDocuments()
-            for document in documents.documents {
-                self.data = document.data()
-                populateStruct()
-                selectedEpisodes.append(viewRating)
-            }
-            
-            lastDocument = documents.documents.last
-            
-        } catch {
-            print(error.localizedDescription)
+        
+        let documents = try await query.getDocuments()
+        for document in documents.documents {
+            self.data = document.data()
+            populateStruct()
+            selectedEpisodes.append(viewRating)
         }
         
-        return selectedEpisodes
+        let lastDocument = documents.documents.last as? PaginatableItem
+        
+        return PaginatedResult(items: selectedEpisodes, lastItem: lastDocument)
+        
     }
     
     @MainActor

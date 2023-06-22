@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Swinject
 //  Manages User data through UserManager. Acts as an abstraction layer
 //  for the underlying database.
 //  UserVM.user is populated by the calling function/view, before

@@ -10,6 +10,7 @@ import SwiftUI
 class SeriesVM: ObservableObject{
     @Published var seriesList = [Series]()
     @Published var series = Series()
+    @Published var currentPage = 0
     public var seriesIds = [String]()
     public var posterImage = UIImage(systemName: "photo")!
     public var updatePoster = false
@@ -19,31 +20,36 @@ class SeriesVM: ObservableObject{
 
 
     @MainActor
-    func fetch() async {
-        self.seriesList = []
-        await withTaskGroup(of: Series.self) { group in
-            for id in seriesIds {
-                group.addTask {
-                    let seriesManager = SeriesManager()
-                    let series = await seriesManager.fetch(id: id)
-                    return series
-                }
-            }
-            for await series in group {
-                self.seriesList.append(series)
-            }
+    func fetch() async -> [Series] {
+        if seriesList.isEmpty {
+            return seriesList
         }
+        
+        let startIndex = currentPage * AppSettings.pageSize
+        let endIndex = min(startIndex + AppSettings.pageSize, seriesIds.count)
+        let pageIds = Array(seriesIds[startIndex..<endIndex])
+
+        for id in pageIds {
+            let seriesManager = SeriesManager()
+            let series = await seriesManager.fetch(id: id)
+            seriesList.append(series)
+        }
+        
+        currentPage += 1
+        return seriesList
     }
+
     
     @MainActor
-    func fetchSeriesList(listType: AppSettings.SeriesListType, category: Category? = nil) async -> [Series] {
-        seriesList = []
+    func fetchSeriesList<PaginatableItem: Paginatable>(listType: AppSettings.SeriesListType, category: Category? = nil, lastDocument: PaginatableItem? = nil) async -> PaginatedResult<Series, PaginatableItem> {
+        var paginatedSeries = PaginatedResult<Series, PaginatableItem>(items: [], lastItem: nil)
+        
         do {
-            seriesList = try await self.seriesManager.fetchAllSeries(listType: listType, category: category, pageSize: AppSettings.pageSize)
+            paginatedSeries = try await self.seriesManager.fetchAllSeries(listType: listType, category: category, pageSize: AppSettings.pageSize, startAfter: lastDocument)
         } catch {
             print(error.localizedDescription)
         }
-        return seriesList
+        return paginatedSeries
     }
     
     @MainActor
@@ -132,6 +138,11 @@ class SeriesVM: ObservableObject{
         series.totalRatings -= old
         series.totalRatings += new
         await update()
+    }
+    
+    func reset() {
+        currentPage = 0
+        seriesList = []
     }
     
 }

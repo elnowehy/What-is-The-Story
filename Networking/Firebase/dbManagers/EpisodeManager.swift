@@ -87,7 +87,7 @@ class EpisodeManager: ObservableObject {
     }
     
     @MainActor
-    func fetch(id: String) async {
+    func fetch(id: String) async -> Episode {
         episode.id = id
         setRef()
         do {
@@ -100,6 +100,8 @@ class EpisodeManager: ObservableObject {
         } catch {
             print(error.localizedDescription)
         }
+        
+        return episode
     }
     
 //    @MainActor

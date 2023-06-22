@@ -13,7 +13,7 @@ class BookmarkVM: ObservableObject {
     @Published var userId: String = ""
     @Published var isLoading = false
     @Published var bookmarks: [Bookmark] = []
-    public var paginator = Paginator<Bookmark>()
+    public var paginator = Paginator<Bookmark, DBPaginatable>()
     
     enum SortOrder {
         case timestampAscending
@@ -49,13 +49,25 @@ class BookmarkVM: ObservableObject {
         isLoading = false
     }
     
+//    @MainActor
+//    func fetchUserBookmarks(pageSize: Int, sortOrder: SortOrder) async {
+// 
+//        await paginator.loadMoreData(fetch: { page, pageSize in
+//            await self.bookmarkManager.fetchUserBookmarks( userId: self.userId, sortOrder: sortOrder, pageSize: pageSize)
+//        }, appendTo: &self.bookmarks)
+//
+//    }
+    
     @MainActor
-    func fetchUserBookmarks(pageSize: Int, sortOrder: SortOrder) async {
- 
-        await paginator.loadMoreData(fetch: { page, pageSize in
-            await self.bookmarkManager.fetchUserBookmarks( userId: self.userId, sortOrder: sortOrder, pageSize: pageSize)
-        }, appendTo: &self.bookmarks)
-
+    func fetchUserBookmarks(sortOrder: SortOrder) async {
+        do {
+            await paginator.loadMoreData(fetch: { lastDocument, pageSize in
+                // Inside this closure, call the actual fetch method from the manager
+                return try await self.bookmarkManager.fetchUserBookmarks(userId: self.userId, sortOrder: sortOrder, startAfter: lastDocument)
+            }, appendTo: &self.bookmarks)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     func delete() {

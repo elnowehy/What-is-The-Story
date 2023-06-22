@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 class ViewRatingVM: ObservableObject {
     @Published var viewRating = ViewRating()
@@ -18,7 +19,7 @@ class ViewRatingVM: ObservableObject {
     @Published var firstView: Bool = false
     @Published var userId: String = ""
     @Published var viewHistory: [ViewRating] = []
-    public var paginator = Paginator<ViewRating>()
+    public var paginator = Paginator<ViewRating, DBPaginatable>()
     
     enum SortOrder {
         case timestampAscending
@@ -76,11 +77,15 @@ class ViewRatingVM: ObservableObject {
     }
     
     @MainActor
-    func fetchUserHistory(pageSize: Int, sortOrder: SortOrder) async {
+    func fetchUserHistory(sortOrder: SortOrder) async {
  
-        await paginator.loadMoreData(fetch: { page, pageSize in
-            await self.viewRatingManager.fetchUserHistory( userId: self.userId, sortOrder: sortOrder, pageSize: pageSize)
-        }, appendTo: &self.viewHistory)
+        do {
+            await paginator.loadMoreData(fetch: { page, pageSize in
+                return try await self.viewRatingManager.fetchUserHistory( userId: self.userId, sortOrder: sortOrder)
+            }, appendTo: &self.viewHistory)
+        } catch {
+            print(error.localizedDescription)
+        }
 
     }
     

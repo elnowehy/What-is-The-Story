@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import FirebaseFirestore
 
 class LandingPageVM: ObservableObject {
     @Published var categories: [Category] = []
@@ -15,10 +14,10 @@ class LandingPageVM: ObservableObject {
     @Published var popularSeries: [Series] = []
     @Published var newSeries: [Series] = []
     @Published var trendingSeries: [Series] = []
-    @Published public var featuredPaginator = Paginator<Series>()
-    @Published public var popularPaginator = Paginator<Series>()
-    @Published public var newPaginator = Paginator<Series>()
-    @Published public var trendingPaginator = Paginator<Series>()
+    // @Published public var featuredPaginator = Paginator<Series, DocumentSnapshot>()
+    @Published public var popularPaginator = Paginator<Series, DBPaginatable>()
+    @Published public var newPaginator = Paginator<Series, DBPaginatable>()
+    @Published public var trendingPaginator = Paginator<Series, DBPaginatable>()
 
 
     public var seriesVM = SeriesVM()
@@ -87,7 +86,7 @@ class LandingPageVM: ObservableObject {
         self.popularSeries = []
         self.newSeries = []
         self.trendingSeries = []
-        self.featuredPaginator.reset()
+        // self.featuredPaginator.reset()
         self.popularPaginator.reset()
         self.newPaginator.reset()
         self.trendingPaginator.reset()

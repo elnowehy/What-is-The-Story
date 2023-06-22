@@ -85,7 +85,7 @@ struct BookmarkListView: View {
     private func fetchAndSortBookmarks() {
         Task {
             let sortOrder = ascendingOrder ? BookmarkVM.SortOrder.timestampAscending : BookmarkVM.SortOrder.timestampDescending
-            await bookmarkVM.fetchUserBookmarks(pageSize: pageSize, sortOrder: sortOrder)
+            await bookmarkVM.fetchUserBookmarks(sortOrder: sortOrder)
             
             let snapshot = bookmarkVM.bookmarks.sorted(by: {
                 return ascendingOrder ? $0.timestamp < $1.timestamp : $0.timestamp > $1.timestamp

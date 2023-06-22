@@ -74,7 +74,7 @@ struct UserViewHistoryView: View {
             ? (sortOption == 0 ? ViewRatingVM.SortOrder.timestampAscending : ViewRatingVM.SortOrder.ratingAscending)
             : (sortOption == 0 ? ViewRatingVM.SortOrder.timestampDescending : ViewRatingVM.SortOrder.ratingDescending)
             
-            await viewRatingVM.fetchUserHistory(pageSize: pageSize, sortOrder: sortOrder)
+            await viewRatingVM.fetchUserHistory(sortOrder: sortOrder)
             
             let snapshot = viewRatingVM.viewHistory.sorted(by: {
                 if sortOption == 0 {

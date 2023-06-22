@@ -13,8 +13,8 @@ struct SearchResult: Hashable {
 
 class SearchVM: ObservableObject {
     @Published var searchResults: [SearchResult] = []  
-    @Published var seriesPaginator = Paginator<SearchResult>()
-    @Published var episodePaginator = Paginator<SearchResult>()
+    var seriesPaginator = ArrayPaginator<Series>()
+    var episodePaginator = ArrayPaginator<Episode>()
     
     @Published var categories = [Category]()
     @Published var selectedCategories = [Category]()
@@ -51,6 +51,7 @@ class SearchVM: ObservableObject {
     func search(tags: [String]) {
         // Clear the previous results
         resetSearch()
+        seriesVM.reset()
         Task {
             do {
                 let categories: [String] = selectedCategories.map { $0.id }
@@ -94,17 +95,13 @@ class SearchVM: ObservableObject {
     func seriesResult(seriesList: [String]) {
         seriesVM.seriesIds = seriesList
         Task {
-            await seriesPaginator.loadMoreData(fetch: { [self] page, pageSize in
-                await seriesVM.fetch()
-                let list = seriesVM.seriesList
-                var results = [SearchResult]()
-                
-                for series in list {
-                    let searchResult = SearchResult(title: series.title, description: series.synopsis)
-                    results.append(searchResult)
-                }
-                return results
-            }, appendTo: &self.searchResults)
+            do {
+                let fetchedSeries = try await seriesPaginator.loadMoreData(fetch: seriesVM.fetch)
+                let searchResults = fetchedSeries.map { SearchResult(title: $0.title, description: $0.synopsis) }
+                self.searchResults.append(contentsOf: searchResults)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
     
@@ -112,20 +109,16 @@ class SearchVM: ObservableObject {
     func episodeResult(episodeList: [String]) {
         episodeVM.episodeIds = episodeList
         Task {
-            await episodePaginator.loadMoreData(fetch: { [self] page, pageSize in
-                await episodeVM.fetch()
-                let list = episodeVM.episodeList
-                var results = [SearchResult]()
-                
-                for episode in list {
-                    let searchResult = SearchResult(title: episode.title, description: episode.synopsis)
-                    results.append(searchResult)
-                }
-                return results
-            }, appendTo: &self.searchResults)
+            do {
+                let fetchedEpisodes = try await episodePaginator.loadMoreData(fetch: episodeVM.fetch)
+                let searchResults = fetchedEpisodes.map { SearchResult(title: $0.title, description: $0.synopsis) }
+                self.searchResults.append(contentsOf: searchResults)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
-
+    
     // Reset search
     func resetSearch() {
         searchResults = []

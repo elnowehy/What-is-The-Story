@@ -10,6 +10,7 @@ import SwiftUI
 class EpisodeVM: ObservableObject{
     @Published var episodeList = [Episode]()
     @Published var episode = Episode()
+    @Published var currentPage = 0
     public var episodeIds = [String]()
     public var videoData = Data()
     public var updateVideo = false
@@ -19,23 +20,20 @@ class EpisodeVM: ObservableObject{
         episodeManager = EpisodeManager()
     }
     
+    
     @MainActor
-    func fetch() async {
-        self.episodeList = []
-        var fetchedEpisodes: [(index: Int, episode: Episode)] = []
-        await withTaskGroup(of: (index: Int, episode: Episode).self) { group in
-            for (index, id) in episodeIds.enumerated() {
-                group.addTask {
-                    let episodeManager = EpisodeManager()
-                    await episodeManager.fetch(id: id)
-                    return (index, episodeManager.episode)
-                }
-            }
-            for await result in group {
-                fetchedEpisodes.append(result)
-            }
+    func fetch() async -> [Episode] {
+        let startIndex = currentPage * AppSettings.pageSize
+        let endIndex = min(startIndex + AppSettings.pageSize, episodeIds.count)
+        let pageIds = Array(episodeIds[startIndex..<endIndex])
+        
+        for id in pageIds {
+            let episodeManager = EpisodeManager()
+            let episode = await episodeManager.fetch(id: id)
+            self.episodeList.append(episode)
         }
-        self.episodeList = fetchedEpisodes.sorted(by: { $0.index < $1.index }).map { $0.episode }
+        
+        return episodeList
     }
     
 //    @MainActor

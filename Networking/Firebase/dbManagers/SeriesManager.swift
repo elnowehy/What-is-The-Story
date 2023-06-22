@@ -200,19 +200,17 @@ class SeriesManager: ObservableObject {
     }
     
     @MainActor
-    func fetchAllSeries(listType: AppSettings.SeriesListType, category: Category? = nil, pageSize: Int) async throws -> [Series] {
+    func fetchAllSeries<PaginatableItem: Paginatable>(listType: AppSettings.SeriesListType, category: Category? = nil, pageSize: Int, startAfter: PaginatableItem? = nil) async throws -> PaginatedResult<Series, PaginatableItem> {
         var fetchedSeries: [Series] = []
         var query: Query
         
         switch listType {
-//        case .featured: // this will be moved to episodes
-//            query = db.collection("Series").whereField("numberOfRatings", isEqualTo: true)
-        case .popular:
-            query = db.collection("Series").order(by: "populatScore", descending: true)
-        case .new:
-            query = db.collection("Series").order(by: "newScore", descending: true)
-        case .trending:
-            query = db.collection("Series").order(by: "trendingScore", descending: true)
+            case .popular:
+                query = db.collection("Series").order(by: "populatScore", descending: true)
+            case .new:
+                query = db.collection("Series").order(by: "newScore", descending: true)
+            case .trending:
+                query = db.collection("Series").order(by: "trendingScore", descending: true)
         }
         
         if let category = category {
@@ -220,6 +218,11 @@ class SeriesManager: ObservableObject {
         }
         
         query = query.limit(to: pageSize)
+        
+        if let startAfter = startAfter as? DocumentSnapshot {
+            query.start(afterDocument: startAfter)
+        }
+        
         let querySnapshot = try await query.getDocuments()
         
         await withTaskGroup(of: Series.self) { group in
@@ -237,8 +240,10 @@ class SeriesManager: ObservableObject {
             }
         }
         
-        return fetchedSeries
+        let lastDocument = querySnapshot.documents.last as? PaginatableItem
+        return PaginatedResult(items: fetchedSeries, lastItem: lastDocument)
     }
+
     
     
     @MainActor

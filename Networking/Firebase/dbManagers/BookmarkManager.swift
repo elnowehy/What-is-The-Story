@@ -97,10 +97,10 @@ class BookmarkManager: ObservableObject {
 
     
     @MainActor
-    func fetchUserBookmarks(userId: String, sortOrder: BookmarkVM.SortOrder, pageSize: Int) async -> [Bookmark]{
-        bookmarked = []
-        // print("**\(userId)**")
-        var query = db.collection("Bookmark").whereField("userId", isEqualTo: userId).limit(to: pageSize)
+    func fetchUserBookmarks<PaginatableItem: Paginatable>(userId: String, sortOrder: BookmarkVM.SortOrder, startAfter: PaginatableItem? = nil) async throws -> PaginatedResult<Bookmark, PaginatableItem> {
+        
+        var bookmarked: [Bookmark] = []
+        var query = db.collection("Bookmark").whereField("userId", isEqualTo: userId).limit(to: AppSettings.pageSize)
         
         switch sortOrder {
         case .timestampAscending:
@@ -109,26 +109,21 @@ class BookmarkManager: ObservableObject {
             query = query.order(by: "timestamp", descending: true)
         }
         
-        if let lastDocument = lastDocument {
-            query = query.start(afterDocument: lastDocument)
+        if let startAfter = startAfter as? DocumentSnapshot {
+            query = query.start(afterDocument: startAfter)
         }
         
-        do {
-            let documents = try await query.getDocuments()
-            for document in documents.documents {
-                self.data = document.data()
-                populateStruct()
-                bookmarked.append(bookmark)
-            }
-            
-            lastDocument = documents.documents.last
-            
-        } catch {
-            print(error.localizedDescription)
+        let documents = try await query.getDocuments()
+        for document in documents.documents {
+            self.data = document.data()
+            populateStruct()
+            bookmarked.append(bookmark)
         }
         
-        return bookmarked
+        let lastDocument = documents.documents.last as? PaginatableItem
+        return PaginatedResult(items: bookmarked, lastItem: lastDocument)
     }
+
     
     
     func delete() async {
