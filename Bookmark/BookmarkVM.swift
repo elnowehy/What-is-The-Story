@@ -61,7 +61,7 @@ class BookmarkVM: ObservableObject {
     @MainActor
     func fetchUserBookmarks(sortOrder: SortOrder) async {
         do {
-            await paginator.loadMoreData(fetch: { lastDocument, pageSize in
+            await paginator.loadMoreData(fetch: { (lastDocument: DBPaginatable?) in
                 // Inside this closure, call the actual fetch method from the manager
                 return try await self.bookmarkManager.fetchUserBookmarks(userId: self.userId, sortOrder: sortOrder, startAfter: lastDocument)
             }, appendTo: &self.bookmarks)
@@ -70,10 +70,10 @@ class BookmarkVM: ObservableObject {
         }
     }
     
-    func delete() {
-        Task {
-            await bookmarkManager.delete()
-        }
+    @MainActor
+    func delete() async {
+        bookmarkManager.bookmark = bookmark
+        await bookmarkManager.delete()
     }
     
 }

@@ -80,8 +80,8 @@ class ViewRatingVM: ObservableObject {
     func fetchUserHistory(sortOrder: SortOrder) async {
  
         do {
-            await paginator.loadMoreData(fetch: { page, pageSize in
-                return try await self.viewRatingManager.fetchUserHistory( userId: self.userId, sortOrder: sortOrder)
+            await paginator.loadMoreData(fetch: { (lastDocument: DBPaginatable?) in
+                return try await self.viewRatingManager.fetchUserHistory( userId: self.userId, sortOrder: sortOrder, startAfter: lastDocument)
             }, appendTo: &self.viewHistory)
         } catch {
             print(error.localizedDescription)

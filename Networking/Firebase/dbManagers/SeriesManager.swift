@@ -200,7 +200,7 @@ class SeriesManager: ObservableObject {
     }
     
     @MainActor
-    func fetchAllSeries<PaginatableItem: Paginatable>(listType: AppSettings.SeriesListType, category: Category? = nil, pageSize: Int, startAfter: PaginatableItem? = nil) async throws -> PaginatedResult<Series, PaginatableItem> {
+    func fetchAllSeries<PaginatableItem: Paginatable>(listType: AppSettings.SeriesListType, category: Category? = nil, startAfter: PaginatableItem? = nil) async throws -> PaginatedResult<Series, PaginatableItem> {
         var fetchedSeries: [Series] = []
         var query: Query
         
@@ -217,7 +217,7 @@ class SeriesManager: ObservableObject {
             query = query.whereField("categories", arrayContains: category.id)
         }
         
-        query = query.limit(to: pageSize)
+        query = query.limit(to: AppSettings.pageSize)
         
         if let startAfter = startAfter as? DocumentSnapshot {
             query.start(afterDocument: startAfter)
@@ -247,13 +247,13 @@ class SeriesManager: ObservableObject {
     
     
     @MainActor
-    func fetchSeriesByCategory(category: String, pageSize: Int) async throws -> [Series] {
+    func fetchSeriesByCategory(category: String) async throws -> [Series] {
         var fetchedSeries: [Series] = []
         var query: Query
         
         query = db.collection("Series")
         query = query.whereField("categories", arrayContains: category)
-        query = query.limit(to: pageSize)
+        query = query.limit(to: AppSettings.pageSize)
         
         let querySnapshot = try await query.getDocuments()
         

@@ -15,6 +15,7 @@ class EpisodeVM: ObservableObject{
     public var videoData = Data()
     public var updateVideo = false
     private var episodeManager: EpisodeManager
+    var paginator = ArrayPaginator<Episode>()
 
     init() {
         episodeManager = EpisodeManager()
@@ -25,13 +26,20 @@ class EpisodeVM: ObservableObject{
     func fetch() async -> [Episode] {
         let startIndex = currentPage * AppSettings.pageSize
         let endIndex = min(startIndex + AppSettings.pageSize, episodeIds.count)
+        if startIndex >= endIndex {
+            return episodeList
+        }
+        
         let pageIds = Array(episodeIds[startIndex..<endIndex])
         
         for id in pageIds {
-            let episodeManager = EpisodeManager()
-            let episode = await episodeManager.fetch(id: id)
-            self.episodeList.append(episode)
+            if !episodeList.contains(where: {$0.id == id}) {
+                let episodeManager = EpisodeManager()
+                let episode = await episodeManager.fetch(id: id)
+                self.episodeList.append(episode)
+            }
         }
+        currentPage += 1
         
         return episodeList
     }

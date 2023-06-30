@@ -22,3 +22,10 @@ enum ContentType: String, CaseIterable {
     case episode
     case series
 }
+
+
+enum Mode {
+    case update
+    case add
+    case view
+}

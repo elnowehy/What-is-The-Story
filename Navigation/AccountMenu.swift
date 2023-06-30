@@ -47,7 +47,7 @@ struct AccountMenu: View {
                     Label("Bookmarks", systemImage: "bookmark")
                 }
                 
-                NavigationLink(destination: UserViewHistoryView()) {
+                NavigationLink(destination: ViewsHistoryView()) {
                     Label("View History", systemImage: "clock")
                 }
                 

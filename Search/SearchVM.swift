@@ -9,6 +9,7 @@ import SwiftUI
 struct SearchResult: Hashable {
     var title: String
     var description: String
+    var contentType: ContentType
 }
 
 class SearchVM: ObservableObject {
@@ -97,7 +98,7 @@ class SearchVM: ObservableObject {
         Task {
             do {
                 let fetchedSeries = try await seriesPaginator.loadMoreData(fetch: seriesVM.fetch)
-                let searchResults = fetchedSeries.map { SearchResult(title: $0.title, description: $0.synopsis) }
+                let searchResults = fetchedSeries.map { SearchResult(title: $0.title, description: $0.synopsis, contentType: .series) }
                 self.searchResults.append(contentsOf: searchResults)
             } catch {
                 print(error.localizedDescription)
@@ -111,7 +112,7 @@ class SearchVM: ObservableObject {
         Task {
             do {
                 let fetchedEpisodes = try await episodePaginator.loadMoreData(fetch: episodeVM.fetch)
-                let searchResults = fetchedEpisodes.map { SearchResult(title: $0.title, description: $0.synopsis) }
+                let searchResults = fetchedEpisodes.map { SearchResult(title: $0.title, description: $0.synopsis, contentType: .episode) }
                 self.searchResults.append(contentsOf: searchResults)
             } catch {
                 print(error.localizedDescription)

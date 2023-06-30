@@ -36,6 +36,7 @@ struct BookmarkListView: View {
                 .toggleStyle(ToggleBaseStyle(theme: theme))
                 .padding()
                 .onChange(of: ascendingOrder) { _ in
+                    reset()
                     fetchAndSortBookmarks()
                 }
                 
@@ -44,7 +45,7 @@ struct BookmarkListView: View {
                         VStack(alignment: .leading) {
                             if let episode = bookmarkItems[index].contentType as? Episode {
                                 
-                                NavigationLink(destination: EpisodeView(episode: episode)
+                                NavigationLink(destination: EpisodeView(episode: episode, mode: .update)
                                     .environmentObject(episodeVM)
                                     .environmentObject(seriesVM)
                                 ) {
@@ -65,21 +66,34 @@ struct BookmarkListView: View {
 
                         }
                         .font(theme.typography.subtitle)
+                        if bookmarkVM.paginator.hasMoreData && !bookmarkVM.paginator.isLoading && index == bookmarkItems.count - 1 {
+                            ProgressView() // Show a loading indicator while loading more data
+                                .onAppear(perform: fetchAndSortBookmarks)
+                        }
                     }
                     .onDelete(perform: delete)
-                    
-                    if bookmarkVM.paginator.hasMoreData && !bookmarkVM.paginator.isLoading {
-                        ProgressView() // Show a loading indicator while loading more data
-                            .onAppear(perform: fetchAndSortBookmarks)
-                    }
+                
                 }
             }
             .navigationTitle("Bookmarks")
-            .task {
+            .onAppear() {
+                reset()
                 bookmarkVM.userId = userVM.user.id
                 fetchAndSortBookmarks()
             }
         }
+    }
+    
+    private func reset() {
+        bookmarkVM.paginator.reset()
+        bookmarkItems = []
+        bookmarkVM.bookmarks = []
+        seriesVM.currentPage = 0
+        episodeVM.currentPage = 0
+        episodeVM.episodeIds.removeAll()
+        episodeVM.episodeList.removeAll()
+        seriesVM.seriesIds.removeAll()
+        seriesVM.seriesList.removeAll()
     }
     
     private func fetchAndSortBookmarks() {
@@ -133,15 +147,16 @@ struct BookmarkListView: View {
 
     
     func delete(at offsets: IndexSet) {
-        let itemsToDelete = offsets.map { bookmarkItems[$0] }
-        for item in itemsToDelete {
-            // Remove from bookmarkVM
-            bookmarkVM.bookmark = item.bookmark
-            bookmarkVM.delete()
-            
-            // Remove from bookmarkItems
-            if let first = offsets.first {
-                bookmarkItems.remove(at: first)
+        Task {
+            let itemsToDelete = offsets.map { bookmarkItems[$0] }
+            for item in itemsToDelete {
+                // Remove from bookmarkVM
+                bookmarkVM.bookmark = item.bookmark
+                await bookmarkVM.delete()
+                // Remove from bookmarkItems
+                if let first = offsets.first {
+                    bookmarkItems.remove(at: first)
+                }
             }
         }
     }

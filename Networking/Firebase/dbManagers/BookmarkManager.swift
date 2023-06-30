@@ -97,7 +97,7 @@ class BookmarkManager: ObservableObject {
 
     
     @MainActor
-    func fetchUserBookmarks<PaginatableItem: Paginatable>(userId: String, sortOrder: BookmarkVM.SortOrder, startAfter: PaginatableItem? = nil) async throws -> PaginatedResult<Bookmark, PaginatableItem> {
+    func fetchUserBookmarks(userId: String, sortOrder: BookmarkVM.SortOrder, startAfter: DBPaginatable? = nil) async throws -> PaginatedResult<Bookmark, DBPaginatable> {
         
         var bookmarked: [Bookmark] = []
         var query = db.collection("Bookmark").whereField("userId", isEqualTo: userId).limit(to: AppSettings.pageSize)
@@ -109,8 +109,8 @@ class BookmarkManager: ObservableObject {
             query = query.order(by: "timestamp", descending: true)
         }
         
-        if let startAfter = startAfter as? DocumentSnapshot {
-            query = query.start(afterDocument: startAfter)
+        if let startAfter = startAfter {
+            query = query.start(afterDocument: startAfter.document)
         }
         
         let documents = try await query.getDocuments()
@@ -120,9 +120,10 @@ class BookmarkManager: ObservableObject {
             bookmarked.append(bookmark)
         }
         
-        let lastDocument = documents.documents.last as? PaginatableItem
+        let lastDocument = documents.documents.last.map { DBPaginatable(document: $0) }
         return PaginatedResult(items: bookmarked, lastItem: lastDocument)
     }
+
 
     
     

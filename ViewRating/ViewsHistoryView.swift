@@ -6,7 +6,7 @@ struct ViewHistoryItem: Identifiable {
     let episode: Episode
 }
 
-struct UserViewHistoryView: View {
+struct ViewsHistoryView: View {
     @StateObject var viewRatingVM = ViewRatingVM()
     @StateObject var episodeVM = EpisodeVM()
     @EnvironmentObject var userVM: UserVM
@@ -43,13 +43,25 @@ struct UserViewHistoryView: View {
 
                 List {
                     ForEach(viewHistoryItems.indices, id: \.self) { index in
-                        VStack(alignment: .leading) {
-                            Text("Episode Title: \(viewHistoryItems[index].episode.title)")
-                            Text("Rating: \(viewHistoryItems[index].viewRating.rating)")
-                            Text("Timestamp: \(viewHistoryItems[index].viewRating.timestamp)")
+                        NavigationLink(destination: EpisodeView(episode: viewHistoryItems[index].episode, mode: .view)
+                            .environmentObject(episodeVM)
+                            .environmentObject(SeriesVM())
+                        ) {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(viewHistoryItems[index].episode.title)
+                                        .font(theme.typography.subtitle)
+                                    Text(formattedTimestamp(for:viewHistoryItems[index].viewRating.timestamp))
+                                        .font(theme.typography.caption)
+                                }
+                                // AvgRatingView(avgRating: viewHistoryItems[index].viewRating.rating)
+                            }
                         }
                     }
                     .onDelete(perform: delete)
+                    .onAppear {
+                        
+                    }
 
                     if viewRatingVM.paginator.hasMoreData && !viewRatingVM.paginator.isLoading {
                         ProgressView() // Show a loading indicator while loading more data
@@ -60,16 +72,14 @@ struct UserViewHistoryView: View {
             }
             .navigationTitle("View History")
             .task {
-                print("userVM: \(userVM.user.id)")
                 viewRatingVM.userId = userVM.user.id
-                print(".task user Id: \(viewRatingVM.userId)")
                 fetchAndSortViewHistory()
             }
         }
     }
     
     private func fetchAndSortViewHistory() {
-        Task {
+        Task {            
             let sortOrder = ascendingOrder
             ? (sortOption == 0 ? ViewRatingVM.SortOrder.timestampAscending : ViewRatingVM.SortOrder.ratingAscending)
             : (sortOption == 0 ? ViewRatingVM.SortOrder.timestampDescending : ViewRatingVM.SortOrder.ratingDescending)
@@ -110,7 +120,7 @@ struct UserViewHistoryView: View {
 
 struct UserViewHistory_Previews: PreviewProvider {
     static var previews: some View {
-        UserViewHistoryView()
+        ViewsHistoryView()
     }
 }
 

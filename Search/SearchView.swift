@@ -74,6 +74,7 @@ struct SearchResultView: View {
         // Display the search results here using data from `searchResults`
         // Customize the view based on your desired UI representation for search results
         List(searchResults, id: \.self) { searchResult in
+            Text(searchResult.contentType.rawValue)
             Text(searchResult.title)
             Text(searchResult.description)
         }

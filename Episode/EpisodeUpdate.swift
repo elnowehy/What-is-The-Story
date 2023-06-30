@@ -9,15 +9,10 @@
 import SwiftUI
 import PhotosUI
 
-enum Mode {
-    case update
-    case add
-}
-
 struct EpisodeUpdate: View {
     @ObservedObject var episodeVM: EpisodeVM
-    @EnvironmentObject var seriesVM: SeriesVM
     var mode: Mode
+    @EnvironmentObject var seriesVM: SeriesVM
     @State private var videoPicker: PhotosPickerItem?
     @Environment(\.dismiss) private var dismiss
     @State private var isSaving: Bool = false

@@ -12,15 +12,14 @@ class Paginator<T, PaginatableItem: Paginatable>: ObservableObject {
     @Published private(set) var hasMoreData: Bool = true
 
     private var lastItem: PaginatableItem? = nil
-    private var pageSize: Int = AppSettings.pageSize
 
-    func loadMoreData(fetch: @escaping (PaginatableItem?, Int) async throws -> PaginatedResult<T, PaginatableItem>, appendTo data: inout [T]) async {
+    func loadMoreData(fetch: @escaping (PaginatableItem?) async throws -> PaginatedResult<T, PaginatableItem>, appendTo data: inout [T]) async {
         guard !isLoading, hasMoreData else { return }
 
         isLoading = true
 
         do {
-            let paginatedResult = try await fetch(lastItem, pageSize)
+            let paginatedResult = try await fetch(lastItem)
             lastItem = paginatedResult.lastItem
             if paginatedResult.items.isEmpty {
                 hasMoreData = false
@@ -53,9 +52,7 @@ struct PaginatedResult<Item: Any, PaginatableItem: Paginatable> {
 class ArrayPaginator<T>: ObservableObject {
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var hasMoreData: Bool = true
-
-    private var pageSize: Int = AppSettings.pageSize
-
+    
     func loadMoreData(fetch: @escaping () async throws -> [T]) async throws -> [T] {
         guard !isLoading, hasMoreData else { return [] }
 
@@ -66,6 +63,8 @@ class ArrayPaginator<T>: ObservableObject {
             if fetchedItems.isEmpty {
                 hasMoreData = false
             }
+            
+            isLoading = false
             return fetchedItems
         } catch {
             isLoading = false

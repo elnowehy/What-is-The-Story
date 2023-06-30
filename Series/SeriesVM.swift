@@ -21,12 +21,13 @@ class SeriesVM: ObservableObject{
 
     @MainActor
     func fetch() async -> [Series] {
-        if seriesList.isEmpty {
-            return seriesList
-        }
-        
         let startIndex = currentPage * AppSettings.pageSize
         let endIndex = min(startIndex + AppSettings.pageSize, seriesIds.count)
+        
+        if startIndex >= endIndex {
+            print("this shouldn't happen: startIndex\(startIndex), endIndex\(endIndex)")
+            return seriesList
+        }
         let pageIds = Array(seriesIds[startIndex..<endIndex])
 
         for id in pageIds {
@@ -45,7 +46,7 @@ class SeriesVM: ObservableObject{
         var paginatedSeries = PaginatedResult<Series, PaginatableItem>(items: [], lastItem: nil)
         
         do {
-            paginatedSeries = try await self.seriesManager.fetchAllSeries(listType: listType, category: category, pageSize: AppSettings.pageSize, startAfter: lastDocument)
+            paginatedSeries = try await self.seriesManager.fetchAllSeries(listType: listType, category: category, startAfter: lastDocument)
         } catch {
             print(error.localizedDescription)
         }
@@ -56,7 +57,7 @@ class SeriesVM: ObservableObject{
     func fetchSeriesByCategory(category: String) async -> [Series] {
         seriesList = []
         do {
-            seriesList = try await self.seriesManager.fetchSeriesByCategory(category: category, pageSize: AppSettings.pageSize)
+            seriesList = try await self.seriesManager.fetchSeriesByCategory(category: category)
         } catch {
             print(error.localizedDescription)
         }

@@ -78,38 +78,38 @@ class ProfileManager: ObservableObject {
         }
     }
     
-    @MainActor
-    func fetchByQuery(field: String, prefix: String, pageSize: Int) async -> [Profile]{
-        var profileList = [Profile]()
-        let endValue = prefix + "\u{f8ff}"
-        var query = db.collection("Profile")
-            .whereField(field, isGreaterThan: prefix)
-            .whereField(field, isLessThan: endValue)
-            .limit(to: pageSize)
-            
-        if let lastDocument = lastDocument {
-            query = query.start(afterDocument: lastDocument)
-        }
-        
-        do {
-            let documents = try await query.getDocuments()
-            for document in documents.documents {
-                let data = document.data()
-                if !data.isEmpty {
-                    self.data = data
-                    self.populateStruct()
-                    profileList.append(self.profile)
-                }
-            }
-            
-            lastDocument = documents.documents.last
-            
-        } catch {
-            print(error.localizedDescription)
-        }
-        
-        return profileList
-    }
+//    @MainActor
+//    func fetchByQuery(field: String, prefix: String, pageSize: Int) async -> [Profile]{
+//        var profileList = [Profile]()
+//        let endValue = prefix + "\u{f8ff}"
+//        var query = db.collection("Profile")
+//            .whereField(field, isGreaterThan: prefix)
+//            .whereField(field, isLessThan: endValue)
+//            .limit(to: pageSize)
+//            
+//        if let lastDocument = lastDocument {
+//            query = query.start(afterDocument: lastDocument)
+//        }
+//        
+//        do {
+//            let documents = try await query.getDocuments()
+//            for document in documents.documents {
+//                let data = document.data()
+//                if !data.isEmpty {
+//                    self.data = data
+//                    self.populateStruct()
+//                    profileList.append(self.profile)
+//                }
+//            }
+//            
+//            lastDocument = documents.documents.last
+//            
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//        
+//        return profileList
+//    }
     
     @MainActor
     func update() async {

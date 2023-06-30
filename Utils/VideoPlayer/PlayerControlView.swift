@@ -46,12 +46,14 @@ struct PlayerControlView: View {
     }
     
     private func updateBookmark() {
-        if isBookmarked {
-            bookmarkVM.delete()
-            isBookmarked = false
-        } else {
-            bookmarkVM.add()
-            isBookmarked = true
+        Task {
+            if isBookmarked {
+                await bookmarkVM.delete()
+                isBookmarked = false
+            } else {
+                bookmarkVM.add()
+                isBookmarked = true
+            }
         }
     }
     

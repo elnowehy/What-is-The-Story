@@ -29,13 +29,15 @@ struct SeriesView: View {
     @State var player: AVPlayer?
     
     private func updateBookmark() {
-        if isBookmarked {
-            bookmarkVM.delete()
-            isBookmarked = false
-        } else {
-            bookmarkVM.bookmark.contentType = ContentType.series
-            bookmarkVM.add()
-            isBookmarked = true
+        Task {
+            if isBookmarked {
+                await bookmarkVM.delete()
+                isBookmarked = false
+            } else {
+                bookmarkVM.bookmark.contentType = ContentType.series
+                bookmarkVM.add()
+                isBookmarked = true
+            }
         }
     }
     
@@ -114,7 +116,7 @@ struct SeriesView: View {
             .frame(maxWidth: .infinity, alignment: .top)
             
             List(episodeVM.episodeList) { episode in
-                NavigationLink(destination: EpisodeView(episode: episode)
+                NavigationLink(destination: EpisodeView(episode: episode, mode: .update)
                     .environmentObject(episodeVM)
                     .environmentObject(seriesVM)
                 ) {

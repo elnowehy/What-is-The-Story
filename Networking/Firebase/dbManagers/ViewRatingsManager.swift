@@ -102,7 +102,7 @@ class ViewRatingManager: ObservableObject {
     }
     
     @MainActor
-    func fetchUserHistory<PaginatableItem: Paginatable>(userId: String, sortOrder: ViewRatingVM.SortOrder) async throws -> PaginatedResult< ViewRating, PaginatableItem> {
+    func fetchUserHistory(userId: String, sortOrder: ViewRatingVM.SortOrder, startAfter: DBPaginatable? = nil) async throws -> PaginatedResult< ViewRating, DBPaginatable> {
         
         selectedEpisodes = []
         // print("**\(userId)**")
@@ -119,10 +119,9 @@ class ViewRatingManager: ObservableObject {
             query = query.order(by: "rating", descending: true)
         }
         
-        if let lastDocument = lastDocument {
-            query = query.start(afterDocument: lastDocument)
+        if let startAfter = startAfter {
+            query = query.start(afterDocument: startAfter.document)
         }
-        
         
         let documents = try await query.getDocuments()
         for document in documents.documents {
@@ -131,7 +130,7 @@ class ViewRatingManager: ObservableObject {
             selectedEpisodes.append(viewRating)
         }
         
-        let lastDocument = documents.documents.last as? PaginatableItem
+        let lastDocument = documents.documents.last.map { DBPaginatable(document: $0) }
         
         return PaginatedResult(items: selectedEpisodes, lastItem: lastDocument)
         

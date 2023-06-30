@@ -16,6 +16,7 @@ struct EpisodeView: View {
     @EnvironmentObject var episodeVM: EpisodeVM
     @EnvironmentObject var seriesVM: SeriesVM
     @State var episode: Episode
+    var mode: Mode
     @StateObject var viewRatingVM = ViewRatingVM()
     @State var player: AVPlayer?
     @State private var timeObserver: Any?
@@ -28,7 +29,7 @@ struct EpisodeView: View {
     @EnvironmentObject var theme: Theme
     @State private var isSynopsisExpanded = false
     @State private var isPollExpanded = false
-
+    
     private func handleViewCount() {
         let duration = player?.currentItem?.duration.seconds ?? 0
         let playbackTime = player!.currentTime().seconds
@@ -102,7 +103,7 @@ struct EpisodeView: View {
                 }
                 
                 Spacer()
-                if episodeVM.episode.userId == userVM.user.id {
+                if episodeVM.episode.userId == userVM.user.id && mode == .update {
                     NavigationLink("Update") {
                         EpisodeUpdate(episodeVM: episodeVM, mode: .update)
                             .environmentObject(seriesVM)
@@ -123,6 +124,14 @@ struct EpisodeView: View {
                 timeObserver = player!.addPeriodicTimeObserver(forInterval: interval, queue: .main) { _ in
                     handleViewCount()
                 }
+            }
+        }
+        
+        .task {
+            if seriesVM.series.id.isEmpty {
+                seriesVM.series.id = episode.series
+                seriesVM.seriesIds.append(episode.series)
+                await seriesVM.fetch()
             }
         }
         

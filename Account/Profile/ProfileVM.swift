@@ -36,21 +36,21 @@ class ProfileVM: ObservableObject{
         profile = profileManager.profile
     }
     
-    @MainActor
-    func fetchProfileByBrand(brand: String) async -> [(Profile, String)] {
-        var results = [(Profile, String)]()
-
-        
-        let profiles = await self.profileManager.fetchByQuery(field: "brand", prefix: brand, pageSize: AppSettings.pageSize)
-        
-        for profile in profiles {
-            profileInfoManager.profileId = profile.id
-            await profileInfoManager.fetch()
-            results.append((profile, profileInfoManager.profile.tagline))
-        }
-        
-        return results
-    }
+//    @MainActor
+//    func fetchProfileByBrand(brand: String) async -> [(Profile, String)] {
+//        var results = [(Profile, String)]()
+//
+//        
+//        let profiles = await self.profileManager.fetchByQuery(field: "brand", prefix: brand)
+//        
+//        for profile in profiles {
+//            profileInfoManager.profileId = profile.id
+//            await profileInfoManager.fetch()
+//            results.append((profile, profileInfoManager.profile.tagline))
+//        }
+//        
+//        return results
+//    }
     
     // create Profile document in Firebase and
     // input: empty Profile struct
