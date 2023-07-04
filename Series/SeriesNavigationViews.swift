@@ -13,7 +13,7 @@ struct SeriesRow: View {
     @EnvironmentObject var theme: Theme
 
     var body: some View {
-        NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series)) {
+        NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series, mode: .view)) {
             SeriesNavigationLinkView(series: series)
         }
     }

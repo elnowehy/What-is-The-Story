@@ -14,25 +14,27 @@ struct SearchView: View {
     @EnvironmentObject var theme: Theme
     
     var body: some View {
-        VStack(alignment: .leading, spacing: theme.spacing.medium) {
-            CategoryGridView().environmentObject(searchVM)
-            
-            HStack(alignment: .top) {
-                TagSearchBarView(searchText: $tagText, enteredTags: $enteredTags)
-                    .environmentObject(searchVM)
-                    .frame(maxWidth: .infinity)
+        NavigationView {
+            VStack(alignment: .leading, spacing: theme.spacing.medium) {
+                CategoryGridView().environmentObject(searchVM)
                 
-                Button("Search") {
-                    performSearch()
+                HStack(alignment: .top) {
+                    TagSearchBarView(searchText: $tagText, enteredTags: $enteredTags)
+                        .environmentObject(searchVM)
+                        .frame(maxWidth: .infinity)
+                    
+                    Button("Search") {
+                        performSearch()
+                    }
+                    .buttonStyle(ButtonBaseStyle(theme: theme))
                 }
-                .buttonStyle(ButtonBaseStyle(theme: theme))
+                .frame(maxWidth: .infinity)
+                
+                
+                SearchResultView(searchResults: searchVM.searchResults)
             }
-            .frame(maxWidth: .infinity)
-            
-            
-            SearchResultView(searchResults: searchVM.searchResults)
+            .padding()
         }
-        .padding()
     }
     
     func performSearch() {
@@ -66,20 +68,62 @@ struct CategoryGridView: View {
     }
 }
 
-
 struct SearchResultView: View {
     var searchResults: [SearchResult]
-
+    
     var body: some View {
-        // Display the search results here using data from `searchResults`
-        // Customize the view based on your desired UI representation for search results
-        List(searchResults, id: \.self) { searchResult in
-            Text(searchResult.contentType.rawValue)
-            Text(searchResult.title)
-            Text(searchResult.description)
+        List(searchResults, id: \.id) { searchResult in
+            SearchResultRowView(searchResult: searchResult)
         }
     }
 }
+
+struct SearchResultRowView: View {
+    var searchResult: SearchResult
+    @StateObject private var seriesVM = SeriesVM()
+    @StateObject private var episodeVM = EpisodeVM()
+    @EnvironmentObject var profileVM: ProfileVM
+
+    var body: some View {
+        if searchResult.contentType == .series {
+            NavigationLink(
+                destination: SeriesView(seriesVM: seriesVM, series: seriesVM.series, mode: .view),
+                label: {
+                    HStack {
+                        Text("Series: ")
+                        Text(searchResult.title)
+                    }
+                }
+            )
+            .onAppear {
+                Task {
+                    seriesVM.seriesIds.append(searchResult.id)
+                    await seriesVM.fetch()
+                }
+            }
+        } else {
+            NavigationLink(
+                destination: EpisodeView(episode: episodeVM.episode, mode: .view)
+                    .environmentObject(episodeVM)
+                    .environmentObject(seriesVM),
+                label: {
+                    HStack {
+                        Text("Episode: ")
+                        Text(searchResult.title)
+                    }
+                }
+            )
+            .onAppear {
+                Task {
+                    episodeVM.episodeIds.append(searchResult.id)
+                    await episodeVM.fetch()
+                }
+            }
+        }
+    }
+}
+
+
 
 
 struct SearchView_Previews: PreviewProvider {

@@ -15,77 +15,86 @@ struct SignUpView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var theme: Theme
+    @State private var isSaving: Bool = false
     
     var body: some View {
-        VStack  {
-            Group {
-                VStack {
+        ZStack {
+            VStack  {
+                Group {
+                    VStack {
+                        Spacer()
+                        
+                        Text("Welcome to WITS")
+                            .modifier(LargeTitleStyle(theme: theme))
+                        
+                        
+                        TextField("Email", text: $user.email)
+                            .textFieldStyle(TextFieldLoginStyle(theme: theme))
+                            .keyboardType(.emailAddress)
+                            .textInputAutocapitalization(.never)
+                            .submitLabel(.next)
+                        
+                        
+                        SecureField("Password", text: $user.password)
+                            .textFieldStyle(TextFieldLoginStyle(theme: theme))
+                            .submitLabel(.done)
+                        
+                        
+                        TextField("User Name", text: $user.name)
+                            .textFieldStyle(TextFieldLoginStyle(theme: theme))
+                            .textInputAutocapitalization(.never)
+                            .submitLabel(.done)
+                        
+                    }
+                    .padding()
+                    .foregroundColor(.black)
+                }
+                
+                HStack {
                     Spacer()
                     
-                    Text("Welcome to WITS")
-                        .modifier(LargeTitleStyle(theme: theme))
-                    
-                    
-                    TextField("Email", text: $user.email)
-                        .textFieldStyle(TextFieldLoginStyle(theme: theme))
-                        .keyboardType(.emailAddress)
-                        .textInputAutocapitalization(.never)
-                        .submitLabel(.next)
-                    
-                    
-                    SecureField("Password", text: $user.password)
-                        .textFieldStyle(TextFieldLoginStyle(theme: theme))
-                        .submitLabel(.done)
-                    
-                    
-                    TextField("User Name", text: $user.name)
-                        .textFieldStyle(TextFieldBaseStyle(theme: theme))
-                        .textInputAutocapitalization(.never)
-                        .submitLabel(.done)
-                    
-                }
-                .padding()
-                .foregroundColor(.black)
-            }
-            
-            HStack {
-                Spacer()
-                
-                Button (action: {
-                    Task {
-                        await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
-                        if(!user.id.isEmpty) {
-                            userVM.user = user
-                            await userVM.create()
-                            await user.id = authManager.signIn(emailAddress: user.email, password: user.password)
-                            showLogIn = false
-                            authManager.isLoggedIn = true
-                        } else {
-                            fatalError("we have a problem")
+                    Button (action: {
+                        Task {
+                            isSaving = true
+                            await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
+                            if(!user.id.isEmpty) {
+                                userVM.user = user
+                                await userVM.create()
+                                await user.id = authManager.signIn(emailAddress: user.email, password: user.password)
+                                showLogIn = false
+                                authManager.isLoggedIn = true
+                            } else {
+                                fatalError("we have a problem")
+                            }
+                            isSaving = false
                         }
-                    }                    
-                }) {
-                    Text("Save")
+                    }) {
+                        Text("Save")
+                    }
+                    .buttonStyle(ButtonBaseStyle(theme: theme))
+                    
+                    Spacer()
+                    
+                    Button (action: {
+                        dismiss()
+                    }) {
+                        Text("Cancel")
+                    }
+                    .buttonStyle(ButtonBaseStyle(theme: theme))
+                    
+                    Spacer()
                 }
-                .buttonStyle(ButtonBaseStyle(theme: theme))
                 
-                Spacer()
+                .frame(width: 350, height: 300)
+                .foregroundColor(.black)
                 
-                Button (action: {
-                    dismiss()
-                }) {
-                    Text("Cancel")
-                }
-                .buttonStyle(ButtonBaseStyle(theme: theme))
                 
-                Spacer()
+                .navigationBarBackButtonHidden(true)
             }
             
-            .frame(width: 350, height: 300)
-            .foregroundColor(.black)
-            
-            
-            .navigationBarBackButtonHidden(true)
+            if isSaving {
+                SavingProgressView()
+            }
         }
     }
 }

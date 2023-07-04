@@ -101,7 +101,7 @@ struct SeriesUpdateView: View {
                 }
                 
             }
-            .background(theme.colors.primaryBackground)
+            // .background(theme.colors.primaryBackground)
             .task {
                 episodeVM.episode.series = seriesVM.series.id
                 selectedCategories = seriesVM.series.categories

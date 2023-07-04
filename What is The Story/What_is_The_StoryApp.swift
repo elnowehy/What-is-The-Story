@@ -46,6 +46,7 @@ struct What_is_The_StoryApp: App {
     @StateObject var authManager = AuthManager()
     @StateObject var userVM = UserVM()
     @StateObject var themeManager = ThemeManager()
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some Scene {
         WindowGroup {
@@ -54,6 +55,12 @@ struct What_is_The_StoryApp: App {
                 .environmentObject(pathRouter)
                 .environmentObject(userVM)
                 .environmentObject(themeManager.current)
+                .onAppear {
+                    themeManager.updateTheme(for: colorScheme)
+                }
+                .onChange(of: colorScheme) { newScheme in
+                    themeManager.updateTheme(for: newScheme)
+                }
         }
     }
 }

@@ -15,7 +15,7 @@ struct TextFieldBaseStyle: TextFieldStyle {
         configuration
             .font(theme.typography.text)
             .padding(5)
-            .background(theme.colors.tertiaryBackground)
+            .background(theme.colors.tertiaryBackground.opacity(theme.opacity.field))
             .foregroundColor(theme.colors.text)
             .cornerRadius(8)
             .shadow(color: theme.colors.shadow, radius: theme.shapes.shadowRadius)
@@ -31,7 +31,7 @@ struct TextFieldLoginStyle: TextFieldStyle {
         configuration
             .font(theme.typography.subtitle)
             .padding(5)
-            .background(theme.colors.tertiaryBackground)
+            .background(theme.colors.primaryBackground.opacity(theme.opacity.field))
             .foregroundColor(theme.colors.text)
             .cornerRadius(8)
             .shadow(color: theme.colors.shadow, radius: theme.shapes.shadowRadius)

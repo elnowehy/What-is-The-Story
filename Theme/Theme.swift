@@ -52,6 +52,7 @@ struct Opacity {
     var enabled: Double
     var disabled: Double
     var hover: Double
+    var field: Double
 }
 
 struct Dimensions {
@@ -101,10 +102,10 @@ class Theme : ObservableObject{
 }
 
 extension Theme {
-    static let wits = Theme(
+    static let light = Theme(
         colors: Colors(
             text: Color(red: 70/255, green: 70/255, blue: 70/255),
-            primaryBackground: Color(.white),
+            primaryBackground: Color(red: 233/255, green: 228/255, blue: 190/255),
             secondaryBackground: Color(red:233/255, green: 233/255, blue: 231/255),
             tertiaryBackground: Color(red:233/255, green: 233/255, blue: 221/255),
             shadow: Color(red: 181/255, green: 181/255, blue: 181/255),
@@ -146,7 +147,67 @@ extension Theme {
         opacity: Opacity(
             enabled: 1.0,
             disabled: 0.0,
-            hover: 0.5
+            hover: 0.5,
+            field: 0.5
+        ),
+        
+        dimensions: Dimensions (
+            cardWidth: 80.0,
+            cardHieght: 95.0,
+            photoWidth: 150,
+            photoHeight: 350,
+            thumbWidth: 50,
+            thumbHieght: 50
+        )
+    )
+    
+    static let dark = Theme(
+        colors: Colors(
+            text: Color(red: 233/255, green: 228/255, blue: 190/255),
+            primaryBackground: Color(red: 70/255, green: 70/255, blue: 70/255),
+            secondaryBackground: Color(red: 181/255, green: 181/255, blue: 181/255),
+            tertiaryBackground: Color(red:233/255, green: 233/255, blue: 221/255),
+            shadow: Color(red:233/255, green: 233/255, blue: 231/255),
+            accent: Color(red: 91/255, green: 144/255, blue: 180/255)
+        ),
+        
+        shapes: Shapes(
+            largeCornerRadius: 15,
+            mediumCornerRadius: 10,
+            smallCornerRadius: 5,
+            cardCornerRadius: 5,
+            shadowRadius: 5
+        ),
+        
+        spacing: Spacing(
+            large: 24,
+            medium: 16,
+            small: 8,
+            button: 8,
+            cardPadding: 4
+        ),
+        
+        typography: Typography(
+            title: .headline,
+            subtitle: .subheadline,
+            body: .body,
+            caption: .caption,
+            button: Font.system(size: 12, weight: .bold, design: .rounded),
+            text: Font.system(size: 10, weight: .bold, design: .rounded)
+
+        ),
+        
+        scales: Scales(
+            button: 1.1,
+            card: 1.1,
+            full: 1.0
+        ),
+        
+        opacity: Opacity(
+            enabled: 1.0,
+            disabled: 0.0,
+            hover: 0.5,
+            field: 0.5
         ),
         
         dimensions: Dimensions (
@@ -162,7 +223,18 @@ extension Theme {
 }
 
 class ThemeManager: ObservableObject {
-    @Published var current: Theme = .wits
+    @Published var current: Theme = .light
+    
+    func updateTheme(for colorScheme: ColorScheme) {
+        switch colorScheme {
+        case .light:
+            current = .light
+        case .dark:
+            current = .dark
+        default:
+            current = .light
+        }
+    }
 }
 
 

@@ -218,6 +218,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C51EA88C2A54655300A77F4A /* Poll */ = {
+			isa = PBXGroup;
+			children = (
+				C51EA88D2A54656800A77F4A /* Answer */,
+			);
+			path = Poll;
+			sourceTree = "<group>";
+		};
+		C51EA88D2A54656800A77F4A /* Answer */ = {
+			isa = PBXGroup;
+			children = (
+				C51EA88E2A5465BD00A77F4A /* Vote */,
+			);
+			path = Answer;
+			sourceTree = "<group>";
+		};
+		C51EA88E2A5465BD00A77F4A /* Vote */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Vote;
+			sourceTree = "<group>";
+		};
 		C51FC3FC299AED8000D7D0C6 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
@@ -554,6 +577,7 @@
 		C5E9FBDC297A04D900121C45 /* Episode */ = {
 			isa = PBXGroup;
 			children = (
+				C51EA88C2A54655300A77F4A /* Poll */,
 				C59404CE296DC6FC003F0FB7 /* Episode.swift */,
 				C5E9FBEF297A06D600121C45 /* EpisodeUpdate.swift */,
 				C58D2C9629DD01C600FF86C4 /* EpisdoeVM.swift */,
@@ -847,7 +871,7 @@
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SQNNWLK4H9;
@@ -995,7 +1019,7 @@
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SQNNWLK4H9;
@@ -1029,7 +1053,7 @@
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SQNNWLK4H9;

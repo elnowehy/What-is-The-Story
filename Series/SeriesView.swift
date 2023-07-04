@@ -16,12 +16,13 @@ import SwiftUI
 struct SeriesView: View {
     @ObservedObject var seriesVM: SeriesVM
     @State var series: Series
+    var mode: Mode
     @StateObject var episodeVM = EpisodeVM()
     @StateObject var bookmarkVM = BookmarkVM()
     @State private var isBookmarked = false
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: Theme
-    @EnvironmentObject var profileVM: ProfileVM
+    // @EnvironmentObject var profileVM: ProfileVM
     @EnvironmentObject var userVM: UserVM
     @State private var isPlayingVideo = false
     @State private var isSynopsisExpanded = false
@@ -93,7 +94,7 @@ struct SeriesView: View {
                         .foregroundColor(theme.colors.text)
                 }
                 
-                if seriesVM.series.userId == userVM.user.id {
+                if seriesVM.series.userId == userVM.user.id && mode == .update {
                     HStack {
                         Spacer()
                         NavigationLink("Update") {

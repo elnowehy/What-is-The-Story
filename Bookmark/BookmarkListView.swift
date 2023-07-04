@@ -53,7 +53,7 @@ struct BookmarkListView: View {
                                         .font(theme.typography.subtitle)
                                 }
                             } else if let series = bookmarkItems[index].contentType as? Series {
-                                NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series))
+                                NavigationLink(destination: SeriesView(seriesVM: seriesVM, series: series, mode: .view))
                                 {
 
                                     Text(series.title)

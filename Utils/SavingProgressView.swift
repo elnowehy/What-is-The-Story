@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SavingProgressView: View {
+    @EnvironmentObject var theme: Theme
+    
     var body: some View {
         Color.black.opacity(0.4)
             .ignoresSafeArea() // Covers the whole screen
@@ -15,8 +17,8 @@ struct SavingProgressView: View {
                 VStack {
                     ProgressView() // Default loading indicator
                     Text("Saving...")
-                        .foregroundColor(.white)
-                        .font(.title)
+                        .foregroundColor(theme.colors.text)
+                        .font(theme.typography.title)
                 }
             )
     }
