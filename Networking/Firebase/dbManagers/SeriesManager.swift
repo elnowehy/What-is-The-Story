@@ -9,8 +9,7 @@ import Foundation
 import Firebase
 import FirebaseFirestoreSwift
 import FirebaseStorage
-
-
+import UIKit
 
 class SeriesManager: ObservableObject {
     @Published var series = Series()

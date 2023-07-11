@@ -10,6 +10,18 @@
 		C502DD72298C5311002930B4 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502DD71298C5311002930B4 /* TestView.swift */; };
 		C502DD74298D92E3002930B4 /* PathRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502DD73298D92E3002930B4 /* PathRouter.swift */; };
 		C51EA88B2A4F2FB300A77F4A /* AdvancedList in Frameworks */ = {isa = PBXBuildFile; productRef = C51EA88A2A4F2FB300A77F4A /* AdvancedList */; };
+		C51EA8902A5466A000A77F4A /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA88F2A5466A000A77F4A /* Poll.swift */; };
+		C51EA8922A54674E00A77F4A /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA8912A54674E00A77F4A /* Answer.swift */; };
+		C51EA8942A5467B000A77F4A /* Vote.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA8932A5467B000A77F4A /* Vote.swift */; };
+		C51EA8962A547F3E00A77F4A /* PollVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA8952A547F3E00A77F4A /* PollVM.swift */; };
+		C51EA8982A547FA300A77F4A /* PollManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA8972A547FA300A77F4A /* PollManager.swift */; };
+		C51EA89A2A5496ED00A77F4A /* PollUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA8992A5496ED00A77F4A /* PollUpdateView.swift */; };
+		C51EA89C2A54986A00A77F4A /* PollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA89B2A54986A00A77F4A /* PollView.swift */; };
+		C51EA89E2A54D71E00A77F4A /* AnswerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA89D2A54D71E00A77F4A /* AnswerVM.swift */; };
+		C51EA8A02A54D73500A77F4A /* VoteVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA89F2A54D73500A77F4A /* VoteVM.swift */; };
+		C51EA8A22A54D80200A77F4A /* AnswerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA8A12A54D80200A77F4A /* AnswerManager.swift */; };
+		C51EA8A42A54DC9300A77F4A /* VoteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA8A32A54DC9300A77F4A /* VoteManager.swift */; };
+		C51EA8A62A56FF5A00A77F4A /* AnswerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA8A52A56FF5A00A77F4A /* AnswerView.swift */; };
 		C51FC3FB2996B2FE00D7D0C6 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = C51FC3FA2996B2FE00D7D0C6 /* Algorithms */; };
 		C51FC3FF299AEF3800D7D0C6 /* UserVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC3FE299AEF3800D7D0C6 /* UserVM.swift */; };
 		C51FC401299AF02500D7D0C6 /* HomeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC400299AF02500D7D0C6 /* HomeTabView.swift */; };
@@ -88,8 +100,6 @@
 		C5E290422A143B21005C3A07 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E290412A143B21005C3A07 /* AppSettings.swift */; };
 		C5E9FBBF2975CF6A00121C45 /* Encryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBBE2975CF6A00121C45 /* Encryption.swift */; };
 		C5E9FBC129770FC300121C45 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBC029770FC300121C45 /* SignInView.swift */; };
-		C5E9FBCF2979EA8900121C45 /* Idea.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBCE2979EA8900121C45 /* Idea.swift */; };
-		C5E9FBD12979EB3200121C45 /* Vote.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBD02979EB3200121C45 /* Vote.swift */; };
 		C5E9FBD32979EC7F00121C45 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBD22979EC7F00121C45 /* Comment.swift */; };
 		C5E9FBD92979EEC900121C45 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBD82979EEC900121C45 /* Token.swift */; };
 		C5E9FBE4297A05E800121C45 /* SeriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9FBE3297A05E800121C45 /* SeriesView.swift */; };
@@ -108,6 +118,18 @@
 /* Begin PBXFileReference section */
 		C502DD71298C5311002930B4 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		C502DD73298D92E3002930B4 /* PathRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathRouter.swift; sourceTree = "<group>"; };
+		C51EA88F2A5466A000A77F4A /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
+		C51EA8912A54674E00A77F4A /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
+		C51EA8932A5467B000A77F4A /* Vote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vote.swift; sourceTree = "<group>"; };
+		C51EA8952A547F3E00A77F4A /* PollVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollVM.swift; sourceTree = "<group>"; };
+		C51EA8972A547FA300A77F4A /* PollManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollManager.swift; sourceTree = "<group>"; };
+		C51EA8992A5496ED00A77F4A /* PollUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollUpdateView.swift; sourceTree = "<group>"; };
+		C51EA89B2A54986A00A77F4A /* PollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollView.swift; sourceTree = "<group>"; };
+		C51EA89D2A54D71E00A77F4A /* AnswerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerVM.swift; sourceTree = "<group>"; };
+		C51EA89F2A54D73500A77F4A /* VoteVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteVM.swift; sourceTree = "<group>"; };
+		C51EA8A12A54D80200A77F4A /* AnswerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerManager.swift; sourceTree = "<group>"; };
+		C51EA8A32A54DC9300A77F4A /* VoteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteManager.swift; sourceTree = "<group>"; };
+		C51EA8A52A56FF5A00A77F4A /* AnswerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerView.swift; sourceTree = "<group>"; };
 		C51FC3FE299AEF3800D7D0C6 /* UserVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserVM.swift; sourceTree = "<group>"; };
 		C51FC400299AF02500D7D0C6 /* HomeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabView.swift; sourceTree = "<group>"; };
 		C51FC402299AF03B00D7D0C6 /* AccountMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountMenu.swift; sourceTree = "<group>"; };
@@ -180,8 +202,6 @@
 		C5E290412A143B21005C3A07 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		C5E9FBBE2975CF6A00121C45 /* Encryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encryption.swift; sourceTree = "<group>"; };
 		C5E9FBC029770FC300121C45 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
-		C5E9FBCE2979EA8900121C45 /* Idea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Idea.swift; sourceTree = "<group>"; };
-		C5E9FBD02979EB3200121C45 /* Vote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vote.swift; sourceTree = "<group>"; };
 		C5E9FBD22979EC7F00121C45 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		C5E9FBD82979EEC900121C45 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		C5E9FBE3297A05E800121C45 /* SeriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesView.swift; sourceTree = "<group>"; };
@@ -221,6 +241,10 @@
 		C51EA88C2A54655300A77F4A /* Poll */ = {
 			isa = PBXGroup;
 			children = (
+				C51EA88F2A5466A000A77F4A /* Poll.swift */,
+				C51EA8952A547F3E00A77F4A /* PollVM.swift */,
+				C51EA8992A5496ED00A77F4A /* PollUpdateView.swift */,
+				C51EA89B2A54986A00A77F4A /* PollView.swift */,
 				C51EA88D2A54656800A77F4A /* Answer */,
 			);
 			path = Poll;
@@ -229,6 +253,9 @@
 		C51EA88D2A54656800A77F4A /* Answer */ = {
 			isa = PBXGroup;
 			children = (
+				C51EA8A52A56FF5A00A77F4A /* AnswerView.swift */,
+				C51EA89D2A54D71E00A77F4A /* AnswerVM.swift */,
+				C51EA8912A54674E00A77F4A /* Answer.swift */,
 				C51EA88E2A5465BD00A77F4A /* Vote */,
 			);
 			path = Answer;
@@ -237,6 +264,8 @@
 		C51EA88E2A5465BD00A77F4A /* Vote */ = {
 			isa = PBXGroup;
 			children = (
+				C51EA8932A5467B000A77F4A /* Vote.swift */,
+				C51EA89F2A54D73500A77F4A /* VoteVM.swift */,
 			);
 			path = Vote;
 			sourceTree = "<group>";
@@ -425,8 +454,6 @@
 			isa = PBXGroup;
 			children = (
 				C5E9FBD82979EEC900121C45 /* Token.swift */,
-				C5E9FBCE2979EA8900121C45 /* Idea.swift */,
-				C5E9FBD02979EB3200121C45 /* Vote.swift */,
 				C5E9FBD22979EC7F00121C45 /* Comment.swift */,
 			);
 			path = Models;
@@ -496,6 +523,9 @@
 				C55233B329FC2AFD009C3CEE /* ViewRatingsManager.swift */,
 				C56E0DFD2A17AC2800A3DE56 /* BookmarkManager.swift */,
 				C5A6F1E22A27A3910061A479 /* TagManager.swift */,
+				C51EA8972A547FA300A77F4A /* PollManager.swift */,
+				C51EA8A12A54D80200A77F4A /* AnswerManager.swift */,
+				C51EA8A32A54DC9300A77F4A /* VoteManager.swift */,
 			);
 			path = dbManagers;
 			sourceTree = "<group>";
@@ -714,16 +744,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5E9FBF2297A072F00121C45 /* SeriesUpdateView.swift in Sources */,
-				C5E9FBD12979EB3200121C45 /* Vote.swift in Sources */,
 				C55E7CA92A2E1B8200CE34FC /* TagViews.swift in Sources */,
 				C502DD74298D92E3002930B4 /* PathRouter.swift in Sources */,
 				C59404BB296DC575003F0FB7 /* ContentView.swift in Sources */,
 				C5E9FBEC297A068400121C45 /* CommentView.swift in Sources */,
 				C5A6F1DB2A2509D10061A479 /* PlayerControlView.swift in Sources */,
+				C51EA8922A54674E00A77F4A /* Answer.swift in Sources */,
 				C58F2397299D55A5009DA4BF /* SettingsView.swift in Sources */,
 				C5E2140F29F05E5400292118 /* CategoryManager.swift in Sources */,
 				C59E4E5D29D2522800D9577E /* SeriesVM.swift in Sources */,
 				C5B7577E297EF9B200186852 /* AuthManager.swift in Sources */,
+				C51EA8A62A56FF5A00A77F4A /* AnswerView.swift in Sources */,
 				C56E0DFE2A17AC2800A3DE56 /* BookmarkManager.swift in Sources */,
 				C5A6F1D92A2509BD0061A479 /* VideoPlayerView.swift in Sources */,
 				C51FC405299AF2DC00D7D0C6 /* CommunityView.swift in Sources */,
@@ -738,22 +769,29 @@
 				C5CD5A0B2A43517E009A3BDA /* FireBasePagination.swift in Sources */,
 				C5A6F1E32A27A3910061A479 /* TagManager.swift in Sources */,
 				C58F2394299D4B4A009DA4BF /* FindView.swift in Sources */,
+				C51EA8A42A54DC9300A77F4A /* VoteManager.swift in Sources */,
 				C58F239C299E9B25009DA4BF /* ImagePicker.swift in Sources */,
+				C51EA8A02A54D73500A77F4A /* VoteVM.swift in Sources */,
 				C59404E9296DDC8D003F0FB7 /* UserManager.swift in Sources */,
 				C51FC401299AF02500D7D0C6 /* HomeTabView.swift in Sources */,
+				C51EA8962A547F3E00A77F4A /* PollVM.swift in Sources */,
 				C55E7CAB2A3110C200CE34FC /* SeriesNavigationViews.swift in Sources */,
+				C51EA8982A547FA300A77F4A /* PollManager.swift in Sources */,
 				C5E00C172A0E7C3C00E37B0D /* RandomString.swift in Sources */,
 				C59E4E5F29D2525D00D9577E /* SeriesManager.swift in Sources */,
 				C59404CF296DC6FC003F0FB7 /* Episode.swift in Sources */,
+				C51EA89E2A54D71E00A77F4A /* AnswerVM.swift in Sources */,
 				C5E9FBFC297A0C2C00121C45 /* CreateCommentView.swift in Sources */,
 				C58D2C9729DD01C600FF86C4 /* EpisdoeVM.swift in Sources */,
 				C5A6F1DF2A26AE900061A479 /* Tag.swift in Sources */,
 				C59404B9296DC575003F0FB7 /* What_is_The_StoryApp.swift in Sources */,
 				C5E00C1B2A0EC0B500E37B0D /* Pagination.swift in Sources */,
+				C51EA8902A5466A000A77F4A /* Poll.swift in Sources */,
 				C59E4E5929D2512500D9577E /* CreateView.swift in Sources */,
 				C5E9FBFA297A07CF00121C45 /* EarningsView.swift in Sources */,
 				C58D2C9529DD006E00FF86C4 /* EpisodeManager.swift in Sources */,
 				C523561D29A93AE600A079E8 /* SignOutView.swift in Sources */,
+				C51EA8942A5467B000A77F4A /* Vote.swift in Sources */,
 				C59404CD296DC6DE003F0FB7 /* User.swift in Sources */,
 				C55233B429FC2AFD009C3CEE /* ViewRatingsManager.swift in Sources */,
 				C56804682A09997C00094AC3 /* RatingStartsView.swift in Sources */,
@@ -771,10 +809,12 @@
 				C53AE50F29F82C1B00F6B149 /* LandingPageVM.swift in Sources */,
 				C5A6F1E12A2781AC0061A479 /* TagVM.swift in Sources */,
 				C56E0E072A20F79400A3DE56 /* Theme.swift in Sources */,
+				C51EA89A2A5496ED00A77F4A /* PollUpdateView.swift in Sources */,
 				C5E9FBFE297A0EA300121C45 /* CreateIdeaView.swift in Sources */,
 				C5E9FBEE297A069800121C45 /* UserView.swift in Sources */,
 				C55233B029F99562009C3CEE /* LandingPageView.swift in Sources */,
 				C51FC403299AF03B00D7D0C6 /* AccountMenu.swift in Sources */,
+				C51EA89C2A54986A00A77F4A /* PollView.swift in Sources */,
 				C5B355A52A3B4257003CFAAD /* DateFormat.swift in Sources */,
 				C5E9FBEA297A065E00121C45 /* TokenView.swift in Sources */,
 				C583A4F529D87DEC00CE9319 /* PhotoSelector.swift in Sources */,
@@ -784,10 +824,10 @@
 				C5660F2C29929B530079CBF1 /* Profile.swift in Sources */,
 				C5E9FBF0297A06D600121C45 /* EpisodeUpdate.swift in Sources */,
 				C5E9FBD92979EEC900121C45 /* Token.swift in Sources */,
-				C5E9FBCF2979EA8900121C45 /* Idea.swift in Sources */,
 				C56B2E5129F969DB00EBF321 /* ViewRating.swift in Sources */,
 				C58F23A0299EB7BB009DA4BF /* ProfileView.swift in Sources */,
 				C5E9FBE4297A05E800121C45 /* SeriesView.swift in Sources */,
+				C51EA8A22A54D80200A77F4A /* AnswerManager.swift in Sources */,
 				C59404D1296DC705003F0FB7 /* Series.swift in Sources */,
 				C57C6D562A0D8C1100B42AC1 /* AboutView.swift in Sources */,
 				C5E9FBC129770FC300121C45 /* SignInView.swift in Sources */,

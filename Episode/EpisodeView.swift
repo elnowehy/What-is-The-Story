@@ -7,8 +7,6 @@
 
 // create a view that displays the episode details and video player and count views
 
-
-
 import AVKit
 import SwiftUI
 
@@ -18,6 +16,7 @@ struct EpisodeView: View {
     @State var episode: Episode
     var mode: Mode
     @StateObject var viewRatingVM = ViewRatingVM()
+    @StateObject var pollVM = PollVM()
     @State var player: AVPlayer?
     @State private var timeObserver: Any?
     @Environment(\.dismiss) private var dismiss
@@ -81,20 +80,9 @@ struct EpisodeView: View {
                 }
                 
                 
-                if episodeVM.episode.votingOpen {
+                if episodeVM.episode.hasPoll {
                     DisclosureGroup(isExpanded: $isPollExpanded) {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(episodeVM.episode.question)
-                                    .font(theme.typography.body)
-                                    .foregroundColor(theme.colors.text)
-                                    .multilineTextAlignment(.leading)
-                                Text("Closing Date: \(formattedTimestamp(for:  episodeVM.episode.pollClosingDate))")
-                                    .font(theme.typography.caption)
-                                    .foregroundColor(theme.colors.accent)
-                            }
-                            Spacer()
-                        }
+                        PollView(pollVM: pollVM)
                     } label: {
                         Text("Poll")
                             .font(theme.typography.subtitle)
@@ -123,6 +111,13 @@ struct EpisodeView: View {
                 let interval = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
                 timeObserver = player!.addPeriodicTimeObserver(forInterval: interval, queue: .main) { _ in
                     handleViewCount()
+                }
+            }
+            
+            if episodeVM.episode.hasPoll {
+                Task {
+                    pollVM.poll.id = episodeVM.episode.id
+                    await pollVM.fetch()
                 }
             }
         }

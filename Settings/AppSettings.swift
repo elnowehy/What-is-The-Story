@@ -23,9 +23,15 @@ enum ContentType: String, CaseIterable {
     case series
 }
 
-
 enum Mode {
     case update
     case add
     case view
+}
+
+enum FetchResult {
+    case success
+    case notFound
+    case networkError(Error)
+    case otherError(Error)
 }

@@ -16,6 +16,7 @@ struct EpisodeUpdate: View {
     @State private var videoPicker: PhotosPickerItem?
     @Environment(\.dismiss) private var dismiss
     @State private var isSaving: Bool = false
+    @StateObject var pollVM = PollVM()
     
     var body: some View {
         ZStack {
@@ -23,12 +24,9 @@ struct EpisodeUpdate: View {
                 Spacer()
                 TextField("Title", text: $episodeVM.episode.title)
                     .padding(.top, 20)
-                Toggle("Open for Vote?", isOn: $episodeVM.episode.votingOpen)
-                if episodeVM.episode.votingOpen  {
-                    TextField("Question", text: $episodeVM.episode.question)
-                        .padding(.top, 20)
-                    
-                    DatePicker("Poll Closing Date", selection: $episodeVM.episode.pollClosingDate)
+                Toggle("Open for Vote?", isOn: $episodeVM.episode.hasPoll)
+                if episodeVM.episode.hasPoll  {
+                    PollUpdateView(pollVM: pollVM)
                 }
                 TextEditor(text: $episodeVM.episode.synopsis)
                 
@@ -58,6 +56,13 @@ struct EpisodeUpdate: View {
                     let seriesId = episodeVM.episode.series
                     episodeVM.episode = Episode()
                     episodeVM.episode.series = seriesId
+                }
+                
+                if episodeVM.episode.hasPoll {
+                    Task {
+                        pollVM.poll.id = episodeVM.episode.id
+                        await pollVM.fetch()
+                    }
                 }
                 
             }
@@ -96,6 +101,11 @@ struct EpisodeUpdate: View {
                 await seriesVM.addEpisode(episodeId: id)
             } else {
                 await episodeVM.update()
+            }
+            
+            if episodeVM.episode.hasPoll {
+                pollVM.poll.id = episodeVM.episode.id
+                pollVM.update()
             }
             isSaving = false
         }

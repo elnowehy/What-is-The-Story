@@ -1,5 +1,5 @@
 //
-//  SeriesManager.swift
+//  EpisodeManager.swift
 //  What is The Story
 //
 //  Created by Amr El-Nowehy on 2023-03-27.
@@ -49,9 +49,7 @@ class EpisodeManager: ObservableObject {
             "userId": self.episode.userId,
             "title": self.episode.title,
             "synopsis": self.episode.synopsis,
-            "question": self.episode.question,
-            "votingOpen": self.episode.votingOpen,
-            "pollClosingDate": self.episode.pollClosingDate,
+            "hasPoll": self.episode.hasPoll,
             "series": self.episode.series,
             "view": self.episode.views,
             "numOfRatings": self.episode.numOfRatings,
@@ -72,9 +70,7 @@ class EpisodeManager: ObservableObject {
         episode.userId = self.data["userId"] as? String ?? ""
         episode.title = self.data["title"] as? String ?? ""
         episode.synopsis = self.data["synopsis"] as? String ?? ""
-        episode.question = self.data["question"] as? String ?? ""
-        episode.votingOpen = self.data["votingOpen"] as? Bool ?? false
-        episode.pollClosingDate = self.data["pollClosingDate"] as? Date ?? Date()
+        episode.hasPoll = self.data["hasPoll"] as? Bool ?? false
         episode.series = self.data["series"] as? String ?? ""
         episode.views = self.data["views"] as? Int ?? 0
         episode.numOfRatings = self.data["numOfRatings"] as? Int ?? 0

@@ -14,11 +14,9 @@ struct Episode: Identifiable {
     var title: String = ""
     // let duration: TimeInterval
     var synopsis: String = ""
-    var question: String = ""
     var video : URL = URL(filePath: "")
     // var thumbnail : URL = URL(filePath: "")
-    var votingOpen: Bool = false
-    var pollClosingDate: Date = Date()
+    var hasPoll: Bool = false
     var series: String = ""
     var views: Int = 0
     var numOfRatings: Int = 0

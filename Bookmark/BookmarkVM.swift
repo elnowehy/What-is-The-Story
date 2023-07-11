@@ -23,7 +23,6 @@ class BookmarkVM: ObservableObject {
     
     
     func add() {
-        // Add an entry to the Views database
         Task {
             bookmarkManager.bookmark = bookmark
             await bookmarkManager.add()
