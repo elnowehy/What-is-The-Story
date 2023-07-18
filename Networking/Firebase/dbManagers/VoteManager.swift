@@ -16,8 +16,6 @@ class VoteManager: ObservableObject {
     private var ref: DocumentReference?
     private var data: [String: Any]
 
-    
-    
     init() {
         self.db = AppDelegate.db
         self.data = [:]

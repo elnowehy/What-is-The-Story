@@ -109,9 +109,10 @@ struct BookmarkListView: View {
                 switch bookmark.contentType {
                 case .episode:
                     episodeVM.episodeIds.append(bookmark.contentId)
-                    
                 case .series:
                     seriesVM.seriesIds.append(bookmark.contentId)
+                default:
+                    break
                 }
             }
             
@@ -124,6 +125,8 @@ struct BookmarkListView: View {
                     return episodeVM.episodeList.first(where: { $0.id == bookmark.contentId })
                 case .series:
                     return seriesVM.seriesList.first(where: { $0.id == bookmark.contentId })
+                default:
+                    return
                 }
             }
 
@@ -136,6 +139,8 @@ struct BookmarkListView: View {
                         return contentItem as? Episode ?? Episode()
                     case .series:
                         return contentItem as? Series ?? Series()
+                    default:
+                        return
                     }
                 }()
 

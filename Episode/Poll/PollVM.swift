@@ -77,11 +77,14 @@ class PollVM: ObservableObject {
     @MainActor
     func addAnswer() async {
         await answerVM.update()
+        poll.answerIds.append(answerVM.answer.id)
+        update()
     }
     
     func deleteAnswer() async {
         self.poll.answerIds.removeAll(where: { $0 == answerVM.answer.id })
         await answerVM.delete()
+        update()
         await fetchAnswers()
     }
 }

@@ -28,9 +28,9 @@ struct PollView: View {
              
             if !userHasVoted && auth.isLoggedIn {
                  TextField("Enter your answer", text: $newAnswer)
-                 Button(action: addAnswer) {
-                     Label("Add Answer", systemImage: "plus")
-                 }
+                    .onSubmit {
+                        addAnswer()
+                    }
              }
              
              ScrollView {
@@ -60,6 +60,8 @@ struct PollView: View {
                 newAnswerVM.answer.text = newAnswer
                 await newAnswerVM.add()
                 pollVM.answerVMs.append(newAnswerVM)
+                pollVM.answerVM.answer = newAnswerVM.answer
+                await pollVM.addAnswer()
                 newAnswer = ""
             }
         }
@@ -68,7 +70,8 @@ struct PollView: View {
     func deleteAnswer(id: String) {
         Task {
             if let index = pollVM.answerVMs.firstIndex(where: { $0.answer.id == id }) {
-                await pollVM.answerVMs[index].delete()
+                pollVM.answerVM = pollVM.answerVMs[index]
+                await pollVM.deleteAnswer()
                 pollVM.answerVMs.remove(at: index)
             }
         }

@@ -19,6 +19,7 @@ struct SeriesView: View {
     var mode: Mode
     @StateObject var episodeVM = EpisodeVM()
     @StateObject var bookmarkVM = BookmarkVM()
+    @StateObject var commentVM = CommentVM()
     @State private var isBookmarked = false
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: Theme
@@ -26,6 +27,7 @@ struct SeriesView: View {
     @EnvironmentObject var userVM: UserVM
     @State private var isPlayingVideo = false
     @State private var isSynopsisExpanded = false
+    @State private var isCommentsExpanded = false
     @State private var averageRating: Double = 0
     @State var player: AVPlayer?
     
@@ -90,6 +92,22 @@ struct SeriesView: View {
                     }
                 } label: {
                     Text("Synopsis")
+                        .font(theme.typography.subtitle)
+                        .foregroundColor(theme.colors.text)
+                }
+                
+                DisclosureGroup(isExpanded: $isCommentsExpanded) {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            CommentView(commentVM: commentVM, contentId: seriesVM.series.id)
+                                .font(theme.typography.body)
+                                .foregroundColor(theme.colors.text)
+                                .multilineTextAlignment(.leading)
+                        }
+                        Spacer()
+                    }
+                } label: {
+                    Text("Comments")
                         .font(theme.typography.subtitle)
                         .foregroundColor(theme.colors.text)
                 }

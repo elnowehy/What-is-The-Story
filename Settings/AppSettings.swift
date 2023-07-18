@@ -9,6 +9,7 @@ import Foundation
 
 struct AppSettings {
     static let pageSize = 20
+    static let commentMax = 140
     
     enum SeriesListType {
   //      case featured
@@ -18,9 +19,10 @@ struct AppSettings {
     }
 }
 
-enum ContentType: String, CaseIterable {
+enum ContentType: String, CaseIterable, Codable {
     case episode
     case series
+    case profile
 }
 
 enum Mode {
