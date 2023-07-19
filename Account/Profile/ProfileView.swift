@@ -13,6 +13,8 @@ struct ProfileView: View {
     @EnvironmentObject var userVM: UserVM
     @EnvironmentObject var theme: Theme
     @State private var isPresentingProfileEdit = false
+    @State private var isCommentsExpanded = false
+    @StateObject var commentVM = CommentVM()
     
     var body: some View {
         ZStack {
@@ -63,7 +65,22 @@ struct ProfileView: View {
                             .padding(theme.spacing.medium)
                         }
                     }
-
+                    
+//                    DisclosureGroup(isExpanded: $isCommentsExpanded) {
+//                        HStack {
+//                            VStack(alignment: .leading) {
+//                                CommentView(commentVM: commentVM, contentId: profileVM.profile.id)
+//                                    .font(theme.typography.body)
+//                                    .foregroundColor(theme.colors.text)
+//                                    .multilineTextAlignment(.leading)
+//                            }
+//                            Spacer()
+//                        }
+//                    } label: {
+//                        Text("Comments")
+//                            .font(theme.typography.subtitle)
+//                            .foregroundColor(theme.colors.text)
+//                    }
                 }
                 .foregroundColor(theme.colors.text)
                 .navigationBarTitle(profileVM.profile.brand)

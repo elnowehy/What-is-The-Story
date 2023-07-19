@@ -52,9 +52,9 @@ class CommentVM: ObservableObject {
             reply.contentId = comment.contentId
             reply.timestamp = Date()
             reply.editedTimestamp = Date()
-            let replyComment = try await commentManager.postReply(comment: reply)
-            self.comments.append(replyComment)
+            _ = try await commentManager.postReply(comment: reply)
             self.isReplying = false
+            await self.fetchComments(for: comment.contentId)
         } catch {
             print("Error posting reply: \(error)")
         }

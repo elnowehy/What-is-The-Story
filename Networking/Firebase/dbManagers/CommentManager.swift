@@ -12,6 +12,7 @@ import FirebaseFirestoreSwift
 class CommentManager: ObservableObject {
     private var db: Firestore
     private var data: [String: Any]
+    private var userManager = UserManager()
     
     var coll: CollectionReference {
         db.collection("Comment")
@@ -21,17 +22,51 @@ class CommentManager: ObservableObject {
         self.db = AppDelegate.db
         self.data = [:]
     }
+    
+    @MainActor
+    func populateData(comment: Comment) {
+        self.data = [
+            "userId": comment.userId,
+            "text": comment.text,
+            "contentId": comment.contentId,
+            "parentId": comment.parentId,
+            "isDelete": comment.isDeleted,
+            "timestamp": comment.timestamp,
+            "editedTimestamp": comment.editedTimestamp,
+        ]
+    }
+    
+    @MainActor
+    func populateStruct(data: [String: Any]) async -> Comment {
+        var comment = Comment()
+        comment.userId = data["userId"] as? String ?? ""
+        comment.text = data["text"] as? String ?? ""
+        comment.contentId = data["contentId"] as? String ?? ""
+        comment.parentId = data["parentId"] as? String ?? ""
+        comment.isDeleted = data["isDeleted"] as? Bool ?? false
+        comment.timestamp = data["timestamp"] as? Date ?? Date()
+        comment.editedTimestamp = data["editedTimestamp"] as? Date ?? Date()
+        
+        if let userId = data["userId"] as? String {
+            userManager.user.id = userId
+            await userManager.fetch()
+            comment.userName = userManager.user.name
+        }
+        
+        return comment
+    }
+
 
     // Fetch comments for a given contentId
+    @MainActor
     func fetchComments(for contentId: String) async throws -> [Comment] {
         let querySnapshot = try await db.collection("Comment").whereField("contentId", isEqualTo: contentId).getDocuments()
         var comments = [Comment]()
         for document in querySnapshot.documents {
-            var comment = try? document.data(as: Comment.self)
-            comment?.id = document.documentID
-            if let comment = comment {
-                comments.append(comment)
-            }
+            var data = document.data()
+            var comment = await populateStruct(data: data)
+            comment.id = document.documentID
+            comments.append(comment)
         }
         
         var rootComments = [Comment]()
@@ -57,14 +92,20 @@ class CommentManager: ObservableObject {
     
     // Post a comment
     func postComment(comment: Comment) async throws -> Comment {
-        let documentReference = try db.collection("Comment").addDocument(from: comment)
-        return try await documentReference.getDocument().data(as: Comment.self)
+        await populateData(comment: comment)
+        let documentReference = try await db.collection("Comment").addDocument(data: self.data)
+        var posted = comment
+        posted.id = documentReference.documentID
+        return posted
     }
 
     // Post a reply to a comment
     func postReply(comment: Comment) async throws -> Comment {
-        let documentReference = try db.collection("Comment").addDocument(from: comment)
-        return try await documentReference.getDocument().data(as: Comment.self)
+        await populateData(comment: comment)
+        let documentReference = try await db.collection("Comment").addDocument(data: self.data)
+        var reply = comment
+        reply.id = documentReference.documentID
+        return reply
     }
     
     // Delete a comment

@@ -11,6 +11,7 @@ import Foundation
 struct Comment: Identifiable, Codable{
     var id: String = ""
     var userId: String = ""
+    var userName: String = ""
     var text: String = ""
     var contentId: String = ""
     var parentId: String = "" // Optional, only for replies

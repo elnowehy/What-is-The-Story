@@ -28,6 +28,9 @@ struct EpisodeView: View {
     @EnvironmentObject var theme: Theme
     @State private var isSynopsisExpanded = false
     @State private var isPollExpanded = false
+    @StateObject var commentVM = CommentVM()
+    @State private var isCommentsExpanded = false
+    
     
     private func handleViewCount() {
         let duration = player?.currentItem?.duration.seconds ?? 0
@@ -88,6 +91,22 @@ struct EpisodeView: View {
                             .font(theme.typography.subtitle)
                             .foregroundColor(theme.colors.text)
                     }
+                }
+                
+                DisclosureGroup(isExpanded: $isCommentsExpanded) {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            CommentView(commentVM: commentVM, contentId: episodeVM.episode.id)
+                                .font(theme.typography.body)
+                                .foregroundColor(theme.colors.text)
+                                .multilineTextAlignment(.leading)
+                        }
+                        Spacer()
+                    }
+                } label: {
+                    Text("Comments")
+                        .font(theme.typography.subtitle)
+                        .foregroundColor(theme.colors.text)
                 }
                 
                 Spacer()
