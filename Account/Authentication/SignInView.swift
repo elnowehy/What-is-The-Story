@@ -11,6 +11,7 @@ import Firebase
 struct SignInView: View {
     @Binding var showLogIn: Bool
     @StateObject var userVM: UserVM
+    @State private var password = ""
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var theme: Theme
@@ -28,7 +29,7 @@ struct SignInView: View {
                     .textInputAutocapitalization(.never)
                     .submitLabel(.next)
                 
-                SecureField("Password", text: $userVM.user.password)
+                SecureField("Password", text: $password)
                     .textFieldStyle(TextFieldLoginStyle(theme: theme))
                     .submitLabel(.done)
                 
@@ -38,7 +39,7 @@ struct SignInView: View {
                 HStack {
                     Button(action: {
                         Task {
-                            await userVM.user.id = authManager.signIn(emailAddress: userVM.user.email, password: userVM.user.password)
+                            await userVM.user.id = authManager.signIn(emailAddress: userVM.user.email, password: password)
                             await userVM.fetch()
                             showLogIn = false
                             authManager.isLoggedIn = true

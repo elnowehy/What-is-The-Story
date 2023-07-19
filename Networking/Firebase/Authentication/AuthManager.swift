@@ -22,7 +22,7 @@ final class AuthManager: ObservableObject {
     @Published var isLoggedIn: Bool = false
 
     init()  {
-        // self.listenToAuthState()
+        self.listenToAuthState()
     }
     
     func listenToAuthState() {
@@ -37,6 +37,7 @@ final class AuthManager: ObservableObject {
                 self.fbUser = currentUser
             } else {
                 self.isLoggedIn = false
+                self.fbUser = nil
             }
         }
     }

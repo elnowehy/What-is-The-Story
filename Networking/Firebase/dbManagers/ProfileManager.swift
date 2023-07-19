@@ -179,9 +179,9 @@ class ProfileInfoManager: ObservableObject {
 
     
     init() {
-        db = Firestore.firestore()
-        storage = Storage.storage()
-        data = [:]
+        self.db = AppDelegate.db
+        self.storage = AppDelegate.storage
+        self.data = [:]
     }
     
     private func setRef() {

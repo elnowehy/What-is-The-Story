@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C502DD72298C5311002930B4 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502DD71298C5311002930B4 /* TestView.swift */; };
 		C502DD74298D92E3002930B4 /* PathRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502DD73298D92E3002930B4 /* PathRouter.swift */; };
 		C51EA88B2A4F2FB300A77F4A /* AdvancedList in Frameworks */ = {isa = PBXBuildFile; productRef = C51EA88A2A4F2FB300A77F4A /* AdvancedList */; };
 		C51EA8902A5466A000A77F4A /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EA88F2A5466A000A77F4A /* Poll.swift */; };
@@ -115,7 +114,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C502DD71298C5311002930B4 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		C502DD73298D92E3002930B4 /* PathRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathRouter.swift; sourceTree = "<group>"; };
 		C51EA88F2A5466A000A77F4A /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		C51EA8912A54674E00A77F4A /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
@@ -526,7 +524,6 @@
 			children = (
 				C5E9FBC029770FC300121C45 /* SignInView.swift */,
 				C59404E6296DD2E2003F0FB7 /* SignUpView.swift */,
-				C502DD71298C5311002930B4 /* TestView.swift */,
 				C523561C29A93AE600A079E8 /* SignOutView.swift */,
 			);
 			path = Authentication;
@@ -724,7 +721,6 @@
 				C5A6F1D92A2509BD0061A479 /* VideoPlayerView.swift in Sources */,
 				C51FC405299AF2DC00D7D0C6 /* CommunityView.swift in Sources */,
 				C56E0DF62A17A76800A3DE56 /* Bookmark.swift in Sources */,
-				C502DD72298C5311002930B4 /* TestView.swift in Sources */,
 				C5AFDC3C29BE7E7400B2F6E2 /* FirebaseUtils.swift in Sources */,
 				C5660F342992C21C0079CBF1 /* ProfileManager.swift in Sources */,
 				C56E0DFC2A17A99900A3DE56 /* BookmarkListView.swift in Sources */,

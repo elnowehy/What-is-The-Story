@@ -14,7 +14,6 @@ struct User: Identifiable, Codable {
     var id: String = ""
     var name: String = ""
     var email: String = ""
-    var password: String = ""
     var profileIds: [String] = []
     var invitationCode: String = ""
     var witsWallet: String = ""

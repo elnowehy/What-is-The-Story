@@ -11,6 +11,7 @@ import Firebase
 struct SignUpView: View {
     @Binding var showLogIn: Bool
     @State private var user  = User()
+    @State private var password = ""
     @ObservedObject var userVM: UserVM
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authManager: AuthManager
@@ -35,7 +36,7 @@ struct SignUpView: View {
                             .submitLabel(.next)
                         
                         
-                        SecureField("Password", text: $user.password)
+                        SecureField("Password", text: $password)
                             .textFieldStyle(TextFieldLoginStyle(theme: theme))
                             .submitLabel(.done)
                         
@@ -56,16 +57,17 @@ struct SignUpView: View {
                     Button (action: {
                         Task {
                             isSaving = true
-                            await user.id = authManager.signUp(emailAddress: user.email, password: user.password)
+                            await user.id = authManager.signUp(emailAddress: user.email, password: password)
                             if(!user.id.isEmpty) {
                                 userVM.user = user
                                 await userVM.create()
-                                await user.id = authManager.signIn(emailAddress: user.email, password: user.password)
+                                await user.id = authManager.signIn(emailAddress: user.email, password: password)
                                 showLogIn = false
                                 authManager.isLoggedIn = true
                             } else {
                                 fatalError("we have a problem")
                             }
+                            password = ""
                             isSaving = false
                         }
                     }) {

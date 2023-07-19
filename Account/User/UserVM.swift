@@ -15,17 +15,23 @@ class UserVM: ObservableObject{
     @Published var user = User()
     private var userManager: UserManager
     private var profileManager = ProfileManager()
+    private var authManager: AuthManager
     
-    init() {
+    init(authManager: AuthManager) {
         self.userManager = UserManager()
+        self.authManager = authManager
+        Task {
+            if await authManager.isLoggedIn {
+                if let _user = await authManager.fbUser {
+                    self.user.id = _user.uid
+                    await fetch()
+                } else {
+                    print("Unable to obtain user data")
+                }
+            }
+        }
     }
 
-    /*
-    init() {
-        userManager = UserManager() // current user
-        self.user =  userManager.user
-    }
-    */
     // fetch data from Firebase and populate User
     // input: User struct with the user uid populated
     // output: User struc is populated
