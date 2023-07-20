@@ -13,7 +13,6 @@ struct SignInView: View {
     @StateObject var userVM: UserVM
     @State private var password = ""
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var theme: Theme
     @EnvironmentObject var pathRouter: PathRouter
     
@@ -39,10 +38,8 @@ struct SignInView: View {
                 HStack {
                     Button(action: {
                         Task {
-                            await userVM.user.id = authManager.signIn(emailAddress: userVM.user.email, password: password)
-                            await userVM.fetch()
+                            await userVM.user.id = userVM.signIn(email: userVM.user.email, password: password)
                             showLogIn = false
-                            authManager.isLoggedIn = true
                             dismiss()
                         }
                     })

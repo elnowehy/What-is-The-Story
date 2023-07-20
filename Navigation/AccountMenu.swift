@@ -10,7 +10,6 @@ import SwiftUI
 
 struct AccountMenu: View {
     @EnvironmentObject var userVM:UserVM
-    @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var theme: Theme
     @StateObject var profileVM = ProfileVM()
     @State var showLogIn = true
@@ -25,7 +24,7 @@ struct AccountMenu: View {
     }
     
     var body: some View {
-        if authManager.isLoggedIn {
+        if userVM.isLoggedIn {
             content
         } else{
             SignInView(showLogIn: $showLogIn, userVM: userVM)
@@ -34,43 +33,63 @@ struct AccountMenu: View {
     
     var content: some View {
         NavigationStack {
-            List {
-                NavigationLink(destination: ProfileView().environmentObject(profileVM)) {
-                    Label("Profile", systemImage: "person.crop.circle.fill")
+            VStack {
+                List {
+                    NavigationLink(destination: ProfileView().environmentObject(profileVM)) {
+                        Label("Profile", systemImage: "person.crop.circle.fill")
+                    }
+                    
+                    NavigationLink(destination: BookmarkListView()) {
+                        Label("Messages", systemImage: "envelope.badge")
+                    }
+                    
+                    NavigationLink(destination: BookmarkListView()) {
+                        Label("Bookmarks", systemImage: "bookmark")
+                    }
+                    
+                    NavigationLink(destination: ViewsHistoryView()) {
+                        Label("View History", systemImage: "clock")
+                    }
+                    
+                    NavigationLink(destination: EarningsView()) {
+                        Label("Earnings", systemImage: "chart.bar.xaxis")
+                    }
+                    
+                    NavigationLink(destination: SettingsView()) {
+                        Label("Settings", systemImage: "gearshape")
+                    }
                 }
-                
-                NavigationLink(destination: BookmarkListView()) {
-                    Label("Messages", systemImage: "envelope.badge")
+                Spacer()
+                Button(action: {
+                    Task.init(priority: .high) {
+                        await userVM.signOut()
+                    }
+                }) {
+                    Text("Sign Out")
                 }
-                
-                NavigationLink(destination: BookmarkListView()) {
-                    Label("Bookmarks", systemImage: "bookmark")
-                }
-                
-                NavigationLink(destination: ViewsHistoryView()) {
-                    Label("View History", systemImage: "clock")
-                }
-                
-                NavigationLink(destination: EarningsView()) {
-                    Label("Earnings", systemImage: "chart.bar.xaxis")
-                }
-                
-                NavigationLink(destination: SettingsView()) {
-                    Label("Settings", systemImage: "gearshape")
-                }
-                
-                NavigationLink(destination: SignOutView()) {
-                    Label("Sign Out", systemImage: "square.and.arrow.up.fill")
-                }
-                
+                .padding()
+                .background(Color.red)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                Spacer()
             }
+            
         }
         .task {
-            if authManager.isLoggedIn {
+            if userVM.isLoggedIn && userVM.user.profileIds.count > 0 {
                 profileVM.profile.id = userVM.user.profileIds[0]
                 await profileVM.fetch()
                 await profileVM.fetchInfo()
-            } 
+            }
+        }
+        .onChange(of: userVM.user.profileIds.count) { newValue in
+            if newValue > 0 {
+                profileVM.profile.id = userVM.user.profileIds[0]
+                Task {
+                    await profileVM.fetch()
+                    await profileVM.fetchInfo()
+                }
+            }
         }
         .font(theme.typography.subtitle)
         .foregroundColor(theme.colors.text)

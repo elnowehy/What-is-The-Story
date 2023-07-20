@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct HomeTabView: View {
-    @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var theme: Theme
     @State private var selection: Tab = .home
     @State private var showSignInSheet = false

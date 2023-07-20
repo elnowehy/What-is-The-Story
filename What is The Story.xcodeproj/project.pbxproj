@@ -417,9 +417,9 @@
 		C59404B7296DC575003F0FB7 /* What is The Story */ = {
 			isa = PBXGroup;
 			children = (
+				C59404B8296DC575003F0FB7 /* What_is_The_StoryApp.swift */,
 				C583CCA129BBA51500085D58 /* What-is-The-Story-Info.plist */,
 				C59404EF296E37F9003F0FB7 /* What is The Story.entitlements */,
-				C59404B8296DC575003F0FB7 /* What_is_The_StoryApp.swift */,
 				C59404BA296DC575003F0FB7 /* ContentView.swift */,
 				C59404BC296DC576003F0FB7 /* Assets.xcassets */,
 				C59404BE296DC576003F0FB7 /* Preview Content */,
@@ -871,7 +871,7 @@
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SQNNWLK4H9;
@@ -1019,7 +1019,7 @@
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SQNNWLK4H9;
@@ -1053,7 +1053,7 @@
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SQNNWLK4H9;

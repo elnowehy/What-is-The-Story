@@ -13,21 +13,28 @@ import SwiftUI
 class UserVM: ObservableObject{
     @Published var profile = Profile()
     @Published var user = User()
-    private var userManager: UserManager
+    private var userManager = UserManager()
     private var profileManager = ProfileManager()
-    private var authManager: AuthManager
+    private var authManager = AuthManager()
+    var isLoggedIn: Bool {
+        return authManager.isLoggedIn
+    }
+
     
-    init(authManager: AuthManager) {
-        self.userManager = UserManager()
-        self.authManager = authManager
+    init() {
         Task {
-            if await authManager.isLoggedIn {
-                if let _user = await authManager.fbUser {
-                    self.user.id = _user.uid
-                    await fetch()
-                } else {
-                    print("Unable to obtain user data")
-                }
+            await updateUserData()
+        }
+    }
+    
+    @MainActor
+    private func updateUserData() async {
+        if isLoggedIn {
+            if let _user = authManager.fbUser {
+                self.user.id = _user.uid
+                await fetch()
+            } else {
+                print("Unable to obtain user data")
             }
         }
     }
@@ -83,5 +90,25 @@ class UserVM: ObservableObject{
     @MainActor
     func currentUserData() async {
         user = await userManager.currentUserData()
+    }
+    
+    @MainActor
+    func signUp(email: String, password: String) async -> String {
+        user.id = await authManager.signUp(emailAddress: email, password: password)
+        await updateUserData()
+        return user.id
+    }
+    
+    @MainActor
+    func signIn(email: String, password: String) async -> String {
+        user.id = await authManager.signIn(emailAddress: email, password: password)
+        await updateUserData()
+        return user.id
+    }
+    
+    @MainActor
+    func signOut() async {
+        await authManager.signOut()
+        user = User()
     }
 }

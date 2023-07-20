@@ -43,15 +43,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct What_is_The_StoryApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var pathRouter = PathRouter()
-//    @StateObject var authManager = AuthManager()
-    @StateObject var userVM: UserVM
+    @StateObject var userVM = UserVM()
     @StateObject var themeManager = ThemeManager()
     @Environment(\.colorScheme) var colorScheme
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                // .environmentObject(authManager)
                 .environmentObject(pathRouter)
                 .environmentObject(userVM)
                 .environmentObject(themeManager.current)

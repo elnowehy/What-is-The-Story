@@ -18,7 +18,6 @@ import Firebase
 import FirebaseFirestoreSwift
 
 struct UserView: View {
-    @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var userVM: UserVM
     
     var body: some View {

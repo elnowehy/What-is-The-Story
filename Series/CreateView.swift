@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct CreateView: View {
-    @EnvironmentObject var userVM:UserVM
-    @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var userVM: UserVM
     @EnvironmentObject var profileVM: ProfileVM
     @EnvironmentObject var theme: Theme
     @StateObject var seriesVM = SeriesVM()
@@ -17,7 +16,7 @@ struct CreateView: View {
     @State var showLogIn = true
     
     var body: some View {
-        if authManager.isLoggedIn {
+        if userVM.isLoggedIn {
             content
         } else{
             SignInView(showLogIn: $showLogIn, userVM: userVM)
@@ -81,7 +80,7 @@ struct CreateView: View {
     
     @MainActor
     private func loadSeries() async {
-        if authManager.isLoggedIn {
+        if userVM.isLoggedIn {
             profileVM.profile.id = userVM.user.profileIds[0]
             await profileVM.fetch()
             if !profileVM.profile.seriesIds.isEmpty {

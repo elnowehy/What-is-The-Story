@@ -12,7 +12,7 @@ import FirebaseFirestoreSwift
 
 
 typealias FireBaseUser = FirebaseAuth.User
-@MainActor
+
 final class AuthManager: ObservableObject {
     var fbUser: FireBaseUser? {
         didSet {
@@ -47,7 +47,7 @@ final class AuthManager: ObservableObject {
         do {
             let result = try await Auth.auth().createUser(withEmail: emailAddress, password: password)
             let user = result.user
-            // self.isLoggedIn = true
+            self.isLoggedIn = true
             userId  = user.uid
         }
         catch {
@@ -61,7 +61,7 @@ final class AuthManager: ObservableObject {
         do {
             let result = try await Auth.auth().signIn(withEmail: emailAddress, password: password)
             userId = result.user.uid
-            // self.isLoggedIn = true
+            self.isLoggedIn = true
         }
         catch {
             print("an error occured: \(error.localizedDescription)")
@@ -69,7 +69,8 @@ final class AuthManager: ObservableObject {
         return userId
     }
     
-    func signOut() {
+    @MainActor
+    func signOut() async {
         do {
             try Auth.auth().signOut()
         } catch let signOutError as NSError {

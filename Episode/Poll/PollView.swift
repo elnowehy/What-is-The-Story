@@ -10,7 +10,6 @@ import SwiftUI
 struct PollView: View {
     @ObservedObject var pollVM: PollVM
     @EnvironmentObject var userVM: UserVM
-    @EnvironmentObject var auth: AuthManager
     @State private var newAnswer: String = ""
 
     var body: some View {
@@ -26,7 +25,7 @@ struct PollView: View {
                      .foregroundColor(.red)
              }
              
-            if !userHasVoted && auth.isLoggedIn {
+            if !userHasVoted && userVM.isLoggedIn {
                  TextField("Enter your answer", text: $newAnswer)
                     .onSubmit {
                         addAnswer()

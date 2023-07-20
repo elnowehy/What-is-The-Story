@@ -14,7 +14,6 @@ struct SignUpView: View {
     @State private var password = ""
     @ObservedObject var userVM: UserVM
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var authManager: AuthManager
     @EnvironmentObject var theme: Theme
     @State private var isSaving: Bool = false
     
@@ -57,13 +56,12 @@ struct SignUpView: View {
                     Button (action: {
                         Task {
                             isSaving = true
-                            await user.id = authManager.signUp(emailAddress: user.email, password: password)
+                            await user.id = userVM.signUp(email: user.email, password: password)
                             if(!user.id.isEmpty) {
                                 userVM.user = user
                                 await userVM.create()
-                                await user.id = authManager.signIn(emailAddress: user.email, password: password)
+                                await user.id = userVM.signIn(email: user.email, password: password)
                                 showLogIn = false
-                                authManager.isLoggedIn = true
                             } else {
                                 fatalError("we have a problem")
                             }

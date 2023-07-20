@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct SignOutView: View {
-    @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var userVM: UserVM
     
     var body: some View {
-        Button(String(authManager.isLoggedIn)) {
+        Button(String(userVM.isLoggedIn)) {
             Task {
-                authManager.signOut()
+                await userVM.signOut()
             }
         }
     }
