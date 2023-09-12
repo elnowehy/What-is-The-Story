@@ -17,7 +17,6 @@ struct EpisodeView: View {
     var mode: Mode
     @StateObject var viewRatingVM = ViewRatingVM()
     @StateObject var pollVM = PollVM()
-    @State var player: AVPlayer?
     @State private var timeObserver: Any?
     @Environment(\.dismiss) private var dismiss
     @State private var showShareSheet = false
@@ -26,6 +25,8 @@ struct EpisodeView: View {
     @State private var countViews = true
     @EnvironmentObject var userVM: UserVM
     @EnvironmentObject var theme: Theme
+    @EnvironmentObject var playerVM: PlayerVM
+    @State private var player: AVPlayer?
     @State private var isSynopsisExpanded = false
     @State private var isPollExpanded = false
     @StateObject var commentVM = CommentVM()
@@ -33,8 +34,10 @@ struct EpisodeView: View {
     
     
     private func handleViewCount() {
-        let duration = player?.currentItem?.duration.seconds ?? 0
-        let playbackTime = player!.currentTime().seconds
+        guard let player = playerVM.player else { return }
+        
+        let duration = player.currentItem?.duration.seconds ?? 0
+        let playbackTime = player.currentTime().seconds
         playbackPercentage = playbackTime / duration
 
         if playbackPercentage >= 0.8 {
@@ -57,12 +60,23 @@ struct EpisodeView: View {
                 
                 Text(episodeVM.episode.title)
                 
-                VideoPlayerView(player: $player)
+                // PlayerView(player: $player)
+                if let player = playerVM.player {
+                    PlayerView(player: .constant(player))
+                } else {
+                    // Show a placeholder or alternative view when player is nil.
+                    Text("No Video!!")
+                }
                 
                 ViewRatingView(episode: $episode, showRating: $showRating)
                     .environmentObject(viewRatingVM)
                 
-                PlayerControlView(episodeVM: episodeVM, player: $player)
+                if let player = playerVM.player {
+                    PlayerControlView(episodeVM: episodeVM, player: .constant(player))
+                } else {
+                    // Show a placeholder or alternative view when player is nil.
+                    Text("No Video!!")
+                }
                 
                 Divider()
                 DisclosureGroup(isExpanded: $isSynopsisExpanded) {
@@ -124,12 +138,14 @@ struct EpisodeView: View {
         .onAppear{
             print(".onAppear \(episode.video)")
             episodeVM.episode = episode
-            player = AVPlayer(url: episodeVM.episode.video)
-            if player != nil && !userVM.user.id.isEmpty {
-                player!.replaceCurrentItem(with: AVPlayerItem(url: episodeVM.episode.video))
-                let interval = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-                timeObserver = player!.addPeriodicTimeObserver(forInterval: interval, queue: .main) { _ in
-                    handleViewCount()
+            if !episodeVM.episode.video.absoluteString.isEmpty {
+                playerVM.preparePlayer(with: seriesVM.series.trailer)
+                if let player = playerVM.player, !userVM.user.id.isEmpty {
+                    self.player = player
+                    let interval = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+                    timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { _ in
+                        handleViewCount()
+                    }
                 }
             }
             
@@ -151,8 +167,10 @@ struct EpisodeView: View {
         
         .onDisappear {
             print("onDisappear \(episode.title)")
-            if let observer = timeObserver {
-                player!.removeTimeObserver(observer)
+            if let observer = timeObserver, let player = self.player {
+                player.removeTimeObserver(observer)
+                timeObserver = nil
+                self.player = nil
             }
         }
     }

@@ -23,6 +23,8 @@ struct Episode: Identifiable {
     var totalRatings: Int = 0
     var releaseDate = Date()
     var avgRating: Double = 0.0
+    var nftContractAddress: String? = nil
+    var nftTokenId: String? = nil
     
     var featuredScore: Double {
         let k = 1.0

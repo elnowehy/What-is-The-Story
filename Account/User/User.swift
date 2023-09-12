@@ -8,8 +8,6 @@
 
 import Foundation
 
-// read and write for user only
-// Firestore path: /User/<documentID>
 struct User: Identifiable, Codable {
     var id: String = ""
     var name: String = ""
@@ -22,14 +20,14 @@ struct User: Identifiable, Codable {
     var loggedInTimestamp = Date()
 }
 
-// read: all, write: system only
-// Firestore path: /Users/<documentID>/Info/<main>
 struct PublicInfo {
     var id: String = "main"
     var sponsor: String = ""
-    var tokens: Int = 0
+    var claimedTokens: Int = 0
+    var outstandingTokens: Int = 0
     var inviteeIDs = [String]()
 }
+
 
 // read: all, write: user
 // Firestore path: /Users/<documentID>/Contribution/<main>

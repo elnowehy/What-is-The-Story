@@ -42,7 +42,7 @@ class SeriesVM: ObservableObject{
 
     
     @MainActor
-    func fetchSeriesList<PaginatableItem: Paginatable>(listType: AppSettings.SeriesListType, category: Category? = nil, lastDocument: PaginatableItem? = nil) async -> PaginatedResult<Series, PaginatableItem> {
+    func fetchSeriesList<PaginatableItem: Paginatable>(listType: SeriesListType, category: Category? = nil, lastDocument: PaginatableItem? = nil) async -> PaginatedResult<Series, PaginatableItem> {
         var paginatedSeries = PaginatedResult<Series, PaginatableItem>(items: [], lastItem: nil)
         
         do {

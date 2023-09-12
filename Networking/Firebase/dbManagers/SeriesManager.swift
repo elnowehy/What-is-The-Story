@@ -199,7 +199,7 @@ class SeriesManager: ObservableObject {
     }
     
     @MainActor
-    func fetchAllSeries<PaginatableItem: Paginatable>(listType: AppSettings.SeriesListType, category: Category? = nil, startAfter: PaginatableItem? = nil) async throws -> PaginatedResult<Series, PaginatableItem> {
+    func fetchAllSeries<PaginatableItem: Paginatable>(listType: SeriesListType, category: Category? = nil, startAfter: PaginatableItem? = nil) async throws -> PaginatedResult<Series, PaginatableItem> {
         var fetchedSeries: [Series] = []
         var query: Query
         

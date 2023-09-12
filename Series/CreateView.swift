@@ -67,26 +67,26 @@ struct CreateView: View {
             
         }
         .task {
-            await loadSeries()
+            if userVM.isLoggedIn && userVM.user.profileIds.count > 0 {
+                await loadSeries()
+            }
         }
-        
-//        .onChange(of: profileVM.profile.seriesIds.last) { _ in
-//            Task {
-//                print("series count: \(seriesVM.seriesList.count)")
-//                await loadSeries()
-//            }
-//        }
+        .onChange(of: userVM.user.profileIds.count) { newValue in
+            if newValue > 0 {
+                Task {
+                    await loadSeries()
+                }
+            }
+        }
     }
     
     @MainActor
     private func loadSeries() async {
-        if userVM.isLoggedIn {
-            profileVM.profile.id = userVM.user.profileIds[0]
-            await profileVM.fetch()
-            if !profileVM.profile.seriesIds.isEmpty {
-                seriesVM.seriesIds = profileVM.profile.seriesIds
-                await seriesVM.fetch()
-            }
+        profileVM.profile.id = userVM.user.profileIds[0]
+        await profileVM.fetch()
+        if !profileVM.profile.seriesIds.isEmpty {
+            seriesVM.seriesIds = profileVM.profile.seriesIds
+            await seriesVM.fetch()
         }
     }
 }

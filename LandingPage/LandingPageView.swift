@@ -31,21 +31,21 @@ struct LandingPageView: View {
                 
 //                Text("Featured Episodes")
 //                    .modifier(LargeTitleStyle(theme: theme))
-//                SeriesListView(seriesList: $landingPageVM.featuredSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.featured)
+//                SeriesListView(seriesList: $landingPageVM.featuredSeries, landingPageVM: landingPageVM, listType: SeriesListType.featured)
                 
                 
                 Text("Popular Series")
                     .modifier(LargeTitleStyle(theme: theme))
-                SeriesListView(seriesList: $landingPageVM.popularSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.popular)
+                SeriesListView(seriesList: $landingPageVM.popularSeries, landingPageVM: landingPageVM, listType: SeriesListType.popular)
                 
                 Text("New Series")
                     .modifier(LargeTitleStyle(theme: theme))
-                SeriesListView(seriesList: $landingPageVM.newSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.new)
+                SeriesListView(seriesList: $landingPageVM.newSeries, landingPageVM: landingPageVM, listType: SeriesListType.new)
                 
                 // Trending series
                 Text("Trending Series")
                     .modifier(LargeTitleStyle(theme: theme))
-                SeriesListView(seriesList: $landingPageVM.trendingSeries, landingPageVM: landingPageVM, listType: AppSettings.SeriesListType.trending)
+                SeriesListView(seriesList: $landingPageVM.trendingSeries, landingPageVM: landingPageVM, listType: SeriesListType.trending)
             }
         }
         //.padding()
@@ -55,7 +55,7 @@ struct LandingPageView: View {
 struct SeriesListView: View {
     @Binding var seriesList: [Series]
     @ObservedObject var landingPageVM: LandingPageVM
-    let listType: AppSettings.SeriesListType
+    let listType: SeriesListType
     @EnvironmentObject var theme: Theme
 
     @State private var lastDisplayedSeries: Series?

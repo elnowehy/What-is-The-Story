@@ -23,13 +23,12 @@ struct SeriesView: View {
     @State private var isBookmarked = false
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: Theme
-    // @EnvironmentObject var profileVM: ProfileVM
+    @EnvironmentObject var playerVM: PlayerVM
     @EnvironmentObject var userVM: UserVM
     @State private var isPlayingVideo = false
     @State private var isSynopsisExpanded = false
     @State private var isCommentsExpanded = false
     @State private var averageRating: Double = 0
-    @State var player: AVPlayer?
     
     private func updateBookmark() {
         Task {
@@ -61,7 +60,13 @@ struct SeriesView: View {
                 
                 ZStack {
                     if isPlayingVideo {
-                        VideoPlayerView(player: $player)
+                        // PlayerView(player: playerVM.player)
+                        if let player = playerVM.player {
+                            PlayerView(player: .constant(player))
+                        } else {
+                            // Show a placeholder or alternative view when player is nil.
+                            Text("No Video!!")
+                        }
                     } else {
                         AsyncImage(url: seriesVM.series.poster, content: { image in
                             image
@@ -149,7 +154,7 @@ struct SeriesView: View {
         }
         .task {
             episodeVM.episode.series = seriesVM.series.id
-            player = AVPlayer(url: seriesVM.series.trailer)
+            playerVM.preparePlayer(with: seriesVM.series.trailer)
             if !seriesVM.series.episodes.isEmpty {
                 episodeVM.episodeIds = seriesVM.series.episodes
                 await episodeVM.fetch()

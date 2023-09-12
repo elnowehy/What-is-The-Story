@@ -10,7 +10,7 @@ import AVKit
 
 struct PlayerControlView: View {
     @StateObject var episodeVM: EpisodeVM
-    @Binding var player: AVPlayer?
+    @Binding var player: AVPlayer
     @State private var autoPlayNextEpisode = false
     @StateObject var bookmarkVM = BookmarkVM()
     @State private var isBookmarked = false
@@ -18,29 +18,29 @@ struct PlayerControlView: View {
     @EnvironmentObject var userVM: UserVM
     
     private func rewindToBeginning() {
-        player!.seek(to: .zero)
+        player.seek(to: .zero)
     }
     
     private func skipToNextEpisode() {
         if let nextEpisode = episodeVM.getNextEpisode() {
             episodeVM.episode = nextEpisode
-            player!.replaceCurrentItem(with: AVPlayerItem(url: nextEpisode.video))
+            player.replaceCurrentItem(with: AVPlayerItem(url: nextEpisode.video))
         }
     }
     
     private func skipToPreviousEpisode() {
         if let previousEpisode = episodeVM.getPreviousEpisode() {
             episodeVM.episode = previousEpisode
-            player!.replaceCurrentItem(with: AVPlayerItem(url: previousEpisode.video))
+            player.replaceCurrentItem(with: AVPlayerItem(url: previousEpisode.video))
         }
     }
     
     private func playNextEpisodeAutomatically() {
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: .main) { _ in
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player.currentItem, queue: .main) { _ in
             if autoPlayNextEpisode, let nextEpisode = episodeVM.getNextEpisode() {
                 episodeVM.episode = nextEpisode
-                player!.replaceCurrentItem(with: AVPlayerItem(url: nextEpisode.video))
-                player!.play()
+                player.replaceCurrentItem(with: AVPlayerItem(url: nextEpisode.video))
+                player.play()
             }
         }
     }
