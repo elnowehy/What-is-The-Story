@@ -7,58 +7,69 @@
 
 import SwiftUI
 import AVKit
-import CoreMotion
 
-struct VideoPlayerView: View {
-    @Binding var player: AVPlayer?
-    @EnvironmentObject var theme: Theme
-    @State private var isFullScreen = false
-    @State private var orientation: UIDeviceOrientation?
-    private let motionManager = CMMotionManager()
-    
-    var body: some View {
-        
-        VideoPlayer(player: player)
-            .modifier(VideoPlayerStyle(theme: theme, isFullScreen: $isFullScreen))
-            .onAppear {
-                startDeviceMotionUpdates()
-            }
-            .onDisappear {
-                stopDeviceMotionUpdates()
-            }
-            .onChange(of: orientation) { newValue in
-                updateOrientation(newValue)
-            }
-        
-            .background(theme.colors.primaryBackground)
+struct PlayerView: UIViewControllerRepresentable {
+    @Binding var player: AVPlayer
+
+    func updateUIViewController(_ playerController: AVPlayerViewController, context: Context) {
+        playerController.player = player
     }
     
-    private func startDeviceMotionUpdates() {
-        if motionManager.isDeviceMotionAvailable {
-            motionManager.deviceMotionUpdateInterval = 0.2
-            motionManager.startDeviceMotionUpdates(to: .main) { motion, error in
-                guard let motion = motion else { return }
-                let deviceOrientation = motion.attitude.roll > 0 ? UIDeviceOrientation.landscapeLeft : UIDeviceOrientation.landscapeRight
-                if deviceOrientation != self.orientation {
-                    self.orientation = deviceOrientation
-                }
-            }
-        }
-    }
-    
-    private func stopDeviceMotionUpdates() {
-        motionManager.stopDeviceMotionUpdates()
-    }
-    
-    private func updateOrientation(_ newOrientation: UIDeviceOrientation?) {
-        guard let newOrientation = newOrientation else { return }
-        if newOrientation.isLandscape {
-            isFullScreen = true
-        } else {
-            isFullScreen = false
-        }
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let playerController = AVPlayerViewController()
+        playerController.player = player
+        return playerController
     }
 }
+
+class PlayerVM: ObservableObject {
+    @Published var player: AVPlayer?
+
+    func preparePlayer(with url: URL) {
+        player = AVPlayer(url: url)
+    }
+}
+
+
+//struct VideoPlayerView: View {
+//    @Binding var player: AVPlayer?
+//    @EnvironmentObject var theme: Theme
+//    @State private var isFullScreen = false
+//
+//    var body: some View {
+//        ZStack(alignment: .bottomTrailing) {
+//            VideoPlayer(player: player)
+//                .modifier(VideoPlayerStyle(theme: theme, isFullScreen: $isFullScreen))
+//                .background(theme.colors.primaryBackground)
+//                .edgesIgnoringSafeArea(isFullScreen ? .all : .init())
+//            Button(action: {
+//                withAnimation {
+//                    isFullScreen.toggle()
+//                }
+//            }) {
+//                Image(systemName: isFullScreen ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
+//                    .resizable()
+//                    .frame(width: 30, height: 30)
+//                    .foregroundColor(.white)
+//                    .padding()
+//                    .background(Color.black.opacity(0.7))
+//                    .clipShape(Circle())
+//            }
+//            .padding(.all, 20)
+//        }
+//        .onAppear(perform: {
+//            let value = UIInterfaceOrientation.landscapeRight.rawValue
+//            UIDevice.current.setValue(value, forKey: "orientation")
+//            UIViewController.attemptRotationToDeviceOrientation()
+//        })
+//        .onDisappear(perform: {
+//            let value = UIInterfaceOrientation.portrait.rawValue
+//            UIDevice.current.setValue(value, forKey: "orientation")
+//            UIViewController.attemptRotationToDeviceOrientation()
+//        })
+//    }
+//}
+
 
 //struct VideoPlayerView_Previews: PreviewProvider {
 //    static var previews: some View {

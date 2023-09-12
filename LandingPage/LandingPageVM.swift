@@ -51,28 +51,28 @@ class LandingPageVM: ObservableObject {
 //    @MainActor
 //    func fetchFeaturedSeries() async {
 //        await featuredPaginator.loadMoreData(fetch: { page, pageSize in
-//            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.featured, category: self.selectedCategory)
+//            await self.seriesVM.fetchSeriesList(listType: SeriesListType.featured, category: self.selectedCategory)
 //        }, appendTo: &self.featuredSeries)
 //    }
 
     @MainActor
     func fetchPopularSeries() async {
         await popularPaginator.loadMoreData(fetch: {page in
-            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.popular, category: self.selectedCategory)
+            await self.seriesVM.fetchSeriesList(listType: SeriesListType.popular, category: self.selectedCategory)
         }, appendTo: &self.popularSeries)
     }
 
     @MainActor
     func fetchNewSeries() async {
         await newPaginator.loadMoreData(fetch: {page in
-            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.new, category: self.selectedCategory)
+            await self.seriesVM.fetchSeriesList(listType: SeriesListType.new, category: self.selectedCategory)
         }, appendTo: &self.newSeries)
     }
 
     @MainActor
     func fetchTrendingSeries() async {
         await trendingPaginator.loadMoreData(fetch: {page in
-            await self.seriesVM.fetchSeriesList(listType: AppSettings.SeriesListType.trending, category: self.selectedCategory)
+            await self.seriesVM.fetchSeriesList(listType: SeriesListType.trending, category: self.selectedCategory)
         }, appendTo: &self.trendingSeries)
     }
 
