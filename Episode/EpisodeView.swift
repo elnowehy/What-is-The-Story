@@ -139,7 +139,7 @@ struct EpisodeView: View {
             print(".onAppear \(episode.video)")
             episodeVM.episode = episode
             if !episodeVM.episode.video.absoluteString.isEmpty {
-                playerVM.preparePlayer(with: seriesVM.series.trailer)
+                playerVM.preparePlayer(with: episode.video)
                 if let player = playerVM.player, !userVM.user.id.isEmpty {
                     self.player = player
                     let interval = CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
