@@ -49,6 +49,14 @@
 		C56E0E032A1D75A100A3DE56 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56E0E022A1D75A100A3DE56 /* SearchView.swift */; };
 		C56E0E072A20F79400A3DE56 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56E0E062A20F79400A3DE56 /* Theme.swift */; };
 		C56E0E092A2165B500A3DE56 /* ComponentStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56E0E082A2165B500A3DE56 /* ComponentStyles.swift */; };
+		C56EAC8D2ACDE51900136B6F /* WITS.json in Resources */ = {isa = PBXBuildFile; fileRef = C56EAC862ACDE51900136B6F /* WITS.json */; };
+		C56EAC8E2ACDE51900136B6F /* WITS_metadata.json in Resources */ = {isa = PBXBuildFile; fileRef = C56EAC872ACDE51900136B6F /* WITS_metadata.json */; };
+		C56EAC8F2ACDE51900136B6F /* 931af7e5d0a00015de2fcd03cfb9b6ea.json in Resources */ = {isa = PBXBuildFile; fileRef = C56EAC892ACDE51900136B6F /* 931af7e5d0a00015de2fcd03cfb9b6ea.json */; };
+		C56EAC902ACDE51900136B6F /* contract-bed87a3bb7.sol in Resources */ = {isa = PBXBuildFile; fileRef = C56EAC8A2ACDE51900136B6F /* contract-bed87a3bb7.sol */; };
+		C56EACA02ACDE63500136B6F /* package-lock.json in Resources */ = {isa = PBXBuildFile; fileRef = C56EAC982ACDE63500136B6F /* package-lock.json */; };
+		C56EACA12ACDE63500136B6F /* package.json in Resources */ = {isa = PBXBuildFile; fileRef = C56EAC992ACDE63500136B6F /* package.json */; };
+		C56EACA22ACDE63500136B6F /* .eslintrc.js in Resources */ = {isa = PBXBuildFile; fileRef = C56EAC9A2ACDE63500136B6F /* .eslintrc.js */; };
+		C56EACA32ACDE63500136B6F /* tsconfig.json in Resources */ = {isa = PBXBuildFile; fileRef = C56EAC9B2ACDE63500136B6F /* tsconfig.json */; };
 		C57C6D562A0D8C1100B42AC1 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57C6D552A0D8C1100B42AC1 /* AboutView.swift */; };
 		C5822A0F298AFFF6009BFD92 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5822A0E298AFFF6009BFD92 /* GoogleService-Info.plist */; };
 		C583A4F529D87DEC00CE9319 /* PhotoSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = C583A4F429D87DEC00CE9319 /* PhotoSelector.swift */; };
@@ -153,6 +161,17 @@
 		C56E0E022A1D75A100A3DE56 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		C56E0E062A20F79400A3DE56 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		C56E0E082A2165B500A3DE56 /* ComponentStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentStyles.swift; sourceTree = "<group>"; };
+		C56E10592AF705A2008B54C2 /* issueTokenForViews.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = issueTokenForViews.ts; sourceTree = "<group>"; };
+		C56EAC862ACDE51900136B6F /* WITS.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = WITS.json; sourceTree = "<group>"; };
+		C56EAC872ACDE51900136B6F /* WITS_metadata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = WITS_metadata.json; sourceTree = "<group>"; };
+		C56EAC892ACDE51900136B6F /* 931af7e5d0a00015de2fcd03cfb9b6ea.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 931af7e5d0a00015de2fcd03cfb9b6ea.json; sourceTree = "<group>"; };
+		C56EAC8A2ACDE51900136B6F /* contract-bed87a3bb7.sol */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "contract-bed87a3bb7.sol"; sourceTree = "<group>"; };
+		C56EAC972ACDE63500136B6F /* mintingFunctions.ts */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.typescript; path = mintingFunctions.ts; sourceTree = "<group>"; };
+		C56EAC982ACDE63500136B6F /* package-lock.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "package-lock.json"; sourceTree = "<group>"; };
+		C56EAC992ACDE63500136B6F /* package.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
+		C56EAC9A2ACDE63500136B6F /* .eslintrc.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = .eslintrc.js; sourceTree = "<group>"; };
+		C56EAC9B2ACDE63500136B6F /* tsconfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tsconfig.json; sourceTree = "<group>"; };
+		C56EAC9C2ACDE63500136B6F /* index.ts */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.typescript; path = index.ts; sourceTree = "<group>"; };
 		C57C6D552A0D8C1100B42AC1 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		C5822A0E298AFFF6009BFD92 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C583A4F429D87DEC00CE9319 /* PhotoSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelector.swift; sourceTree = "<group>"; };
@@ -190,6 +209,8 @@
 		C5B7577D297EF9B200186852 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		C5C695682A5DD7F500A311AC /* CommentVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentVM.swift; sourceTree = "<group>"; };
 		C5C6956D2A5F41FC00A311AC /* CommentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentManager.swift; sourceTree = "<group>"; };
+		C5C765C12B0D724F00AB3995 /* updateGasBalance.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = updateGasBalance.ts; sourceTree = "<group>"; };
+		C5C765C32B0EAE5100AB3995 /* processTokenClaims.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = processTokenClaims.ts; sourceTree = "<group>"; };
 		C5CD5A0A2A43517E009A3BDA /* FireBasePagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBasePagination.swift; sourceTree = "<group>"; };
 		C5E00C162A0E7C3C00E37B0D /* RandomString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomString.swift; sourceTree = "<group>"; };
 		C5E00C182A0E814600E37B0D /* ViewsHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewsHistoryView.swift; sourceTree = "<group>"; };
@@ -202,7 +223,6 @@
 		C5E9FBBE2975CF6A00121C45 /* Encryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encryption.swift; sourceTree = "<group>"; };
 		C5E9FBC029770FC300121C45 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		C5E9FBD22979EC7F00121C45 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
-		C5E9FBD82979EEC900121C45 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		C5E9FBE3297A05E800121C45 /* SeriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesView.swift; sourceTree = "<group>"; };
 		C5E9FBE7297A062100121C45 /* ProfileUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUpdate.swift; sourceTree = "<group>"; };
 		C5E9FBE9297A065E00121C45 /* TokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenView.swift; sourceTree = "<group>"; };
@@ -362,6 +382,49 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
+		C56EAC842ACDE51900136B6F /* Blockchain */ = {
+			isa = PBXGroup;
+			children = (
+				C56EAC852ACDE51900136B6F /* artifacts */,
+				C56EAC8A2ACDE51900136B6F /* contract-bed87a3bb7.sol */,
+			);
+			path = Blockchain;
+			sourceTree = "<group>";
+		};
+		C56EAC852ACDE51900136B6F /* artifacts */ = {
+			isa = PBXGroup;
+			children = (
+				C56EAC862ACDE51900136B6F /* WITS.json */,
+				C56EAC872ACDE51900136B6F /* WITS_metadata.json */,
+				C56EAC882ACDE51900136B6F /* build-info */,
+			);
+			path = artifacts;
+			sourceTree = "<group>";
+		};
+		C56EAC882ACDE51900136B6F /* build-info */ = {
+			isa = PBXGroup;
+			children = (
+				C56EAC892ACDE51900136B6F /* 931af7e5d0a00015de2fcd03cfb9b6ea.json */,
+			);
+			path = "build-info";
+			sourceTree = "<group>";
+		};
+		C56EAC932ACDE63500136B6F /* Functions */ = {
+			isa = PBXGroup;
+			children = (
+				C56EAC972ACDE63500136B6F /* mintingFunctions.ts */,
+				C56EAC982ACDE63500136B6F /* package-lock.json */,
+				C56EAC992ACDE63500136B6F /* package.json */,
+				C56EAC9A2ACDE63500136B6F /* .eslintrc.js */,
+				C56EAC9B2ACDE63500136B6F /* tsconfig.json */,
+				C56EAC9C2ACDE63500136B6F /* index.ts */,
+				C56E10592AF705A2008B54C2 /* issueTokenForViews.ts */,
+				C5C765C12B0D724F00AB3995 /* updateGasBalance.ts */,
+				C5C765C32B0EAE5100AB3995 /* processTokenClaims.ts */,
+			);
+			path = Functions;
+			sourceTree = "<group>";
+		};
 		C57621FB29F36B21005C41D7 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
@@ -437,6 +500,7 @@
 		C59404C8296DC615003F0FB7 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				C56EAC842ACDE51900136B6F /* Blockchain */,
 				C59404C9296DC637003F0FB7 /* Firebase */,
 			);
 			path = Networking;
@@ -445,6 +509,7 @@
 		C59404C9296DC637003F0FB7 /* Firebase */ = {
 			isa = PBXGroup;
 			children = (
+				C56EAC932ACDE63500136B6F /* Functions */,
 				C5CD5A092A435165009A3BDA /* Abstractions */,
 				C59E4E6029D2527600D9577E /* dbManagers */,
 				C59404F0296E3FEF003F0FB7 /* Authentication */,
@@ -542,11 +607,18 @@
 		C5C695672A5DA0E700A311AC /* Tokens */ = {
 			isa = PBXGroup;
 			children = (
+				C5C765C22B0E959100AB3995 /* Claim */,
 				C5E9FBE9297A065E00121C45 /* TokenView.swift */,
-				C5E9FBD82979EEC900121C45 /* Token.swift */,
 				C51DD10C2A6F1B7600179B23 /* TokenVM.swift */,
 			);
 			path = Tokens;
+			sourceTree = "<group>";
+		};
+		C5C765C22B0E959100AB3995 /* Claim */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Claim;
 			sourceTree = "<group>";
 		};
 		C5CD5A092A435165009A3BDA /* Abstractions */ = {
@@ -659,7 +731,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					C59404B4296DC575003F0FB7 = {
 						CreatedOnToolsVersion = 14.2;
@@ -694,8 +766,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C56EAC8D2ACDE51900136B6F /* WITS.json in Resources */,
+				C56EAC8E2ACDE51900136B6F /* WITS_metadata.json in Resources */,
 				C59404C0296DC576003F0FB7 /* Preview Assets.xcassets in Resources */,
 				C59404BD296DC576003F0FB7 /* Assets.xcassets in Resources */,
+				C56EACA02ACDE63500136B6F /* package-lock.json in Resources */,
+				C56EACA22ACDE63500136B6F /* .eslintrc.js in Resources */,
+				C56EACA32ACDE63500136B6F /* tsconfig.json in Resources */,
+				C56EAC8F2ACDE51900136B6F /* 931af7e5d0a00015de2fcd03cfb9b6ea.json in Resources */,
+				C56EACA12ACDE63500136B6F /* package.json in Resources */,
+				C56EAC902ACDE51900136B6F /* contract-bed87a3bb7.sol in Resources */,
 				C5822A0F298AFFF6009BFD92 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -838,6 +918,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -932,6 +1013,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -992,6 +1074,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1120,8 +1203,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 9.0.0;
+				kind = exactVersion;
+				version = 10.16.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
