@@ -1,0 +1,15 @@
+{
+  "Tokens": {
+    "PlatformMintableReserve": {
+      "remaining": 10000000000
+    },
+    "Container": {
+      "UserBooks": {
+        }
+      },
+      "Ledger": {
+      }
+    }
+  }
+}
+

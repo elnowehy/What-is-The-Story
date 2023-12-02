@@ -1,0 +1,19 @@
+{
+  "name": "videos/7jR6q3sqJJonEbgXj7Ms.mp4",
+  "bucket": "fir-test-49220.appspot.com",
+  "metageneration": 1,
+  "generation": 1699727001415,
+  "contentType": "video/mp4",
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "downloadTokens": [
+    "9755610f-85d2-4189-979c-8d858d288b96"
+  ],
+  "etag": "GZ7xvHvHlqTeSXZBcE8NbxnY5yk",
+  "customMetadata": {},
+  "timeCreated": "2023-11-11T18:23:21.415Z",
+  "updated": "2023-11-11T18:23:21.415Z",
+  "size": 41274275,
+  "md5Hash": "wS9FG4rOlCrZ228YjPXn0A==",
+  "crc32c": "764979205"
+}
