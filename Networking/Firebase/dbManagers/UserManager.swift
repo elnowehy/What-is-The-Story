@@ -64,6 +64,7 @@ class UserManager: ObservableObject {
             "name": user.name,
             "profileIds": user.profileIds,
             "InvitationCode": user.invitationCode,
+            "wallet": user.wallet,
         ]
     }
     
@@ -73,6 +74,7 @@ class UserManager: ObservableObject {
         user.name  = self.data["name"] as? String ?? ""
         user.profileIds =  self.data["profileIds"] as? [String] ?? []
         user.invitationCode =  self.data["invitationCode"] as? String ?? ""
+        user.wallet = self.data["wallet"] as? String ?? ""
     }
 
     @MainActor

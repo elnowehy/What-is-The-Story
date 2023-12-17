@@ -14,8 +14,7 @@ struct User: Identifiable, Codable {
     var email: String = ""
     var profileIds: [String] = []
     var invitationCode: String = ""
-    var witsWallet: String = ""
-    var ethWallet: String = ""
+    var wallet: String = ""
     var createdTimestamp = Date()
     var loggedInTimestamp = Date()
 }

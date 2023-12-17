@@ -53,7 +53,6 @@ export async function fetchTransactions(userWalletAddress: string, lastProcessed
 export async function updateUserGasBalance(userId: string, userWalletAddress: string): Promise<void> {
     console.log("these are the arguments user id and userWalletAddress", userId, userWalletAddress)
     const userDoc = await db.collection('Tokens_Balance').doc(userId).get();
-    // const lastProcessedBlockNumber: number = userDoc.exists && userDoc.data().lastProcessedBlockNumber ? userDoc.data().lastProcessedBlockNumber : 0;
     const lastProcessedBlockNumber: number = userDoc.exists
         ? (userDoc.data()?.lastProcessedBlockNumber ?? 0)
         : 0;
@@ -66,7 +65,6 @@ export async function updateUserGasBalance(userId: string, userWalletAddress: st
     const newDeposits: Deposit[] = await fetchTransactions(userWalletAddress, lastProcessedBlockNumber);
 
     if (newDeposits.length > 0) {
-//      const totalNewDeposits: number = newDeposits.reduce((sum: number, tx: Deposit) => sum + parseFloat(tx.amount), 0);
         // Ensure that 'tx.amount' is in MATIC units
         const totalNewDeposits: number = newDeposits.reduce((sum: number, tx: Deposit) => sum + parseFloat(ethers.formatEther(tx.amount)), 0);
 
@@ -80,11 +78,5 @@ export async function updateUserGasBalance(userId: string, userWalletAddress: st
         });
     }
 }
-
-// Usage example
-//const userId: string = 'USER_ID'; // Replace with actual user ID
-//const userWalletAddress: string = 'USER_WALLET_ADDRESS'; // Replace with actual user wallet address
-//updateUserGasBalance(userId, userWalletAddress)
-//    .then(() => console.log('User gas balance updated'))
-//    .catch((error: any) => console.error('Error:', error));
+catch((error: any) => console.error('Error:', error));
 
