@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+struct GasBalance {
+    var userId: String = ""
+    var userWallet: String = ""
+    var gasBalance: Double = 0.0
+    var referenceBlock: Int = 0
+    // var timestamp: Date
+}

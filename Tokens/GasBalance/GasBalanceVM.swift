@@ -4,31 +4,38 @@
 //
 //  Created by Amr El-Nowehy on 2023-12-04.
 //
-
-import Foundation
+import SwiftUI
 
 class GasBalanceVM: ObservableObject {
-    @Published var gasBalance: Double = 0.0
-    @Published var latestTransactionBlockNumber: Int = 0
-    @Published var isLoading: Bool = true
+    @Published var gasBalance = GasBalance()
+    // @Published var transactions: [Transaction] = []
+    @Published var isLoading = true
     @Published var errorMessage: String?
 
-    // Reference to Firestore service (pseudo-code)
-    private var firestoreService: FirestoreService
+    private var gasBalanceManager = GasBalanceManager()
 
-    init(firestoreService: FirestoreService) {
-        self.firestoreService = firestoreService
-        fetchInitialGasBalance()
-        subscribeToGasBalanceUpdates()
+    @MainActor
+    func fetch() async {
+        do {
+            isLoading = true
+            gasBalance = try await gasBalanceManager.fetch(userId: gasBalance.userId)
+            isLoading = false
+        } catch {
+            print("Error fetching gas balance: \(error)")
+            errorMessage = error.localizedDescription
+        }
     }
-
-    private func fetchInitialGasBalance() {
-        // Implementation to fetch the initial gas balance and transaction block number
+    
+    @MainActor
+    func refresh() async {
+        do {
+            try await gasBalanceManager.refresh(userId: gasBalance.userId, wallet: gasBalance.userWallet)
+            await fetch()
+            isLoading = false
+        } catch {
+            print("Error fetching gas balance: \(error)")
+            errorMessage = error.localizedDescription
+        }
     }
-
-    private func subscribeToGasBalanceUpdates() {
-        // Implementation to listen for real-time updates
-    }
-
-    // Additional functions for error handling and data processing
 }
+

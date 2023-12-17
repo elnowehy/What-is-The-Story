@@ -9,6 +9,7 @@ import SwiftUI
 import Firebase
 import FirebaseAuth
 import FirebaseStorage
+import FirebaseFunctions
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -31,6 +32,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         settings.isSSLEnabled = false
         AppDelegate.db.settings = settings
         Storage.storage().useEmulator(withHost: "localhost", port: 9199)
+        Functions.functions().useEmulator(withHost:"localhost", port:5001)
 
 #elseif DEBUG
         print("****** DEBIGGER *******")
