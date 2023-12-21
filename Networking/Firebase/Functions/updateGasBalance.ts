@@ -78,5 +78,5 @@ export async function updateUserGasBalance(userId: string, userWalletAddress: st
         });
     }
 }
-catch((error: any) => console.error('Error:', error));
+// catch((error: any) => console.error('Error:', error));
 

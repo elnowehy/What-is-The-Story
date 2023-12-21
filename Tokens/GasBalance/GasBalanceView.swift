@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GasBalanceView: View {
-    @StateObject var gasBalanceVM = GasBalanceVM()
+    @EnvironmentObject var gasBalanceVM: GasBalanceVM
     @EnvironmentObject var userVM: UserVM
 
     var body: some View {
@@ -41,12 +41,6 @@ struct GasBalanceView: View {
                             .cornerRadius(8)
                     }
                 }
-            }
-        }
-        .onAppear {
-            Task {
-                gasBalanceVM.gasBalance.userId = userVM.user.id
-                await gasBalanceVM.fetch()
             }
         }
         .padding()

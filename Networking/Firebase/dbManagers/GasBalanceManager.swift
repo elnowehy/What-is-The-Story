@@ -16,7 +16,6 @@ class GasBalanceManager {
     init() {
         self.db = AppDelegate.db
         self.functions = Functions.functions()
-        // functions.useEmulator(withHost:"localhost", port:5001)
     }
 
     @MainActor

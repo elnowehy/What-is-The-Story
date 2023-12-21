@@ -12,7 +12,7 @@ import SwiftUI
 
 struct EarningsView: View {
     var body: some View {
-        GasBalanceView()
+        UserTokenDashboardView()
     }
 }
 

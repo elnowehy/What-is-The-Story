@@ -29,7 +29,7 @@ export const processTokenClaims = async (userId: string, amount: number): Promis
             throw new Error('User not found');
         }
         
-        const userWalletAddress = userDoc.data()?.ethWallet ?? "";
+        const userWalletAddress = userDoc.data()?.wallet ?? "";
         if(!userWalletAddress) {
             throw new Error("User wallet address is undefined")
         }
@@ -52,7 +52,9 @@ export const processTokenClaims = async (userId: string, amount: number): Promis
         let userGasBalance = userGasBalanceDoc.data()?.userGasBalance;
         
         if(userGasBalance < estimatedGasFee) {
-            throw new Error(`not enough gas balance: ${userGasBalance} Required: ${estimatedGasFee}`);
+            //throw new Error(`not enough gas balance: ${userGasBalance} Required: ${estimatedGasFee}`);
+            
+            throw new functions.https.HttpsError('failed-precondition', `Not enough gas balance: ${userGasBalance} MATIC. Required: ${estimatedGasFee} MATIC`);
         }
         console.log(`userGasBalance: ${userGasBalance}, estimatedGasFee: ${estimatedGasFee}`)
         
