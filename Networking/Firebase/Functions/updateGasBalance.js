@@ -58,7 +58,6 @@ function updateUserGasBalance(userId, userWalletAddress) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("these are the arguments user id and userWalletAddress", userId, userWalletAddress);
         const userDoc = yield index_1.db.collection('Tokens_Balance').doc(userId).get();
-        // const lastProcessedBlockNumber: number = userDoc.exists && userDoc.data().lastProcessedBlockNumber ? userDoc.data().lastProcessedBlockNumber : 0;
         const lastProcessedBlockNumber = userDoc.exists
             ? ((_b = (_a = userDoc.data()) === null || _a === void 0 ? void 0 : _a.lastProcessedBlockNumber) !== null && _b !== void 0 ? _b : 0)
             : 0;
@@ -68,7 +67,6 @@ function updateUserGasBalance(userId, userWalletAddress) {
             : 0;
         const newDeposits = yield fetchTransactions(userWalletAddress, lastProcessedBlockNumber);
         if (newDeposits.length > 0) {
-            //      const totalNewDeposits: number = newDeposits.reduce((sum: number, tx: Deposit) => sum + parseFloat(tx.amount), 0);
             // Ensure that 'tx.amount' is in MATIC units
             const totalNewDeposits = newDeposits.reduce((sum, tx) => sum + parseFloat(ethers_1.ethers.formatEther(tx.amount)), 0);
             const latestBlockNumber = newDeposits[newDeposits.length - 1].blockNumber;
@@ -82,9 +80,4 @@ function updateUserGasBalance(userId, userWalletAddress) {
     });
 }
 exports.updateUserGasBalance = updateUserGasBalance;
-// Usage example
-//const userId: string = 'USER_ID'; // Replace with actual user ID
-//const userWalletAddress: string = 'USER_WALLET_ADDRESS'; // Replace with actual user wallet address
-//updateUserGasBalance(userId, userWalletAddress)
-//    .then(() => console.log('User gas balance updated'))
-//    .catch((error: any) => console.error('Error:', error));
+// catch((error: any) => console.error('Error:', error));

@@ -12,13 +12,13 @@ class UserTokenBalanceVM: ObservableObject {
     @Published var isLoading = true
     @Published var errorMessage: String?
     
-    private var userTokenBanaceManager = UserTokenBalanceManager()
+    private var userTokenBalanceManager = UserTokenBalanceManager()
     
     @MainActor
     func fetch() async {
         do {
             isLoading = true
-            userTokenBalance = try await userTokenBanaceManager.fetch(userId: userTokenBalance.userId)
+            userTokenBalance = try await userTokenBalanceManager.fetch(userId: userTokenBalance.userId)
             isLoading = false
         } catch {
             print("Error fetching user balance: \(error)")
@@ -35,7 +35,7 @@ class UserTokenBalanceVM: ObservableObject {
         
         do {
             isLoading = true
-            _ = try await userTokenBanaceManager.claim(userId: userTokenBalance.userId, amount: amount)
+            _ = try await userTokenBalanceManager.claim(userId: userTokenBalance.userId, amount: amount)
             
             userTokenBalance.unclaimed -= amount
             userTokenBalance.claimed += amount
