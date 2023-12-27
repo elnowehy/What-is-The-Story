@@ -6,7 +6,7 @@ import * as admin from 'firebase-admin'
 import { FieldValue } from 'firebase-admin/lib/firestore'
 import { scheduledMinting } from './mintingFunctions'
 import { issueTokenForViews } from './issueTokenForViews'
-import { updateUserGasBalance } from './updateGasBalance';
+import { updateUserBalances } from './updateUserBalances';
 import { processTokenClaims } from './processTokenClaims';
 
 admin.initializeApp({
@@ -30,9 +30,9 @@ export const issueTokenForViewsFunction = functions.firestore
   .document('ViewRating/{viewRatingId}')
   .onCreate(issueTokenForViews)
 
-exports.checkAndUpdateUserGasBalance = functions.https.onCall((data, context) => {
+exports.checkAndUpdateUserBalances = functions.https.onCall((data, context) => {
     const { userId, userWalletAddress } = data;
-    return updateUserGasBalance(userId, userWalletAddress);
+    return updateUserBalances(userId, userWalletAddress);
 });
 
 exports.handleTokenClaims = functions.https.onCall((data, context) => {

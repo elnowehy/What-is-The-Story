@@ -27,6 +27,18 @@ class UserTokenBalanceVM: ObservableObject {
     }
     
     @MainActor
+    func refresh() async {
+        do {
+            try await userTokenBalanceManager.refresh(userId: userTokenBalance.userId, wallet: userTokenBalance.wallet)
+            await fetch()
+            isLoading = false
+        } catch {
+            print("Error fetching gas balance: \(error)")
+            errorMessage = error.localizedDescription
+        }
+    }
+    
+    @MainActor
     func claim(amount: Double) async {
         guard amount <= userTokenBalance.unclaimed else {
             errorMessage = "Claim amount exceeds unclaimed tokens"

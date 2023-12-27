@@ -33,16 +33,34 @@ class UserTokenBalanceManager {
             let unclaimed = documentData["unclaimed"] as? Double ?? 0
             let reserved = documentData["reserved"] as? Double ?? 0
             let claimed = documentData["claimed"] as? Double ?? 0
+            let gas = documentData["gas"] as? Double ?? 0
+            let referenceBlock = documentData["lastProcessedBlockNumber"] as? Int ?? 0
             
             return UserTokenBlance(
                 userId: userId,
                 pending: pending,
                 unclaimed: unclaimed,
                 reserved: reserved,
-                claimed: claimed)
+                claimed: claimed,
+                gas: gas,
+                referenceBlock: referenceBlock)
         } else {
             // Handle the case where there's no data
             return UserTokenBlance(userId: userId)
+        }
+    }
+    
+    @MainActor
+    func refresh(userId: String, wallet: String) async throws -> Void {
+        let data: [String: Any] = [
+            "userId": userId,
+            "userWalletAddress": wallet
+        ]
+        
+        do {
+            _ = try await functions.httpsCallable("checkAndUpdateUserBalances").call(data)
+        } catch {
+            throw error
         }
     }
     

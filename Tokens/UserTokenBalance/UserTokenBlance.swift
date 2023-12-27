@@ -14,7 +14,7 @@ struct UserTokenBlance {
     var unclaimed: Double = 0.0
     var reserved: Double = 0.0
     var claimed: Double = 0.0
-    var userWallet: String = ""
-    var gasBalance: Double = 0.0
+    var wallet: String = ""
+    var gas: Double = 0.0
     var referenceBlock: Int = 0
 }

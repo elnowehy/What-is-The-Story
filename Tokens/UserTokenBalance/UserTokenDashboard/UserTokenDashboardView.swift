@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UserTokenDashboardView: View {
     @EnvironmentObject var userVM: UserVM
-    @StateObject var gasBalanceVM = GasBalanceVM()
+    // @StateObject var gasBalanceVM = GasBalanceVM()
     @StateObject var userTokenBalanceVM = UserTokenBalanceVM()
     @State private var claimAmount: String = "0"
 
@@ -19,10 +19,10 @@ struct UserTokenDashboardView: View {
                 UserTokenBalanceView()
                     .environmentObject(userVM)
                     .environmentObject(userTokenBalanceVM)
-
-                GasBalanceView()
-                    .environmentObject(userVM)
-                    .environmentObject(gasBalanceVM)
+//
+//                GasBalanceView()
+//                    .environmentObject(userVM)
+//                    .environmentObject(gasBalanceVM)
 
                 HStack {
                     TextField("Enter amount to claim", text: $claimAmount)
@@ -49,8 +49,8 @@ struct UserTokenDashboardView: View {
                 userTokenBalanceVM.userTokenBalance.userId = userVM.user.id
                 await userTokenBalanceVM.fetch()
                 
-                gasBalanceVM.gasBalance.userId = userVM.user.id
-                await gasBalanceVM.fetch()
+//                gasBalanceVM.gasBalance.userId = userVM.user.id
+//                await gasBalanceVM.fetch()
             }
         }
         .navigationTitle("Token Dashboard")
