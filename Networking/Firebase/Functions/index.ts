@@ -8,6 +8,7 @@ import { scheduledMinting } from './mintingFunctions'
 import { issueTokenForViews } from './issueTokenForViews'
 import { updateUserBalances } from './updateUserBalances';
 import { processTokenClaims } from './processTokenClaims';
+import { finalizePolls } from './FinalizePolls';
 
 admin.initializeApp({
   projectId: 'fir-test-49220'
@@ -40,3 +41,11 @@ exports.handleTokenClaims = functions.https.onCall((data, context) => {
     const { userId, amount } = data;
     return processTokenClaims(userId, amount);
 });
+
+export const finalizePollsFunction = functions.pubsub
+  .schedule('every 24 hours') // The schedule for the function
+  .onRun(async (context) => {
+    await finalizePolls();
+    return null;
+  });
+

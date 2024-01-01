@@ -60,7 +60,11 @@ struct EpisodeUpdate: View {
                 
                 if episodeVM.episode.hasPoll {
                     Task {
+                        let userTokenBalanceVM = UserTokenBalanceVM()
+                        userTokenBalanceVM.userTokenBalance.userId = episodeVM.episode.userId
+                        await userTokenBalanceVM.fetch()
                         pollVM.poll.id = episodeVM.episode.id
+                        pollVM.setUserTokenBalanceVM(userTokenBalanceVM)
                         await pollVM.fetch()
                     }
                 }

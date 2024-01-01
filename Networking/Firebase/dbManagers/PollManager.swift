@@ -48,6 +48,7 @@ class PollManager: ObservableObject {
             "closingDate": self.poll.closingDate,
             "timestamp": Date(),
             "answerIds": self.poll.answerIds,
+            "rewardTokens": self.poll.rewardTokens,
         ]
     }
     
@@ -56,6 +57,7 @@ class PollManager: ObservableObject {
         poll.id = self.data["id"] as? String ?? ""
         poll.question = self.data["question"] as? String ?? ""
         poll.answerIds = self.data["answerIds"] as? [String] ?? []
+        poll.rewardTokens = self.data["rewardTokens"] as? Double ?? 0.0
         if let closingDate = self.data["closingDate"] as? Timestamp {
             poll.closingDate = closingDate.dateValue()
         }

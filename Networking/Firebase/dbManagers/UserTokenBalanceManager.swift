@@ -21,7 +21,7 @@ class UserTokenBalanceManager {
     }
     
     @MainActor
-    func fetch(userId: String) async throws -> UserTokenBlance {
+    func fetch(userId: String) async throws -> UserTokenBalance {
         // Fetch gas balance data from Firestore
         let document = try await db.collection("Tokens_Balance").document(userId).getDocument()
         let pendingDoc = try await db.collection("Tokens/Treasury/PendingTokens").document(userId).getDocument()
@@ -36,7 +36,7 @@ class UserTokenBalanceManager {
             let gas = documentData["gas"] as? Double ?? 0
             let referenceBlock = documentData["lastProcessedBlockNumber"] as? Int ?? 0
             
-            return UserTokenBlance(
+            return UserTokenBalance(
                 userId: userId,
                 pending: pending,
                 unclaimed: unclaimed,
@@ -46,8 +46,29 @@ class UserTokenBalanceManager {
                 referenceBlock: referenceBlock)
         } else {
             // Handle the case where there's no data
-            return UserTokenBlance(userId: userId)
+            return UserTokenBalance(userId: userId)
         }
+    }
+    
+    @MainActor
+    func update(balance: UserTokenBalance) async throws -> UserTokenBalance {
+        do {
+            let document = db.collection("Tokens_Balance").document(balance.userId)
+            
+            var data: [String : Any] = [:]
+            data["userId"] = balance.userId
+            data["unclaimed"] = balance.unclaimed
+            data["reserved"] = balance.reserved
+            data["claimed"] = balance.claimed
+            data["gas"] = balance.gas
+            data["referenceBlock"] = balance.referenceBlock
+            try await document.updateData(data)
+            
+            return balance
+        } catch {
+            print(error.localizedDescription)
+        }
+        return balance
     }
     
     @MainActor

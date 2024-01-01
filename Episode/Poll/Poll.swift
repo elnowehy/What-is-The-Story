@@ -14,4 +14,6 @@ struct Poll: Identifiable {
     var closingDate: Date = Date()
     var timestamp: Date = Date()
     var answerIds: [String] = [] // "pollId_userId"
+    var rewardTokens: Double = 0.0
+    var isFinalized: Bool = false
 }

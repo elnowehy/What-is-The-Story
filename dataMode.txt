@@ -1,0 +1,650 @@
+./Series/Series.swift:
+//
+//  Series.swift
+//  WITS
+//
+//  Created by Amr El-Nowehy on 2023-01-06.
+//
+// ** data model **
+
+import Foundation
+
+struct Series: Identifiable, Codable, Equatable {
+    var id: String = ""
+    var profile: String = ""
+    var userId: String = ""
+    var title: String = ""
+    var categories: Set<String> = []
+    var tags: Set<String> = []
+    var synopsis: String = ""
+    var episodes = [String]()
+    var poster = URL(filePath: "")
+    var imgQlty = 0.5
+    var trailer = URL(filePath: "")
+    var initialReleaseDate = Date()
+    var latestReleaseDate = Date()
+    var totalRatings = 0
+    var numberOfRatings = 0
+    var totalViews = 0
+
+    var averageRating: Double {
+        return numberOfRatings == 0 ? 0 : Double(totalRatings) / Double(numberOfRatings)
+    }
+    
+    var trendingScore: Double {
+        let k = 1.0 // factor (customize according to your needs)
+        let t = Date().timeIntervalSince1970
+        let t0 = initialReleaseDate.timeIntervalSince1970
+        return 1.0 / (k + exp(t - t0))
+    }
+    
+    var popularScore: Double {
+        return 0.5 * averageRating + 0.5 * Double(totalViews)
+    }
+    
+    var newScore: Double {
+        let currentDate = Date().timeIntervalSince1970
+        let releaseDateWeight = (currentDate - initialReleaseDate.timeIntervalSince1970) / (latestReleaseDate.timeIntervalSince1970 - initialReleaseDate.timeIntervalSince1970)
+        return (0.6 * releaseDateWeight) + (0.2 * averageRating) + (0.2 * Double(numberOfRatings))
+    }
+}
+
+./Comments/Comment.swift:
+//
+//  Comments.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-01-19.
+//
+// ** data model **
+
+import Foundation
+
+struct Comment: Identifiable, Codable{
+    var id: String = ""
+    var userId: String = ""
+    var userName: String = ""
+    var text: String = ""
+    var contentId: String = ""
+    var parentId: String = "" // Optional, only for replies
+    var replies: [Comment] = []
+    var isDeleted: Bool = false
+    var timestamp: Date = Date()
+    var editedTimestamp: Date = Date()
+}
+
+./Bookmark/Bookmark.swift:
+//
+//  Bookmark.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-05-19.
+//
+// ** data model **
+
+import Foundation
+
+struct Bookmark: Identifiable {
+    var id: String = ""
+    var userId: String = ""
+    var contentType: ContentType = .episode
+    var contentId: String = ""
+    var timestamp = Date()
+}
+./Category/Category.swift:
+//
+//  Category.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-04-19.
+//
+// ** data model **
+import Foundation
+
+struct Category: Identifiable, Equatable {
+    var id: String = ""
+}
+./ViewRating/ViewRating.swift:
+//
+//  EpisodeViews.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-04-26.
+//
+// ** data model **
+
+import Foundation
+
+struct ViewRating: Codable, Hashable {
+    var episodeId: String = ""
+    var userId: String = ""
+    var rating: Int = 0 // 1...5
+    var timestamp: Date = Date()
+}
+
+./Episode/Episode.swift:
+//
+//  Video.swift
+//  WITS
+//
+//  Created by Amr El-Nowehy on 2023-01-06.
+//
+// ** data model **
+
+import Foundation
+
+struct Episode: Identifiable {
+    var id: String = ""
+    var userId: String = ""
+    var title: String = ""
+    // let duration: TimeInterval
+    var synopsis: String = ""
+    var video : URL = URL(filePath: "")
+    // var thumbnail : URL = URL(filePath: "")
+    var hasPoll: Bool = false
+    var series: String = ""
+    var views: Int = 0
+    var numOfRatings: Int = 0
+    var totalRatings: Int = 0
+    var releaseDate = Date()
+    var avgRating: Double = 0.0
+    var nftContractAddress: String? = nil
+    var nftTokenId: String? = nil
+    
+    var featuredScore: Double {
+        let k = 1.0
+        let t = Date().timeIntervalSince1970
+        let t0 = releaseDate.timeIntervalSince1970
+        return Double((numOfRatings /* +  numofComments */)) / (k + exp(t - t0))
+        // featuredScore = (numRatings + numComments) / (k + e^(t - t0)) where t: currenttime, t0: release date
+    }
+}
+./Episode/Poll/Answer/Vote/Vote.swift:
+//
+//  Vote.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-07-04.
+//
+// ** data model **
+
+import Foundation
+
+struct Vote: Identifiable {
+    var id: String = "" // same as the voter userId
+    var answerId: String = "" // "episodeId_userId"
+    var timestamp: Date = Date()
+}
+./Episode/Poll/Answer/Answer.swift:
+//
+//  Answer.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-07-04.
+//
+// ** data model **
+
+import Foundation
+
+struct Answer: Identifiable {
+    var id: String = "" // "pollId_userId"
+    var pollId: String = "" // same as episode id
+    var userId: String = ""
+    var text: String = ""
+    var timestamp: Date = Date()
+}
+./Episode/Poll/Poll.swift:
+//
+//  File.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-07-04.
+//
+// ** data model **
+
+import Foundation
+
+struct Poll: Identifiable {
+    var id: String = "" // same as the episode id
+    var question: String = ""
+    var closingDate: Date = Date()
+    var timestamp: Date = Date()
+    var answerIds: [String] = [] // "pollId_userId"
+}
+./dataModels.txt:
+./Series/Series.swift:
+//
+//  Series.swift
+//  WITS
+//
+//  Created by Amr El-Nowehy on 2023-01-06.
+//
+// ** data model **
+
+import Foundation
+
+struct Series: Identifiable, Codable, Equatable {
+    var id: String = ""
+    var profile: String = ""
+    var userId: String = ""
+    var title: String = ""
+    var categories: Set<String> = []
+    var tags: Set<String> = []
+    var synopsis: String = ""
+    var episodes = [String]()
+    var poster = URL(filePath: "")
+    var imgQlty = 0.5
+    var trailer = URL(filePath: "")
+    var initialReleaseDate = Date()
+    var latestReleaseDate = Date()
+    var totalRatings = 0
+    var numberOfRatings = 0
+    var totalViews = 0
+
+    var averageRating: Double {
+        return numberOfRatings == 0 ? 0 : Double(totalRatings) / Double(numberOfRatings)
+    }
+    
+    var trendingScore: Double {
+        let k = 1.0 // factor (customize according to your needs)
+        let t = Date().timeIntervalSince1970
+        let t0 = initialReleaseDate.timeIntervalSince1970
+        return 1.0 / (k + exp(t - t0))
+    }
+    
+    var popularScore: Double {
+        return 0.5 * averageRating + 0.5 * Double(totalViews)
+    }
+    
+    var newScore: Double {
+        let currentDate = Date().timeIntervalSince1970
+        let releaseDateWeight = (currentDate - initialReleaseDate.timeIntervalSince1970) / (latestReleaseDate.timeIntervalSince1970 - initialReleaseDate.timeIntervalSince1970)
+        return (0.6 * releaseDateWeight) + (0.2 * averageRating) + (0.2 * Double(numberOfRatings))
+    }
+}
+
+./Comments/Comment.swift:
+//
+//  Comments.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-01-19.
+//
+// ** data model **
+
+import Foundation
+
+struct Comment: Identifiable, Codable{
+    var id: String = ""
+    var userId: String = ""
+    var userName: String = ""
+    var text: String = ""
+    var contentId: String = ""
+    var parentId: String = "" // Optional, only for replies
+    var replies: [Comment] = []
+    var isDeleted: Bool = false
+    var timestamp: Date = Date()
+    var editedTimestamp: Date = Date()
+}
+
+./Bookmark/Bookmark.swift:
+//
+//  Bookmark.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-05-19.
+//
+// ** data model **
+
+import Foundation
+
+struct Bookmark: Identifiable {
+    var id: String = ""
+    var userId: String = ""
+    var contentType: ContentType = .episode
+    var contentId: String = ""
+    var timestamp = Date()
+}
+./Category/Category.swift:
+//
+//  Category.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-04-19.
+//
+// ** data model **
+import Foundation
+
+struct Category: Identifiable, Equatable {
+    var id: String = ""
+}
+./ViewRating/ViewRating.swift:
+//
+//  EpisodeViews.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-04-26.
+//
+// ** data model **
+
+import Foundation
+
+struct ViewRating: Codable, Hashable {
+    var episodeId: String = ""
+    var userId: String = ""
+    var rating: Int = 0 // 1...5
+    var timestamp: Date = Date()
+}
+
+./Episode/Episode.swift:
+//
+//  Video.swift
+//  WITS
+//
+//  Created by Amr El-Nowehy on 2023-01-06.
+//
+// ** data model **
+
+import Foundation
+
+struct Episode: Identifiable {
+    var id: String = ""
+    var userId: String = ""
+    var title: String = ""
+    // let duration: TimeInterval
+    var synopsis: String = ""
+    var video : URL = URL(filePath: "")
+    // var thumbnail : URL = URL(filePath: "")
+    var hasPoll: Bool = false
+    var series: String = ""
+    var views: Int = 0
+    var numOfRatings: Int = 0
+    var totalRatings: Int = 0
+    var releaseDate = Date()
+    var avgRating: Double = 0.0
+    var nftContractAddress: String? = nil
+    var nftTokenId: String? = nil
+    
+    var featuredScore: Double {
+        let k = 1.0
+        let t = Date().timeIntervalSince1970
+        let t0 = releaseDate.timeIntervalSince1970
+        return Double((numOfRatings /* +  numofComments */)) / (k + exp(t - t0))
+        // featuredScore = (numRatings + numComments) / (k + e^(t - t0)) where t: currenttime, t0: release date
+    }
+}
+./Episode/Poll/Answer/Vote/Vote.swift:
+//
+//  Vote.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-07-04.
+//
+// ** data model **
+
+import Foundation
+
+struct Vote: Identifiable {
+    var id: String = "" // same as the voter userId
+    var answerId: String = "" // "episodeId_userId"
+    var timestamp: Date = Date()
+}
+./Episode/Poll/Answer/Answer.swift:
+//
+//  Answer.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-07-04.
+//
+// ** data model **
+
+import Foundation
+
+struct Answer: Identifiable {
+    var id: String = "" // "pollId_userId"
+    var pollId: String = "" // same as episode id
+    var userId: String = ""
+    var text: String = ""
+    var timestamp: Date = Date()
+}
+./Episode/Poll/Poll.swift:
+//
+//  File.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-07-04.
+//
+// ** data model **
+
+import Foundation
+
+struct Poll: Identifiable {
+    var id: String = "" // same as the episode id
+    var question: String = ""
+    var closingDate: Date = Date()
+    var timestamp: Date = Date()
+    var answerIds: [String] = [] // "pollId_userId"
+}
+./Account/User/User.swift:
+//
+//  User.swift
+//  WITS
+//
+//  Created by Amr El-Nowehy on 2023-01-05.
+//
+// ** data model **
+
+import Foundation
+
+struct User: Identifiable, Codable {
+    var id: String = ""
+    var name: String = ""
+    var email: String = ""
+    var profileIds: [String] = []
+    var invitationCode: String = ""
+    var witsWallet: String = ""
+    var ethWallet: String = ""
+    var createdTimestamp = Date()
+    var loggedInTimestamp = Date()
+}
+
+struct PublicInfo {
+    var id: String = "main"
+    var sponsor: String = ""
+    var claimedTokens: Int = 0
+    var outstandingTokens: Int = 0
+    var inviteeIDs = [String]()
+}
+
+
+// read: all, write: user
+// Firestore path: /Users/<documentID>/Contribution/<main>
+struct Contribution {
+    var id: String = "main"
+    var ideaIds = [String]()
+    var voteIds = [String]()
+    var commentIds = [String]()
+}
+
+
+
+./Account/Profile/Profile.swift:
+//
+//  Profile.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-02-07.
+//
+
+import SwiftUI
+
+// read: pubic write: user
+// ** data model **
+
+struct Profile {
+    var id: String = "" // profileId
+    var userId: String = ""
+    var brand: String = ""
+    var tagline: String = ""
+    var avatar = URL(filePath: "")
+    var imgQlty = 0.2
+    var seriesIds = [String]()
+    var timestamp = Date()
+}
+
+struct ProfileInfo {
+    var id: String = "" // profileId
+    var bio: String = ""
+    var photo = URL(filePath: "")
+    var background = URL(filePath: "")
+    var photoQlty = 0.2
+    var bgQlty = 0.2
+}
+
+
+
+
+
+./Tag/Tag.swift:
+//
+//  Tag.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-05-30.
+//
+// ** data model **
+
+import Foundation
+
+struct Tag: Identifiable {
+    var id: String = ""
+}
+./Account/User/User.swift:
+//
+//  User.swift
+//  WITS
+//
+//  Created by Amr El-Nowehy on 2023-01-05.
+//
+// ** data model **
+
+import Foundation
+
+struct User: Identifiable, Codable {
+    var id: String = ""
+    var name: String = ""
+    var email: String = ""
+    var profileIds: [String] = []
+    var invitationCode: String = ""
+    var wallet: String = ""
+    var createdTimestamp = Date()
+    var loggedInTimestamp = Date()
+}
+
+struct PublicInfo {
+    var id: String = "main"
+    var sponsor: String = ""
+    var claimedTokens: Int = 0
+    var outstandingTokens: Int = 0
+    var inviteeIDs = [String]()
+}
+
+
+// read: all, write: user
+// Firestore path: /Users/<documentID>/Contribution/<main>
+struct Contribution {
+    var id: String = "main"
+    var ideaIds = [String]()
+    var voteIds = [String]()
+    var commentIds = [String]()
+}
+
+
+
+./Account/Profile/Profile.swift:
+//
+//  Profile.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-02-07.
+//
+
+import SwiftUI
+
+// read: pubic write: user
+// ** data model **
+
+struct Profile {
+    var id: String = "" // profileId
+    var userId: String = ""
+    var brand: String = ""
+    var tagline: String = ""
+    var avatar = URL(filePath: "")
+    var imgQlty = 0.2
+    var seriesIds = [String]()
+    var timestamp = Date()
+}
+
+struct ProfileInfo {
+    var id: String = "" // profileId
+    var bio: String = ""
+    var photo = URL(filePath: "")
+    var background = URL(filePath: "")
+    var photoQlty = 0.2
+    var bgQlty = 0.2
+}
+
+
+
+
+
+./Tokens/UserTokenBalance/UserTokenBlance.swift:
+//
+//  UserTokenBlance.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-12-17.
+//
+// ** data model **
+
+import Foundation
+
+struct UserTokenBlance {
+    var userId: String = ""
+    var pending: Double = 0.0
+    var unclaimed: Double = 0.0
+    var reserved: Double = 0.0
+    var claimed: Double = 0.0
+}
+./Tokens/GasBalance/GasBalance.swift:
+//
+//  GasBalance.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-12-04.
+//
+// ** data model **
+
+import Foundation
+
+struct GasBalance {
+    var userId: String = ""
+    var userWallet: String = ""
+    var gasBalance: Double = 0.0
+    var referenceBlock: Int = 0
+    // var timestamp: Date
+}
+./Tag/Tag.swift:
+//
+//  Tag.swift
+//  What is The Story
+//
+//  Created by Amr El-Nowehy on 2023-05-30.
+//
+// ** data model **
+
+import Foundation
+
+struct Tag: Identifiable {
+    var id: String = ""
+}

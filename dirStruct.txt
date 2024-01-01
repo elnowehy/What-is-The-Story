@@ -1,0 +1,280 @@
+.
+./Series
+./Series/SeriesUpdateView.swift
+./Series/CreateView.swift
+./Series/SeriesVM.swift
+./Series/Series.swift
+./Series/SeriesNavigationViews.swift
+./Series/SeriesView.swift
+./Settings
+./Settings/AppSettings.swift
+./Settings/Theme
+./Settings/Theme/ComponentStyles.swift
+./Settings/Theme/Theme.swift
+./testData
+./testData/firebase-export-metadata.json
+./testData/database_export
+./testData/firestore_export
+./testData/firestore_export/firestore_export.overall_export_metadata
+./testData/firestore_export/all_namespaces
+./testData/firestore_export/all_namespaces/all_kinds
+./testData/firestore_export/all_namespaces/all_kinds/output-0
+./testData/firestore_export/all_namespaces/all_kinds/all_namespaces_all_kinds.export_metadata
+./testData/storage_export
+./testData/storage_export/buckets.json
+./testData/storage_export/blobs
+./testData/storage_export/blobs/226997fe-92b4-477a-89d1-a128a5aaeff0
+./testData/storage_export/blobs/9fdad25a-3a4f-48ce-8b1d-6cf868734b1c
+./testData/storage_export/blobs/aaea7365-56a7-4b51-a35a-c419b1eb4d04
+./testData/storage_export/blobs/6ffc3175-a99a-4a86-84c2-0fd56c4a14be
+./testData/storage_export/blobs/a0b8e7ee-a975-41aa-9c45-cad9ab849be0
+./testData/storage_export/blobs/d1147535-e364-4e81-9969-1a8bfcf650d6
+./testData/storage_export/blobs/b41a7d95-1759-4764-8fee-6f74164c7ee6
+./testData/storage_export/blobs/90e240ef-c62e-40d7-a4a2-dae654bc22dc
+./testData/storage_export/blobs/3d72ecf1-7e7f-46cb-bfbb-34c5dc1dfd93
+./testData/storage_export/metadata
+./testData/storage_export/metadata/b41a7d95-1759-4764-8fee-6f74164c7ee6.json
+./testData/storage_export/metadata/3d72ecf1-7e7f-46cb-bfbb-34c5dc1dfd93.json
+./testData/storage_export/metadata/90e240ef-c62e-40d7-a4a2-dae654bc22dc.json
+./testData/storage_export/metadata/6ffc3175-a99a-4a86-84c2-0fd56c4a14be.json
+./testData/storage_export/metadata/aaea7365-56a7-4b51-a35a-c419b1eb4d04.json
+./testData/storage_export/metadata/d1147535-e364-4e81-9969-1a8bfcf650d6.json
+./testData/storage_export/metadata/226997fe-92b4-477a-89d1-a128a5aaeff0.json
+./testData/storage_export/metadata/9fdad25a-3a4f-48ce-8b1d-6cf868734b1c.json
+./testData/storage_export/metadata/a0b8e7ee-a975-41aa-9c45-cad9ab849be0.json
+./testData/auth_export
+./testData/auth_export/config.json
+./testData/auth_export/accounts.json
+./Comments
+./Comments/Comment.swift
+./Comments/CommentView.swift
+./Comments/CommentVM.swift
+./firebase-debug.log
+./.DS_Store
+./Bookmark
+./Bookmark/BookmarkVM.swift
+./Bookmark/Bookmark.swift
+./Bookmark/BookmarkListView.swift
+./Category
+./Category/CategoryVM.swift
+./Category/CategoryView.swift
+./Category/Category.swift
+./What is The Story.xcodeproj
+./What is The Story.xcodeproj/project.pbxproj
+./What is The Story.xcodeproj/xcuserdata
+./What is The Story.xcodeproj/xcuserdata/amr.xcuserdatad
+./What is The Story.xcodeproj/xcuserdata/amr.xcuserdatad/xcdebugger
+./What is The Story.xcodeproj/xcuserdata/amr.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+./What is The Story.xcodeproj/xcuserdata/amr.xcuserdatad/xcschemes
+./What is The Story.xcodeproj/xcuserdata/amr.xcuserdatad/xcschemes/xcschememanagement.plist
+./What is The Story.xcodeproj/project.xcworkspace
+./What is The Story.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+./What is The Story.xcodeproj/project.xcworkspace/xcuserdata
+./What is The Story.xcodeproj/project.xcworkspace/xcuserdata/amr.xcuserdatad
+./What is The Story.xcodeproj/project.xcworkspace/xcuserdata/amr.xcuserdatad/IDEFindNavigatorScopes.plist
+./What is The Story.xcodeproj/project.xcworkspace/xcuserdata/amr.xcuserdatad/WorkspaceSettings.xcsettings
+./What is The Story.xcodeproj/project.xcworkspace/xcuserdata/amr.xcuserdatad/UserInterfaceState.xcuserstate
+./What is The Story.xcodeproj/project.xcworkspace/xcshareddata
+./What is The Story.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+./What is The Story.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+./What is The Story.xcodeproj/project.xcworkspace/xcshareddata/swiftpm
+./What is The Story.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/configuration
+./What is The Story.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+./What is The Story.xcodeproj/xcshareddata
+./What is The Story.xcodeproj/xcshareddata/xcdebugger
+./What is The Story.xcodeproj/xcshareddata/xcdebugger/Breakpoints_v2.xcbkptlist
+./What is The Story.xcodeproj/xcshareddata/xcschemes
+./What is The Story.xcodeproj/xcshareddata/xcschemes/What is The Story.xcscheme
+./ViewRating
+./ViewRating/ViewRating.swift
+./ViewRating/ViewRatingView.swift
+./ViewRating/ViewRatingVM.swift
+./ViewRating/RatingStartsView.swift
+./ViewRating/ViewsHistoryView.swift
+./Networking
+./Networking/.DS_Store
+./Networking/Blockchain
+./Networking/Blockchain/artifacts
+./Networking/Blockchain/artifacts/WITS.json
+./Networking/Blockchain/artifacts/WITS_metadata.json
+./Networking/Blockchain/artifacts/build-info
+./Networking/Blockchain/artifacts/build-info/931af7e5d0a00015de2fcd03cfb9b6ea.json
+./Networking/Blockchain/.DS_Store
+./Networking/Blockchain/contract-bed87a3bb7.sol
+./Networking/Blockchain/.env
+./Networking/Firebase
+./Networking/Firebase/.DS_Store
+./Networking/Firebase/dbManagers
+./Networking/Firebase/dbManagers/TagManager.swift
+./Networking/Firebase/dbManagers/CategoryManager.swift
+./Networking/Firebase/dbManagers/UserTokenBalanceManager.swift
+./Networking/Firebase/dbManagers/EpisodeManager.swift
+./Networking/Firebase/dbManagers/UserManager.swift
+./Networking/Firebase/dbManagers/GasBalanceManager.swift
+./Networking/Firebase/dbManagers/.DS_Store
+./Networking/Firebase/dbManagers/SeriesManager.swift
+./Networking/Firebase/dbManagers/CommentManager.swift
+./Networking/Firebase/dbManagers/PollManager.swift
+./Networking/Firebase/dbManagers/AnswerManager.swift
+./Networking/Firebase/dbManagers/TokenManager.swift
+./Networking/Firebase/dbManagers/ProfileManager.swift
+./Networking/Firebase/dbManagers/ViewRatingsManager.swift
+./Networking/Firebase/dbManagers/VoteManager.swift
+./Networking/Firebase/dbManagers/BookmarkManager.swift
+./Networking/Firebase/Functions
+./Networking/Firebase/Functions/firebase-debug.log
+./Networking/Firebase/Functions/issueTokenForViews.txt
+./Networking/Firebase/Functions/mintingFunctions.js
+./Networking/Firebase/Functions/mintingFunctions.txt
+./Networking/Firebase/Functions/processTokenClaims.js
+./Networking/Firebase/Functions/updateGasBalance.js
+./Networking/Firebase/Functions/issueTokenForViews.js
+./Networking/Firebase/Functions/index.js
+./Networking/Firebase/Functions/mintingFunctions.ts
+./Networking/Firebase/Functions/processTokenClaims.ts
+./Networking/Firebase/Functions/package-lock.json
+./Networking/Firebase/Functions/package.json
+./Networking/Firebase/Functions/updateGasBalance.ts
+./Networking/Firebase/Functions/.env
+./Networking/Firebase/Functions/contractABI.json
+./Networking/Firebase/Functions/.eslintrc.js
+./Networking/Firebase/Functions/tsconfig.json
+./Networking/Firebase/Functions/index.ts
+./Networking/Firebase/Functions/issueTokenForViews.ts
+./Networking/Firebase/Abstractions
+./Networking/Firebase/Abstractions/FireBasePagination.swift
+./Networking/Firebase/Authentication
+./Networking/Firebase/Authentication/AuthManager.swift
+./Networking/Firebase/FirebaseUtils.swift
+./Episode
+./Episode/EpisodeUpdate.swift
+./Episode/EpisdoeVM.swift
+./Episode/Episode.swift
+./Episode/EpisodeView.swift
+./Episode/Poll
+./Episode/Poll/Answer
+./Episode/Poll/Answer/Vote
+./Episode/Poll/Answer/Vote/VoteVM.swift
+./Episode/Poll/Answer/Vote/Vote.swift
+./Episode/Poll/Answer/AnswerVM.swift
+./Episode/Poll/Answer/AnswerView.swift
+./Episode/Poll/Answer/Answer.swift
+./Episode/Poll/Poll.swift
+./Episode/Poll/PollView.swift
+./Episode/Poll/PollVM.swift
+./Episode/Poll/PollUpdateView.swift
+./Resources
+./firestore-export.json
+./dataModels.txt
+./Navigation
+./Navigation/AboutView.swift
+./Navigation/FindView.swift
+./Navigation/AccountMenu.swift
+./Navigation/HomeTabView.swift
+./ui-debug.log
+./Utils
+./Utils/RandomString.swift
+./Utils/DateFormat.swift
+./Utils/VideoPlayer
+./Utils/VideoPlayer/VideoPlayerView.swift
+./Utils/VideoPlayer/PlayerControlView.swift
+./Utils/ImagePicker.swift
+./Utils/Pagination.swift
+./Utils/Encryption.swift
+./Utils/PhotoSelector.swift
+./Utils/SavingProgressView.swift
+./Utils/Colors.swift
+./Utils/Image2Data.swift
+./Utils/PathRouter.swift
+./GoogleService-Info.plist
+./dirStruct.txt
+./Search
+./Search/SearchView.swift
+./Search/SearchVM.swift
+./firestore-debug.log
+./database-debug.log
+./What is The Story
+./What is The Story/Assets.xcassets
+./What is The Story/Assets.xcassets/Color
+./What is The Story/Assets.xcassets/Color/Primary.colorset
+./What is The Story/Assets.xcassets/Color/Primary.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/Success.colorset
+./What is The Story/Assets.xcassets/Color/Success.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/OnError.colorset
+./What is The Story/Assets.xcassets/Color/OnError.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/Background.colorset
+./What is The Story/Assets.xcassets/Color/Background.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/Surface.colorset
+./What is The Story/Assets.xcassets/Color/Surface.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/PrimaryVariant.colorset
+./What is The Story/Assets.xcassets/Color/PrimaryVariant.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/OnBackground.colorset
+./What is The Story/Assets.xcassets/Color/OnBackground.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/Contents.json
+./What is The Story/Assets.xcassets/Color/Warning.colorset
+./What is The Story/Assets.xcassets/Color/Warning.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/Secondary.colorset
+./What is The Story/Assets.xcassets/Color/Secondary.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/OnPrimary.colorset
+./What is The Story/Assets.xcassets/Color/OnPrimary.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/SecondaryVariant.colorset
+./What is The Story/Assets.xcassets/Color/SecondaryVariant.colorset/Contents.json
+./What is The Story/Assets.xcassets/Color/Error.colorset
+./What is The Story/Assets.xcassets/Color/Error.colorset/Contents.json
+./What is The Story/Assets.xcassets/AppIcon.appiconset
+./What is The Story/Assets.xcassets/AppIcon.appiconset/Contents.json
+./What is The Story/Assets.xcassets/AppIcon.appiconset/wits-high-resolution-color-logo.png
+./What is The Story/Assets.xcassets/AccentColor.colorset
+./What is The Story/Assets.xcassets/AccentColor.colorset/Contents.json
+./What is The Story/Assets.xcassets/Contents.json
+./What is The Story/Preview Content
+./What is The Story/Preview Content/Preview Assets.xcassets
+./What is The Story/Preview Content/Preview Assets.xcassets/Contents.json
+./What is The Story/What_is_The_StoryApp.swift
+./What is The Story/What is The Story.entitlements
+./What is The Story/ContentView.swift
+./What-is-The-Story-Info.plist
+./pubsub-debug.log
+./Account
+./Account/Settings
+./Account/Settings/SettingsView.swift
+./Account/.DS_Store
+./Account/User
+./Account/User/UserView.swift
+./Account/User/User.swift
+./Account/User/UserVM.swift
+./Account/Profile
+./Account/Profile/ProfileView.swift
+./Account/Profile/Profile.swift
+./Account/Profile/ProfileVM.swift
+./Account/Profile/ProfileUpdate.swift
+./Account/Earnings
+./Account/Earnings/EarningsView.swift
+./Account/Authentication
+./Account/Authentication/SignInView.swift
+./Account/Authentication/SignOutView.swift
+./Account/Authentication/SignUpView.swift
+./.vscode
+./.vscode/settings.json
+./.vscode/tasks.json
+./Community
+./Community/CommunityView.swift
+./LandingPage
+./LandingPage/LandingPageView.swift
+./LandingPage/LandingPageVM.swift
+./Tokens
+./Tokens/.DS_Store
+./Tokens/UserTokenDashboard
+./Tokens/UserTokenDashboard/UserTokenDashboardView.swift
+./Tokens/UserTokenBalance
+./Tokens/UserTokenBalance/UserTokenBalanceVM.swift
+./Tokens/UserTokenBalance/UserTokenBalanceView.swift
+./Tokens/UserTokenBalance/UserTokenBlance.swift
+./Tokens/GasBalance
+./Tokens/GasBalance/GasBalanceView.swift
+./Tokens/GasBalance/GasBalanceVM.swift
+./Tokens/GasBalance/GasBalance.swift
+./Tag
+./Tag/TagVM.swift
+./Tag/TagViews.swift
+./Tag/Tag.swift

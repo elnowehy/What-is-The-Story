@@ -12,10 +12,21 @@ class PollVM: ObservableObject {
     @Published var answerVMs = [AnswerVM]()
     @Published var isLoading = false
     private var pollManager = PollManager()
+    var userTokenValanceVM = UserTokenBalanceVM()
     var answerVM = AnswerVM()
+    @Published var validationError: String = ""
+    @Published var rewardTokenString: String = "" {
+        didSet {
+            poll.rewardTokens = Double(rewardTokenString) ?? 0.0
+        }
+    }
     
     var isOpen: Bool {
         poll.closingDate > Date()
+    }
+    
+    func setUserTokenBalanceVM(_ vm: UserTokenBalanceVM) {
+        userTokenValanceVM = vm
     }
     
     @MainActor
@@ -37,9 +48,14 @@ class PollVM: ObservableObject {
     }
     
     func update() {
-        Task {
-            pollManager.poll = poll
-            await pollManager.add()
+        if validateRewardTokens() {
+            Task {
+                pollManager.poll = poll
+                await pollManager.add()
+                userTokenValanceVM.userTokenBalance.unclaimed -= poll.rewardTokens
+                userTokenValanceVM.userTokenBalance.reserved += poll.rewardTokens
+                await userTokenValanceVM.update()
+            }
         }
     }
     
@@ -49,6 +65,20 @@ class PollVM: ObservableObject {
         await pollManager.delete()
     }
     
+    func validateRewardTokens() -> Bool {
+        guard !userTokenValanceVM.userTokenBalance.userId.isEmpty else {
+            validationError = "Token balance data is unavailable."
+            return false
+        }
+        
+        if  poll.rewardTokens > userTokenValanceVM.userTokenBalance.unclaimed {
+            validationError = "Insufficient unclaimed tokens for the reward"
+            return false
+        }
+        
+        validationError = ""
+        return true
+    }
     
     @MainActor
     func fetchAnswers() async {

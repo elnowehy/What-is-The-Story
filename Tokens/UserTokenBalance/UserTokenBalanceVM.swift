@@ -8,7 +8,7 @@
 import SwiftUI
 
 class UserTokenBalanceVM: ObservableObject {
-    @Published var userTokenBalance = UserTokenBlance()
+    @Published var userTokenBalance = UserTokenBalance()
     @Published var isLoading = true
     @Published var errorMessage: String?
     
@@ -22,6 +22,18 @@ class UserTokenBalanceVM: ObservableObject {
             isLoading = false
         } catch {
             print("Error fetching user balance: \(error)")
+            errorMessage = error.localizedDescription
+        }
+    }
+    
+    @MainActor
+    func update() async {
+        do {
+            isLoading = true
+            userTokenBalance = try await userTokenBalanceManager.update(balance: userTokenBalance)
+            isLoading = false
+        } catch {
+            print("Error updating user balance: \(error)")
             errorMessage = error.localizedDescription
         }
     }

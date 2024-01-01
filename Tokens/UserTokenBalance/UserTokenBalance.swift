@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct UserTokenBlance {
+struct UserTokenBalance {
     var userId: String = ""
     var pending: Double = 0.0
     var unclaimed: Double = 0.0

@@ -19,6 +19,12 @@ struct PollUpdateView: View {
             DatePicker("Poll Closing Date", selection: $pollVM.poll.closingDate, in: Date()...)
                 .datePickerStyle(CompactDatePickerStyle())
                 .labelsHidden()
+            
+            UserTokenBalanceView()
+                .environmentObject(pollVM.userTokenValanceVM)
+            
+            TextField("Reward Tokens", text: $pollVM.rewardTokenString)
+                .keyboardType(.numberPad)
         }
     }
 }

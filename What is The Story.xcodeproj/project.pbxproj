@@ -63,6 +63,11 @@
 		C58D2C9529DD006E00FF86C4 /* EpisodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D2C9429DD006E00FF86C4 /* EpisodeManager.swift */; };
 		C58D2C9729DD01C600FF86C4 /* EpisdoeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D2C9629DD01C600FF86C4 /* EpisdoeVM.swift */; };
 		C58D2C9929DE319700FF86C4 /* EpisodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D2C9829DE319700FF86C4 /* EpisodeView.swift */; };
+		C58D56EF2B2F5AF60006195A /* UserTokenBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D56EE2B2F5AF60006195A /* UserTokenBalance.swift */; };
+		C58D56F12B2F5B200006195A /* UserTokenBalanceVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D56F02B2F5B200006195A /* UserTokenBalanceVM.swift */; };
+		C58D56F32B2F5B340006195A /* UserTokenBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D56F22B2F5B340006195A /* UserTokenBalanceView.swift */; };
+		C58D56F52B2F99220006195A /* UserTokenBalanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D56F42B2F99220006195A /* UserTokenBalanceManager.swift */; };
+		C58D56F72B2FA10D0006195A /* UserTokenDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D56F62B2FA10D0006195A /* UserTokenDashboardView.swift */; };
 		C58F2394299D4B4A009DA4BF /* FindView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58F2393299D4B4A009DA4BF /* FindView.swift */; };
 		C58F2397299D55A5009DA4BF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58F2396299D55A5009DA4BF /* SettingsView.swift */; };
 		C58F239C299E9B25009DA4BF /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58F239B299E9B25009DA4BF /* ImagePicker.swift */; };
@@ -101,6 +106,7 @@
 		C5C6956C2A5EE72900A311AC /* CommentVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C695682A5DD7F500A311AC /* CommentVM.swift */; };
 		C5C6956E2A5F41FC00A311AC /* CommentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6956D2A5F41FC00A311AC /* CommentManager.swift */; };
 		C5CD5A0B2A43517E009A3BDA /* FireBasePagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5CD5A0A2A43517E009A3BDA /* FireBasePagination.swift */; };
+		C5D3E95D2B210DC500EAEC9C /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = C5D3E95C2B210DC500EAEC9C /* FirebaseFunctions */; };
 		C5E00C172A0E7C3C00E37B0D /* RandomString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E00C162A0E7C3C00E37B0D /* RandomString.swift */; };
 		C5E00C192A0E814600E37B0D /* ViewsHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E00C182A0E814600E37B0D /* ViewsHistoryView.swift */; };
 		C5E00C1B2A0EC0B500E37B0D /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E00C1A2A0EC0B500E37B0D /* Pagination.swift */; };
@@ -121,7 +127,6 @@
 
 /* Begin PBXFileReference section */
 		C502DD73298D92E3002930B4 /* PathRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathRouter.swift; sourceTree = "<group>"; };
-		C51DD10C2A6F1B7600179B23 /* TokenVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenVM.swift; sourceTree = "<group>"; };
 		C51DD10E2A6F1CE800179B23 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		C51EA88F2A5466A000A77F4A /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		C51EA8912A54674E00A77F4A /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
@@ -142,6 +147,7 @@
 		C523561C29A93AE600A079E8 /* SignOutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignOutView.swift; sourceTree = "<group>"; };
 		C5383BD62A3F824600ADA8BB /* SavingProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingProgressView.swift; sourceTree = "<group>"; };
 		C53AE50E29F82C1B00F6B149 /* LandingPageVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPageVM.swift; sourceTree = "<group>"; };
+		C542CE2A2B407CF800AF885C /* FinalizePolls.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = FinalizePolls.ts; sourceTree = "<group>"; };
 		C55233AF29F99562009C3CEE /* LandingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPageView.swift; sourceTree = "<group>"; };
 		C55233B129FC245E009C3CEE /* ViewRatingVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRatingVM.swift; sourceTree = "<group>"; };
 		C55233B329FC2AFD009C3CEE /* ViewRatingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRatingsManager.swift; sourceTree = "<group>"; };
@@ -179,6 +185,11 @@
 		C58D2C9429DD006E00FF86C4 /* EpisodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeManager.swift; sourceTree = "<group>"; };
 		C58D2C9629DD01C600FF86C4 /* EpisdoeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisdoeVM.swift; sourceTree = "<group>"; };
 		C58D2C9829DE319700FF86C4 /* EpisodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeView.swift; sourceTree = "<group>"; };
+		C58D56EE2B2F5AF60006195A /* UserTokenBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTokenBalance.swift; sourceTree = "<group>"; };
+		C58D56F02B2F5B200006195A /* UserTokenBalanceVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTokenBalanceVM.swift; sourceTree = "<group>"; };
+		C58D56F22B2F5B340006195A /* UserTokenBalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTokenBalanceView.swift; sourceTree = "<group>"; };
+		C58D56F42B2F99220006195A /* UserTokenBalanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTokenBalanceManager.swift; sourceTree = "<group>"; };
+		C58D56F62B2FA10D0006195A /* UserTokenDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTokenDashboardView.swift; sourceTree = "<group>"; };
 		C58F2393299D4B4A009DA4BF /* FindView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindView.swift; sourceTree = "<group>"; };
 		C58F2396299D55A5009DA4BF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		C58F239B299E9B25009DA4BF /* ImagePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -205,11 +216,11 @@
 		C5A6F1E22A27A3910061A479 /* TagManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManager.swift; sourceTree = "<group>"; };
 		C5AFDC3B29BE7E7400B2F6E2 /* FirebaseUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUtils.swift; sourceTree = "<group>"; };
 		C5AFDC3D29BE850200B2F6E2 /* Image2Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image2Data.swift; sourceTree = "<group>"; };
+		C5B24B382B3A20590050A2F6 /* updateUserBalances.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = updateUserBalances.ts; sourceTree = "<group>"; };
 		C5B355A42A3B4257003CFAAD /* DateFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormat.swift; sourceTree = "<group>"; };
 		C5B7577D297EF9B200186852 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		C5C695682A5DD7F500A311AC /* CommentVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentVM.swift; sourceTree = "<group>"; };
 		C5C6956D2A5F41FC00A311AC /* CommentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentManager.swift; sourceTree = "<group>"; };
-		C5C765C12B0D724F00AB3995 /* updateGasBalance.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = updateGasBalance.ts; sourceTree = "<group>"; };
 		C5C765C32B0EAE5100AB3995 /* processTokenClaims.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = processTokenClaims.ts; sourceTree = "<group>"; };
 		C5CD5A0A2A43517E009A3BDA /* FireBasePagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBasePagination.swift; sourceTree = "<group>"; };
 		C5E00C162A0E7C3C00E37B0D /* RandomString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomString.swift; sourceTree = "<group>"; };
@@ -225,7 +236,6 @@
 		C5E9FBD22979EC7F00121C45 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		C5E9FBE3297A05E800121C45 /* SeriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesView.swift; sourceTree = "<group>"; };
 		C5E9FBE7297A062100121C45 /* ProfileUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUpdate.swift; sourceTree = "<group>"; };
-		C5E9FBE9297A065E00121C45 /* TokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenView.swift; sourceTree = "<group>"; };
 		C5E9FBEB297A068400121C45 /* CommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentView.swift; sourceTree = "<group>"; };
 		C5E9FBED297A069800121C45 /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		C5E9FBEF297A06D600121C45 /* EpisodeUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeUpdate.swift; sourceTree = "<group>"; };
@@ -247,6 +257,7 @@
 				C59404D8296DCA88003F0FB7 /* FirebaseAnalytics in Frameworks */,
 				C5A31656298B0DAA00D98972 /* FirebaseStorage in Frameworks */,
 				C59404E0296DCA88003F0FB7 /* FirebaseFirestore in Frameworks */,
+				C5D3E95D2B210DC500EAEC9C /* FirebaseFunctions in Frameworks */,
 				C59404DA296DCA88003F0FB7 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -338,17 +349,9 @@
 		C5660F2D2992A8C40079CBF1 /* Earnings */ = {
 			isa = PBXGroup;
 			children = (
-				C5660F2E2992A8D20079CBF1 /* Views */,
-			);
-			path = Earnings;
-			sourceTree = "<group>";
-		};
-		C5660F2E2992A8D20079CBF1 /* Views */ = {
-			isa = PBXGroup;
-			children = (
 				C5E9FBF9297A07CF00121C45 /* EarningsView.swift */,
 			);
-			path = Views;
+			path = Earnings;
 			sourceTree = "<group>";
 		};
 		C56B2E4F29F969B800EBF321 /* ViewRating */ = {
@@ -419,8 +422,9 @@
 				C56EAC9B2ACDE63500136B6F /* tsconfig.json */,
 				C56EAC9C2ACDE63500136B6F /* index.ts */,
 				C56E10592AF705A2008B54C2 /* issueTokenForViews.ts */,
-				C5C765C12B0D724F00AB3995 /* updateGasBalance.ts */,
 				C5C765C32B0EAE5100AB3995 /* processTokenClaims.ts */,
+				C5B24B382B3A20590050A2F6 /* updateUserBalances.ts */,
+				C542CE2A2B407CF800AF885C /* FinalizePolls.ts */,
 			);
 			path = Functions;
 			sourceTree = "<group>";
@@ -465,6 +469,7 @@
 				C59404CA296DC64D003F0FB7 /* Resources */,
 				C59404C8296DC615003F0FB7 /* Networking */,
 				C59404B6296DC575003F0FB7 /* Products */,
+				C5D3E95B2B210DC500EAEC9C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -561,6 +566,7 @@
 				C51EA8A32A54DC9300A77F4A /* VoteManager.swift */,
 				C5C6956D2A5F41FC00A311AC /* CommentManager.swift */,
 				C51DD10E2A6F1CE800179B23 /* TokenManager.swift */,
+				C58D56F42B2F99220006195A /* UserTokenBalanceManager.swift */,
 			);
 			path = dbManagers;
 			sourceTree = "<group>";
@@ -607,18 +613,9 @@
 		C5C695672A5DA0E700A311AC /* Tokens */ = {
 			isa = PBXGroup;
 			children = (
-				C5C765C22B0E959100AB3995 /* Claim */,
-				C5E9FBE9297A065E00121C45 /* TokenView.swift */,
-				C51DD10C2A6F1B7600179B23 /* TokenVM.swift */,
+				C5D3E9532B1E551A00EAEC9C /* UserTokenBalance */,
 			);
 			path = Tokens;
-			sourceTree = "<group>";
-		};
-		C5C765C22B0E959100AB3995 /* Claim */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Claim;
 			sourceTree = "<group>";
 		};
 		C5CD5A092A435165009A3BDA /* Abstractions */ = {
@@ -627,6 +624,32 @@
 				C5CD5A0A2A43517E009A3BDA /* FireBasePagination.swift */,
 			);
 			path = Abstractions;
+			sourceTree = "<group>";
+		};
+		C5D3E9532B1E551A00EAEC9C /* UserTokenBalance */ = {
+			isa = PBXGroup;
+			children = (
+				C58D56EE2B2F5AF60006195A /* UserTokenBalance.swift */,
+				C58D56F02B2F5B200006195A /* UserTokenBalanceVM.swift */,
+				C58D56F22B2F5B340006195A /* UserTokenBalanceView.swift */,
+				C5D3E9542B1E553000EAEC9C /* UserTokenDashboard */,
+			);
+			path = UserTokenBalance;
+			sourceTree = "<group>";
+		};
+		C5D3E9542B1E553000EAEC9C /* UserTokenDashboard */ = {
+			isa = PBXGroup;
+			children = (
+				C58D56F62B2FA10D0006195A /* UserTokenDashboardView.swift */,
+			);
+			path = UserTokenDashboard;
+			sourceTree = "<group>";
+		};
+		C5D3E95B2B210DC500EAEC9C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		C5E2140829F055B300292118 /* Settings */ = {
@@ -718,6 +741,7 @@
 				C5A31655298B0DAA00D98972 /* FirebaseStorage */,
 				C51FC3FA2996B2FE00D7D0C6 /* Algorithms */,
 				C51EA88A2A4F2FB300A77F4A /* AdvancedList */,
+				C5D3E95C2B210DC500EAEC9C /* FirebaseFunctions */,
 			);
 			productName = "What is The Story";
 			productReference = C59404B5296DC575003F0FB7 /* What is The Story.app */;
@@ -798,6 +822,7 @@
 				C5E2140F29F05E5400292118 /* CategoryManager.swift in Sources */,
 				C59E4E5D29D2522800D9577E /* SeriesVM.swift in Sources */,
 				C5B7577E297EF9B200186852 /* AuthManager.swift in Sources */,
+				C58D56EF2B2F5AF60006195A /* UserTokenBalance.swift in Sources */,
 				C51EA8A62A56FF5A00A77F4A /* AnswerView.swift in Sources */,
 				C56E0DFE2A17AC2800A3DE56 /* BookmarkManager.swift in Sources */,
 				C5A6F1D92A2509BD0061A479 /* VideoPlayerView.swift in Sources */,
@@ -829,6 +854,7 @@
 				C58D2C9729DD01C600FF86C4 /* EpisdoeVM.swift in Sources */,
 				C5A6F1DF2A26AE900061A479 /* Tag.swift in Sources */,
 				C59404B9296DC575003F0FB7 /* What_is_The_StoryApp.swift in Sources */,
+				C58D56F52B2F99220006195A /* UserTokenBalanceManager.swift in Sources */,
 				C5E00C1B2A0EC0B500E37B0D /* Pagination.swift in Sources */,
 				C51EA8902A5466A000A77F4A /* Poll.swift in Sources */,
 				C59E4E5929D2512500D9577E /* CreateView.swift in Sources */,
@@ -837,8 +863,10 @@
 				C523561D29A93AE600A079E8 /* SignOutView.swift in Sources */,
 				C51EA8942A5467B000A77F4A /* Vote.swift in Sources */,
 				C59404CD296DC6DE003F0FB7 /* User.swift in Sources */,
+				C58D56F32B2F5B340006195A /* UserTokenBalanceView.swift in Sources */,
 				C55233B429FC2AFD009C3CEE /* ViewRatingsManager.swift in Sources */,
 				C56804682A09997C00094AC3 /* RatingStartsView.swift in Sources */,
+				C58D56F72B2FA10D0006195A /* UserTokenDashboardView.swift in Sources */,
 				C5660F322992BB870079CBF1 /* ProfileVM.swift in Sources */,
 				C5E9FBBF2975CF6A00121C45 /* Encryption.swift in Sources */,
 				C5E2141129F0649A00292118 /* CategoryView.swift in Sources */,
@@ -849,6 +877,7 @@
 				C568046A2A0A868900094AC3 /* ViewRatingView.swift in Sources */,
 				C5E00C192A0E814600E37B0D /* ViewsHistoryView.swift in Sources */,
 				C58F239E299EB569009DA4BF /* Colors.swift in Sources */,
+				C58D56F12B2F5B200006195A /* UserTokenBalanceVM.swift in Sources */,
 				C53AE50F29F82C1B00F6B149 /* LandingPageVM.swift in Sources */,
 				C5A6F1E12A2781AC0061A479 /* TagVM.swift in Sources */,
 				C56E0E072A20F79400A3DE56 /* Theme.swift in Sources */,
@@ -1204,7 +1233,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
 				kind = exactVersion;
-				version = 10.16.0;
+				version = 10.19.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1259,6 +1288,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		C5D3E95C2B210DC500EAEC9C /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
