@@ -2,14 +2,6 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { db } from './index';
 
-export const finalizePolls = functions.pubsub.schedule('every 24 hours').onRun(async (context) => {
-    const polls = await fetchPollsToFinalize();
-    for (const poll of polls) {
-        await processPoll(poll);
-    }
-});
-
-
 interface Poll {
     id: string;
     rewardTokens: number;
@@ -28,9 +20,16 @@ interface AnswerVote {
     voteCount: number;
 }
 
+export async function runFinalizePolls() {
+    const polls = await fetchPollsToFinalize();
+    for (const poll of polls) {
+        await processPoll(poll);
+    }
+}
+
 // And so on for other functions...
 async function fetchPollsToFinalize(): Promise<Poll[]> {
-    const now = admin.firestore.Timestamp.now();
+    const now = new Date();
     const pollsSnapshot = await db.collection('Poll')
                                   .where('closingDate', '<=', now)
                                   .get();
@@ -40,6 +39,7 @@ async function fetchPollsToFinalize(): Promise<Poll[]> {
         const pollData = doc.data() as Poll;
         if ('rewardTokens' in pollData) {
            polls.push({ ...pollData,  id: doc.id });
+            console.log(`id: ${doc.id}`)
         } else {
            console.log(`Poll with ID ${doc.id} is missing the 'rewardToken' property`);
         }
@@ -56,6 +56,7 @@ async function processPoll(poll: Poll) {
     if (winner) {
         // Assuming 'winner' contains the userId of the winning user
         const winnerUserId = winner.userId;
+        console.log(`winner: ${winnerUserId}`)
 
         await allocateTokenRewards(winnerUserId, poll.id, poll.rewardTokens);
         // Optional: Notify participants
@@ -79,6 +80,7 @@ async function fetchAnswersForPoll(pollId: string) {
             userId: answerData.userId,
             timestamp: answerData.timestamp
         });
+        console.log(`answers: ${doc.id}`)
     });
 
     return answers;
@@ -99,6 +101,7 @@ async function countVotesForAnswers(answers: Answer[]) {
             userId: answer.userId,
             voteCount: votesSnapshot.size,
         });
+        console.log(`votes: ${answer.id}`)
     }
 
     return answerVotes;
@@ -132,11 +135,11 @@ async function allocateTokenRewards(winnerUserId: string, pollId: string, reward
     }
 
     // Decrease 'reserved' tokens for the creator
-    const creatorTokenBalanceRef = db.collection('UserTokenBalances').doc(creatorUserId);
+    const creatorTokenBalanceRef = db.collection('Tokens_Balance').doc(creatorUserId);
     await updateTokenBalance(creatorTokenBalanceRef, 'reserved', -rewardTokens);
 
     // Handle the winner's token balance
-    const winnerTokenBalanceRef = db.collection('UserTokenBalances').doc(winnerUserId);
+    const winnerTokenBalanceRef = db.collection('Tokens_Balance').doc(winnerUserId);
     const winnerTokenBalanceDoc = await winnerTokenBalanceRef.get();
 
     if (!winnerTokenBalanceDoc.exists) {
@@ -184,5 +187,14 @@ async function updateTokenBalance(tokenBalanceRef: FirebaseFirestore.DocumentRef
     }
 }
 
+// Trigger for testing
+export const triggerFinalizePolls = functions.https.onRequest(async (req, res) => {
+    try {
+        await runFinalizePolls();
+        res.send('Finalize polls function triggered successfully.');
+    } catch (error) {
+        console.error('Error triggering finalize polls:', error);
+        res.status(500).send('An error occurred while triggering finalize polls.');
+    }
+});
 
-// Additional function to update the poll's status to finalized

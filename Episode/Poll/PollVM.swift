@@ -48,14 +48,14 @@ class PollVM: ObservableObject {
     }
     
     func update() {
-        if validateRewardTokens() {
-            Task {
-                pollManager.poll = poll
-                await pollManager.add()
+        Task {
+            pollManager.poll = poll
+            await pollManager.add()
+            if validateRewardTokens() {
                 userTokenValanceVM.userTokenBalance.unclaimed -= poll.rewardTokens
                 userTokenValanceVM.userTokenBalance.reserved += poll.rewardTokens
-                await userTokenValanceVM.update()
             }
+            await userTokenValanceVM.update()
         }
     }
     
