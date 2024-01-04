@@ -32,7 +32,6 @@ struct EpisodeView: View {
     @StateObject var commentVM = CommentVM()
     @State private var isCommentsExpanded = false
     
-    
     private func handleViewCount() {
         guard let player = playerVM.player else { return }
         
@@ -77,7 +76,7 @@ struct EpisodeView: View {
                     // Show a placeholder or alternative view when player is nil.
                     Text("No Video!!")
                 }
-                
+
                 Divider()
                 DisclosureGroup(isExpanded: $isSynopsisExpanded) {
                     HStack {
@@ -133,7 +132,7 @@ struct EpisodeView: View {
                 }
             }
         }
-        //        .background(ShareSheet(items: [episode.video.absoluteString], isPresented: $showShareSheet, onShareCompletion: onShareCompletion))
+         
         .padding()
         .onAppear{
             print(".onAppear \(episode.video)")
@@ -174,7 +173,11 @@ struct EpisodeView: View {
             }
         }
     }
+    
+
 }
+
+
 
 
 

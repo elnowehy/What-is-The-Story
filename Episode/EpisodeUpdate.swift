@@ -17,6 +17,10 @@ struct EpisodeUpdate: View {
     @Environment(\.dismiss) private var dismiss
     @State private var isSaving: Bool = false
     @StateObject var pollVM = PollVM()
+    @State private var rewardPerViews: Int = 0
+    @State private var rewardExpiryDate: Date = Date()
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
     
     var body: some View {
         ZStack {
@@ -29,6 +33,15 @@ struct EpisodeUpdate: View {
                     PollUpdateView(pollVM: pollVM)
                 }
                 TextEditor(text: $episodeVM.episode.synopsis)
+                
+                Divider()
+                
+                TextField("Reward Per Views", value: $rewardPerViews, format: .number)
+                    .keyboardType(.numberPad)
+                    .padding()
+                
+                DatePicker("Reward Expiry Date", selection: $rewardExpiryDate, displayedComponents: .date)
+                    .padding()
                 
                 Divider()
                 
@@ -50,6 +63,9 @@ struct EpisodeUpdate: View {
                 }
                 Spacer()
             }
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text("Invalid Input"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            }
             .navigationBarBackButtonHidden()
             .onAppear{
                 if mode == .add {
@@ -67,6 +83,11 @@ struct EpisodeUpdate: View {
                         pollVM.setUserTokenBalanceVM(userTokenBalanceVM)
                         await pollVM.fetch()
                     }
+                }
+                
+                if mode == .update {
+                    rewardPerViews = episodeVM.episode.rewardPerViews
+                    rewardExpiryDate = episodeVM.episode.rewardExpiryDate
                 }
                 
             }
@@ -98,6 +119,9 @@ struct EpisodeUpdate: View {
                 }
             }
             
+            episodeVM.episode.rewardPerViews = rewardPerViews
+            episodeVM.episode.rewardExpiryDate = rewardExpiryDate
+            
             if episodeVM.episode.id.isEmpty {
                 episodeVM.episode.series = seriesVM.series.id
                 episodeVM.episode.userId = seriesVM.series.userId
@@ -113,6 +137,22 @@ struct EpisodeUpdate: View {
             }
             isSaving = false
         }
+    }
+    
+    private func validateInput() -> Bool {
+        // Validate rewardPerViews
+        if rewardPerViews <= 0 {
+            alertMessage = "Reward per views must be a positive number."
+            return false
+        }
+
+        // Validate rewardExpiryDate
+        if rewardExpiryDate <= Date() {
+            alertMessage = "Reward expiry date must be in the future."
+            return false
+        }
+
+        return true
     }
 }
 //

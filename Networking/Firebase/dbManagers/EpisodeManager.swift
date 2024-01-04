@@ -56,7 +56,9 @@ class EpisodeManager: ObservableObject {
             "totalRatings": self.episode.totalRatings,
             "avgRating": self.episode.avgRating,
             "releaseDate": self.episode.releaseDate,
-            "featuredScore": self.episode.featuredScore
+            "featuredScore": self.episode.featuredScore,
+            "rewardPerViews": self.episode.rewardPerViews,
+            "rewardExpiryDate": self.episode.rewardExpiryDate
         ]
         
         if updateVideo {
@@ -76,6 +78,10 @@ class EpisodeManager: ObservableObject {
         episode.numOfRatings = self.data["numOfRatings"] as? Int ?? 0
         episode.totalRatings = self.data["totalRatings"] as? Int ?? 0
         episode.avgRating = self.data["avgRating"] as? Double ?? 0.0
+        episode.rewardPerViews = self.data["rewardPerViews"] as? Int ?? 0
+        if let timestamp = self.data["rewardExpiryDate"] as? Timestamp {
+            episode.rewardExpiryDate = timestamp.dateValue()
+        }
         if let timestamp = self.data["releaseDate"] as? Timestamp {
             episode.releaseDate = timestamp.dateValue()
         }

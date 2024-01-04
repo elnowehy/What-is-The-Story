@@ -16,6 +16,7 @@ struct PlayerControlView: View {
     @State private var isBookmarked = false
     @EnvironmentObject var theme: Theme
     @EnvironmentObject var userVM: UserVM
+    @State private var showingShareSheet = false
     
     private func rewindToBeginning() {
         player.seek(to: .zero)
@@ -57,20 +58,13 @@ struct PlayerControlView: View {
         }
     }
     
-    //    private func share() {
-    //        showShareSheet = true
-    //        onShareCompletion = { completed in
-    //            if completed {
-    //                // The user shared the URL
-    //                print("URL shared")
-    //                // Add your custom logic for sharing completion here
-    //            } else {
-    //                // The user canceled the sharing process
-    //                print("URL sharing canceled")
-    //                // Add your custom logic for sharing cancellation here
-    //            }
-    //        }
-    //    }
+    // Function to generate the share link
+    private func generateShareLink() -> URL {
+        let baseLink = "https://yourapp.com/episode?ep=\(episodeVM.episode.id)"
+        let inviterCode = userVM.user.invitationCode
+        return URL(string: "\(baseLink)&inviter=\(inviterCode)")!
+
+    }
     
     var body: some View {
         HStack {
@@ -101,11 +95,20 @@ struct PlayerControlView: View {
                 }
             }
             
-            //                        Button(action: share) {
-            //                            Image(systemName: "square.and.arrow.up")
-            //                        }
+            Button(action: {
+                self.showingShareSheet = true
+            }) {
+                Image(systemName: "square.and.arrow.up")
+            }
+            .sheet(isPresented: $showingShareSheet, content: {
+                ShareSheet(items: [generateShareLink()])
+            })
+            
             Spacer()
         }
+        .sheet(isPresented: $showingShareSheet, content: {
+            ShareSheet(items: [generateShareLink()])
+        })
         .buttonStyle(ButtonBaseStyle(theme: theme))
         .background(theme.colors.tertiaryBackground)
         .task {
@@ -130,3 +133,16 @@ struct PlayerControlView: View {
 //        PlayerControlView()
 //    }
 //}
+
+struct ShareSheet: UIViewControllerRepresentable {
+    var items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+        // No update required
+    }
+}
