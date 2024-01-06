@@ -15,6 +15,7 @@ import FirebaseFunctions
 class AppDelegate: NSObject, UIApplicationDelegate {
     static var db: Firestore!
     static var storage: Storage!
+    let navigationManager = NavigationManager()
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -39,6 +40,28 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 #endif
         return true
     }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        if userActivity.activityType == NSUserActivityTypeBrowsingWeb, let incomingURL = userActivity.webpageURL {
+            // Parse the incoming URL
+            let urlComponents = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true)
+            let episodeID = urlComponents?.queryItems?.first(where: { $0.name == "ep" })?.value
+            let invterCode = urlComponents?.queryItems?.first(where:{ $0.name == "inviter" })?.value
+
+            // Set the episode ID in the Navigation Manager
+            DispatchQueue.main.async {
+                if let episodeID = episodeID {
+                    self.navigationManager.selectedEpisodeID = episodeID
+                    self.navigationManager.invitationCode = invterCode
+                } else {
+                    self.navigationManager.selectedEpisodeID = nil // Default to home page
+                }
+            }
+
+            return true
+        }
+        return false
+    }
 }
 
 @main
@@ -48,10 +71,12 @@ struct What_is_The_StoryApp: App {
     @StateObject var userVM = UserVM()
     @StateObject var themeManager = ThemeManager()
     @Environment(\.colorScheme) var colorScheme
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(appDelegate.navigationManager)
                 .environmentObject(pathRouter)
                 .environmentObject(userVM)
                 .environmentObject(themeManager.current)

@@ -59,12 +59,16 @@ struct PlayerControlView: View {
     }
     
     // Function to generate the share link
-    private func generateShareLink() -> URL {
-        let baseLink = "https://yourapp.com/episode?ep=\(episodeVM.episode.id)"
-        let inviterCode = userVM.user.invitationCode
-        return URL(string: "\(baseLink)&inviter=\(inviterCode)")!
-
+    private func generateShareLink() -> URL? {
+        let baseLink = "\(AppSettings.baseLink)/episode"
+        guard let episodeID = episodeVM.episode.id.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
+              let inviterCode = userVM.user.invitationCode.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
+            return nil
+        }
+        let shareLink = "\(baseLink)?ep=\(episodeID)&inviter=\(inviterCode)"
+        return URL(string: shareLink)
     }
+
     
     var body: some View {
         HStack {

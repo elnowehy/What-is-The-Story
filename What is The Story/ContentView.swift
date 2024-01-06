@@ -10,10 +10,15 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var theme: Theme
+    @EnvironmentObject var navigationManager: NavigationManager
     
     var body: some View {
-        HomeTabView()
-            .background(theme.colors.primaryBackground.edgesIgnoringSafeArea(.all))
+        if let episdeID = navigationManager.selectedEpisodeID {
+            EpisodeView(episode: , mode: <#T##Mode#>)
+        } else {
+            HomeTabView()
+                .background(theme.colors.primaryBackground.edgesIgnoringSafeArea(.all))
+        }
     }
 }
 

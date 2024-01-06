@@ -10,8 +10,9 @@ import Foundation
 struct AppSettings {
     static let pageSize = 20
     static let commentMax = 140
-    static let defaultURL = "https://www.w3schools.com/html/mov_bbb.mp4"
+    static let baseLink = "https://whatisthestory.tv"
     static let totalTokens: Int = 1_000_000_000
+    
 }
 
 enum SeriesListType {
