@@ -11,3 +11,4 @@ class NavigationManager: ObservableObject {
     @Published var selectedEpisodeID: String? = nil
     @Published var invitationCode: String? = nil
 }
+
