@@ -14,7 +14,7 @@ struct ContentView: View {
     
     var body: some View {
         if let episdeID = navigationManager.selectedEpisodeID {
-            EpisodeView(episode: , mode: <#T##Mode#>)
+            EpisodeViewLink(episodeID: episdeID)
         } else {
             HomeTabView()
                 .background(theme.colors.primaryBackground.edgesIgnoringSafeArea(.all))

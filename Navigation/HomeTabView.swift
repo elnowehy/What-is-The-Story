@@ -13,7 +13,6 @@ struct HomeTabView: View {
     @State private var showSignInSheet = false
     @EnvironmentObject var userVM: UserVM
     @StateObject var profileVM = ProfileVM()
-    @StateObject var playerVM = PlayerVM()
     
     enum Tab {
         case home
@@ -56,7 +55,7 @@ struct HomeTabView: View {
                 .tag(Tab.signout)
         }
         .modifier(TabViewBaseStyle(theme: theme))
-        .environmentObject(playerVM)
+        // .environmentObject(playerVM)
     }
 }
 

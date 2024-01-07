@@ -14,7 +14,7 @@ struct SignInView: View {
     @State private var password = ""
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: Theme
-    @EnvironmentObject var pathRouter: PathRouter
+    // @EnvironmentObject var pathRouter: PathRouter
     
     var body: some View {
         NavigationStack {

@@ -67,7 +67,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct What_is_The_StoryApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject var pathRouter = PathRouter()
+    // @StateObject var pathRouter = PathRouter()
+    @StateObject var playerVM = PlayerVM()
     @StateObject var userVM = UserVM()
     @StateObject var themeManager = ThemeManager()
     @Environment(\.colorScheme) var colorScheme
@@ -77,7 +78,7 @@ struct What_is_The_StoryApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(appDelegate.navigationManager)
-                .environmentObject(pathRouter)
+                .environmentObject(playerVM)
                 .environmentObject(userVM)
                 .environmentObject(themeManager.current)
                 .onAppear {

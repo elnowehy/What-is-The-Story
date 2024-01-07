@@ -173,9 +173,43 @@ struct EpisodeView: View {
             }
         }
     }
-    
-
 }
+
+struct EpisodeViewLink: View {
+    let episodeID: String
+    @StateObject var episodeVM = EpisodeVM()
+    @StateObject var seriesVM = SeriesVM()
+    @State private var episode = Episode()
+
+    var body: some View {
+        Group {
+            EpisodeView(episode: episode, mode: .view)
+                .environmentObject(episodeVM)
+                .environmentObject(seriesVM)
+        }
+        .task {
+            await populateVMs(episode: episodeID)
+        }
+    }
+
+    private func populateVMs(episode: String) async {
+        episodeVM.episodeIds[0] = episodeID
+        let episodeList = await episodeVM.fetch()
+        let episode = episodeList[0]
+        episodeVM.episode = episode
+        
+        if episode.series.isEmpty {
+            print("\(episodeID) doesn't have a series id??")
+            return
+        } else {
+            seriesVM.series.id = episode.series
+            let seriesList = await seriesVM.fetch()
+            seriesVM.series = seriesList[0]
+        }
+        
+    }
+}
+
 
 
 
