@@ -63,7 +63,7 @@ class UserManager: ObservableObject {
             "email": user.email,
             "name": user.name,
             "profileIds": user.profileIds,
-            "InvitationCode": user.invitationCode,
+            "invitationCode": user.invitationCode,
             "wallet": user.wallet,
         ]
     }

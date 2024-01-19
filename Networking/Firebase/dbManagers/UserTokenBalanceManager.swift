@@ -33,6 +33,7 @@ class UserTokenBalanceManager {
             let unclaimed = documentData["unclaimed"] as? Double ?? 0
             let reserved = documentData["reserved"] as? Double ?? 0
             let claimed = documentData["claimed"] as? Double ?? 0
+            let taxes = documentData["taxes"] as? Double ?? 0
             let gas = documentData["gas"] as? Double ?? 0
             let referenceBlock = documentData["lastProcessedBlockNumber"] as? Int ?? 0
             
@@ -42,7 +43,8 @@ class UserTokenBalanceManager {
                 unclaimed: unclaimed,
                 reserved: reserved,
                 claimed: claimed,
-                gas: gas,
+                gas: gas, 
+                taxes: taxes,
                 referenceBlock: referenceBlock)
         } else {
             // Handle the case where there's no data
@@ -61,6 +63,7 @@ class UserTokenBalanceManager {
             data["reserved"] = balance.reserved
             data["claimed"] = balance.claimed
             data["gas"] = balance.gas
+            data["taxes"] = balance.taxes
             data["referenceBlock"] = balance.referenceBlock
             try await document.updateData(data)
             

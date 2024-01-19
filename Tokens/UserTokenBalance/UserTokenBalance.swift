@@ -1,5 +1,5 @@
 //
-//  UserTokenBlance.swift
+//  UserTokenBalance.swift
 //  What is The Story
 //
 //  Created by Amr El-Nowehy on 2023-12-17.
@@ -16,5 +16,6 @@ struct UserTokenBalance {
     var claimed: Double = 0.0
     var wallet: String = ""
     var gas: Double = 0.0
+    var taxes: Double = 0.0
     var referenceBlock: Int = 0
 }

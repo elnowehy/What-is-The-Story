@@ -986,7 +986,7 @@
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = SQNNWLK4H9;
 				ENABLE_PREVIEWS = YES;
@@ -1134,7 +1134,7 @@
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = SQNNWLK4H9;
 				ENABLE_PREVIEWS = YES;
@@ -1166,7 +1166,7 @@
 				CODE_SIGN_ENTITLEMENTS = "What is The Story/What is The Story.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = SQNNWLK4H9;
 				ENABLE_PREVIEWS = YES;

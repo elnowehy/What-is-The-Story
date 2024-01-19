@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CryptoKit
 //  Manages User data through UserManager. Acts as an abstraction layer
 //  for the underlying database.
 //  UserVM.user is populated by the calling function/view, before
@@ -59,6 +60,7 @@ class UserVM: ObservableObject{
         let profileVM = ProfileVM()
         async let profileId = await profileVM.create()
         await user.profileIds.append(profileId)
+        user.invitationCode = generateInvitationCode(name: user.name, profileId: await profileId)
         userManager.user = user
         await userManager.create()
         profileVM.profile.userId = userManager.user.id
@@ -110,5 +112,23 @@ class UserVM: ObservableObject{
     func signOut() async {
         await authManager.signOut()
         user = User()
+    }
+    
+    private func generateInvitationCode(name: String, profileId: String) -> String {
+        let profile = String(profileId.prefix(4))
+        let short = String(name.prefix(2)).lowercased()
+        
+        let rawCode = profile + short
+        
+        if let data = rawCode.data(using: .utf8) {
+            let hashed = SHA256.hash(data: data)
+            // Convert the hash to a hexadecimal string
+            let hexString = hashed.compactMap { String(format: "%02x", $0) }.joined()
+            let code = String(hexString.prefix(8))
+            return code
+        } else {
+            print("Invitation code not generated")
+            return "InvitationCodeNotGenerated"
+        }
     }
 }

@@ -52,17 +52,26 @@ export const processTokenClaims = async (userId: string, amount: number): Promis
             if (!userGasBalanceDoc.exists) {
                 throw new Error('User gas balance not found');
             }
-            let userGasBalance = userGasBalanceDoc.data()?.userGasBalance;
+            let userGasBalance = userGasBalanceDoc.data()?.gas;
             let userUnclaimed = userGasBalanceDoc.data()?.uncalimed;
             let userClaimed = userGasBalanceDoc.data()?.claimed;
+            let userTaxes = userGasBalanceDoc.data()?.taxes;
             
             if(userGasBalance < estimatedGasFee) {
                 throw new functions.https.HttpsError('failed-precondition', `Not enough gas balance: ${userGasBalance} MATIC. Required: ${estimatedGasFee} MATIC`);
             }
             console.log(`userGasBalance: ${userGasBalance}, estimatedGasFee: ${estimatedGasFee}`)
             
+            // Calculate 2% tax
+            const scalingFactor = BigInt(10**18); //scaling factor for percision
+            const taxPercentage = BigInt(0.02 * 10**18); // 2%
+            const taxesScaled = transferAmount * taxPercentage / scalingFactor
+            const netAmount = transferAmount - taxesScaled;
+            const taxes = ethers.formatEther(taxesScaled)
+            console.log("taxes", taxesScaled.toString())
+            
             // Call transfer function of your smart contract
-            const tx = await contract.transfer(userWalletAddress, transferAmount);
+            const tx = await contract.transfer(userWalletAddress, netAmount);
             const receipt = await tx.wait();
             console.log("receipt: ", receipt);
             console.log("gas used", Number(receipt.gasUsed));
@@ -81,17 +90,20 @@ export const processTokenClaims = async (userId: string, amount: number): Promis
             if (!treasuryDoc.exists) {
                 throw new Error('Treasury data not found');
             }
-            let treasuryUnclaimed = treasuryDoc.data()?.uncailmed
+            let treasuryUnclaimed = treasuryDoc.data()?.unclaimed
+            let treasuryTaxes = treasuryDoc.data()?.taxes
             
             // await db.collection('Tokens_Balance').doc(userId).update({ userGasBalance });
             transaction.update(userGasBalanceRef, {
-                userGasBalance: userGasBalance,
+                gas: userGasBalance,
                 claimed: userClaimed + amount,
                 uncalimed: userUnclaimed - amount,
+                taxes: userTaxes + parseFloat(taxes),
             })
             
             transaction.update(treasuryRef, {
-                unClaimed: treasuryUnclaimed - amount
+                unclaimed: treasuryUnclaimed - amount,
+                taxes: treasuryTaxes + parseFloat(taxes)
             })
             
             console.log(`Tokens transferred to ${userWalletAddress}: ${amount}`);

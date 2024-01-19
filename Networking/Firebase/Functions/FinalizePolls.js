@@ -32,20 +32,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.finalizePolls = void 0;
+exports.triggerFinalizePolls = exports.runFinalizePolls = void 0;
 const functions = __importStar(require("firebase-functions"));
-const admin = __importStar(require("firebase-admin"));
 const index_1 = require("./index");
-exports.finalizePolls = functions.pubsub.schedule('every 24 hours').onRun((context) => __awaiter(void 0, void 0, void 0, function* () {
-    const polls = yield fetchPollsToFinalize();
-    for (const poll of polls) {
-        yield processPoll(poll);
-    }
-}));
+function runFinalizePolls() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const polls = yield fetchPollsToFinalize();
+        for (const poll of polls) {
+            yield processPoll(poll);
+        }
+    });
+}
+exports.runFinalizePolls = runFinalizePolls;
 // And so on for other functions...
 function fetchPollsToFinalize() {
     return __awaiter(this, void 0, void 0, function* () {
-        const now = admin.firestore.Timestamp.now();
+        const now = new Date();
         const pollsSnapshot = yield index_1.db.collection('Poll')
             .where('closingDate', '<=', now)
             .get();
@@ -54,6 +56,7 @@ function fetchPollsToFinalize() {
             const pollData = doc.data();
             if ('rewardTokens' in pollData) {
                 polls.push(Object.assign(Object.assign({}, pollData), { id: doc.id }));
+                console.log(`id: ${doc.id}`);
             }
             else {
                 console.log(`Poll with ID ${doc.id} is missing the 'rewardToken' property`);
@@ -70,6 +73,7 @@ function processPoll(poll) {
         if (winner) {
             // Assuming 'winner' contains the userId of the winning user
             const winnerUserId = winner.userId;
+            console.log(`winner: ${winnerUserId}`);
             yield allocateTokenRewards(winnerUserId, poll.id, poll.rewardTokens);
             // Optional: Notify participants
             // Update poll status to finalized
@@ -91,6 +95,7 @@ function fetchAnswersForPoll(pollId) {
                 userId: answerData.userId,
                 timestamp: answerData.timestamp
             });
+            console.log(`answers: ${doc.id}`);
         });
         return answers;
     });
@@ -109,6 +114,7 @@ function countVotesForAnswers(answers) {
                 userId: answer.userId,
                 voteCount: votesSnapshot.size,
             });
+            console.log(`votes: ${answer.id}`);
         }
         return answerVotes;
     });
@@ -137,10 +143,10 @@ function allocateTokenRewards(winnerUserId, pollId, rewardTokens) {
             return;
         }
         // Decrease 'reserved' tokens for the creator
-        const creatorTokenBalanceRef = index_1.db.collection('UserTokenBalances').doc(creatorUserId);
+        const creatorTokenBalanceRef = index_1.db.collection('Tokens_Balance').doc(creatorUserId);
         yield updateTokenBalance(creatorTokenBalanceRef, 'reserved', -rewardTokens);
         // Handle the winner's token balance
-        const winnerTokenBalanceRef = index_1.db.collection('UserTokenBalances').doc(winnerUserId);
+        const winnerTokenBalanceRef = index_1.db.collection('Tokens_Balance').doc(winnerUserId);
         const winnerTokenBalanceDoc = yield winnerTokenBalanceRef.get();
         if (!winnerTokenBalanceDoc.exists) {
             // Create a new token balance for the winner if it doesn't exist
@@ -187,4 +193,14 @@ function updateTokenBalance(tokenBalanceRef, field, tokenChange) {
         }
     });
 }
-// Additional function to update the poll's status to finalized
+// Trigger for testing
+exports.triggerFinalizePolls = functions.https.onRequest((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield runFinalizePolls();
+        res.send('Finalize polls function triggered successfully.');
+    }
+    catch (error) {
+        console.error('Error triggering finalize polls:', error);
+        res.status(500).send('An error occurred while triggering finalize polls.');
+    }
+}));

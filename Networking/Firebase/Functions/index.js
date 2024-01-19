@@ -35,15 +35,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.issueTokenForViewsFunction = exports.scheduledMintingFunction = exports.db = void 0;
+exports.finalizePollsFunction = exports.issueTokenForViewsFunction = exports.scheduledMintingFunction = exports.db = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const functions = __importStar(require("firebase-functions"));
 const admin = __importStar(require("firebase-admin"));
 const mintingFunctions_1 = require("./mintingFunctions");
 const issueTokenForViews_1 = require("./issueTokenForViews");
-const updateGasBalance_1 = require("./updateGasBalance");
+const updateUserBalances_1 = require("./updateUserBalances");
 const processTokenClaims_1 = require("./processTokenClaims");
+const FinalizePolls_1 = require("./FinalizePolls");
 admin.initializeApp({
     projectId: 'fir-test-49220'
 });
@@ -61,12 +62,17 @@ exports.scheduledMintingFunction = functions.pubsub
 exports.issueTokenForViewsFunction = functions.firestore
     .document('ViewRating/{viewRatingId}')
     .onCreate(issueTokenForViews_1.issueTokenForViews);
-exports.checkAndUpdateUserGasBalance = functions.https.onCall((data, context) => {
+exports.checkAndUpdateUserBalances = functions.https.onCall((data, context) => {
     const { userId, userWalletAddress } = data;
-    return (0, updateGasBalance_1.updateUserGasBalance)(userId, userWalletAddress);
+    return (0, updateUserBalances_1.updateUserBalances)(userId, userWalletAddress);
 });
 exports.handleTokenClaims = functions.https.onCall((data, context) => {
     // Extract required parameters from `data` or `context`
     const { userId, amount } = data;
     return (0, processTokenClaims_1.processTokenClaims)(userId, amount);
 });
+exports.finalizePollsFunction = functions.pubsub.schedule('every 24 hours').onRun((context) => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, FinalizePolls_1.runFinalizePolls)();
+}));
+// HTTP-triggered function for testing
+exports.triggerFinalizePolls = FinalizePolls_1.triggerFinalizePolls;
