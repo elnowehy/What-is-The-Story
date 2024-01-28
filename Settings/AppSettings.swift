@@ -23,15 +23,24 @@ enum SeriesListType {
 }
 
 enum ContentType: String, CaseIterable, Codable {
-    case episode
-    case series
-    case profile
+    case episode = "Episode"
+    case series = "Series"
+    case profile = "Profile"
+    case answer = "Answer"
+    case comment = "Comment"
 }
 
 enum Mode {
     case update
     case add
     case view
+}
+
+enum ReportReason: String, CaseIterable, Codable {
+    case placeHolder = "Select a Reason"
+    case childAbuse = "Child Abuse"
+    case explicitMaterial = "Explicit Material"
+    case legalIssue = "Legal Issue"
 }
 
 enum FetchResult {

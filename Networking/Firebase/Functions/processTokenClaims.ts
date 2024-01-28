@@ -53,7 +53,7 @@ export const processTokenClaims = async (userId: string, amount: number): Promis
                 throw new Error('User gas balance not found');
             }
             let userGasBalance = userGasBalanceDoc.data()?.gas;
-            let userUnclaimed = userGasBalanceDoc.data()?.uncalimed;
+            let userUnclaimed = userGasBalanceDoc.data()?.unclaimed;
             let userClaimed = userGasBalanceDoc.data()?.claimed;
             let userTaxes = userGasBalanceDoc.data()?.taxes;
             

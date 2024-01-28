@@ -19,5 +19,6 @@ struct Comment: Identifiable, Codable{
     var isDeleted: Bool = false
     var timestamp: Date = Date()
     var editedTimestamp: Date = Date()
+    var isHidden: Bool = false
 }
 

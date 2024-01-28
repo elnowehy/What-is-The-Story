@@ -97,6 +97,10 @@
 		C5A6F1DF2A26AE900061A479 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F1DE2A26AE900061A479 /* Tag.swift */; };
 		C5A6F1E12A2781AC0061A479 /* TagVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F1E02A2781AC0061A479 /* TagVM.swift */; };
 		C5A6F1E32A27A3910061A479 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F1E22A27A3910061A479 /* TagManager.swift */; };
+		C5A969E12B6173E200278669 /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A969E02B6173E200278669 /* Report.swift */; };
+		C5A969E32B61D83C00278669 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A969E22B61D83C00278669 /* ReportView.swift */; };
+		C5A969E52B61D8BD00278669 /* ReportVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A969E42B61D8BD00278669 /* ReportVM.swift */; };
+		C5A969E72B64101A00278669 /* ReportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A969E62B64101A00278669 /* ReportManager.swift */; };
 		C5AFDC3C29BE7E7400B2F6E2 /* FirebaseUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5AFDC3B29BE7E7400B2F6E2 /* FirebaseUtils.swift */; };
 		C5AFDC3E29BE850200B2F6E2 /* Image2Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5AFDC3D29BE850200B2F6E2 /* Image2Data.swift */; };
 		C5B355A52A3B4257003CFAAD /* DateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B355A42A3B4257003CFAAD /* DateFormat.swift */; };
@@ -215,6 +219,10 @@
 		C5A6F1DE2A26AE900061A479 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		C5A6F1E02A2781AC0061A479 /* TagVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagVM.swift; sourceTree = "<group>"; };
 		C5A6F1E22A27A3910061A479 /* TagManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManager.swift; sourceTree = "<group>"; };
+		C5A969E02B6173E200278669 /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
+		C5A969E22B61D83C00278669 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
+		C5A969E42B61D8BD00278669 /* ReportVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVM.swift; sourceTree = "<group>"; };
+		C5A969E62B64101A00278669 /* ReportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportManager.swift; sourceTree = "<group>"; };
 		C5AFDC3B29BE7E7400B2F6E2 /* FirebaseUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUtils.swift; sourceTree = "<group>"; };
 		C5AFDC3D29BE850200B2F6E2 /* Image2Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image2Data.swift; sourceTree = "<group>"; };
 		C5B24B382B3A20590050A2F6 /* updateUserBalances.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = updateUserBalances.ts; sourceTree = "<group>"; };
@@ -451,6 +459,7 @@
 		C59404AC296DC575003F0FB7 = {
 			isa = PBXGroup;
 			children = (
+				C5A969DF2B6173B900278669 /* Reporting */,
 				C5C695672A5DA0E700A311AC /* Tokens */,
 				C5C695662A5DA0D000A311AC /* Comments */,
 				C56B2E4F29F969B800EBF321 /* ViewRating */,
@@ -569,6 +578,7 @@
 				C5C6956D2A5F41FC00A311AC /* CommentManager.swift */,
 				C51DD10E2A6F1CE800179B23 /* TokenManager.swift */,
 				C58D56F42B2F99220006195A /* UserTokenBalanceManager.swift */,
+				C5A969E62B64101A00278669 /* ReportManager.swift */,
 			);
 			path = dbManagers;
 			sourceTree = "<group>";
@@ -590,6 +600,16 @@
 				C55E7CA82A2E1B8200CE34FC /* TagViews.swift */,
 			);
 			path = Tag;
+			sourceTree = "<group>";
+		};
+		C5A969DF2B6173B900278669 /* Reporting */ = {
+			isa = PBXGroup;
+			children = (
+				C5A969E02B6173E200278669 /* Report.swift */,
+				C5A969E22B61D83C00278669 /* ReportView.swift */,
+				C5A969E42B61D8BD00278669 /* ReportVM.swift */,
+			);
+			path = Reporting;
 			sourceTree = "<group>";
 		};
 		C5B7577F297F125C00186852 /* Authentication */ = {
@@ -820,6 +840,7 @@
 				C59404BB296DC575003F0FB7 /* ContentView.swift in Sources */,
 				C5A6F1DB2A2509D10061A479 /* PlayerControlView.swift in Sources */,
 				C51EA8922A54674E00A77F4A /* Answer.swift in Sources */,
+				C5A969E52B61D8BD00278669 /* ReportVM.swift in Sources */,
 				C5C6956C2A5EE72900A311AC /* CommentVM.swift in Sources */,
 				C58F2397299D55A5009DA4BF /* SettingsView.swift in Sources */,
 				C5E2140F29F05E5400292118 /* CategoryManager.swift in Sources */,
@@ -845,6 +866,7 @@
 				C51EA8A02A54D73500A77F4A /* VoteVM.swift in Sources */,
 				C5B6FE7A2B49F13D007C38A4 /* NavigationManager.swift in Sources */,
 				C5C6956E2A5F41FC00A311AC /* CommentManager.swift in Sources */,
+				C5A969E12B6173E200278669 /* Report.swift in Sources */,
 				C59404E9296DDC8D003F0FB7 /* UserManager.swift in Sources */,
 				C51FC401299AF02500D7D0C6 /* HomeTabView.swift in Sources */,
 				C51EA8962A547F3E00A77F4A /* PollVM.swift in Sources */,
@@ -871,6 +893,7 @@
 				C55233B429FC2AFD009C3CEE /* ViewRatingsManager.swift in Sources */,
 				C56804682A09997C00094AC3 /* RatingStartsView.swift in Sources */,
 				C58D56F72B2FA10D0006195A /* UserTokenDashboardView.swift in Sources */,
+				C5A969E32B61D83C00278669 /* ReportView.swift in Sources */,
 				C5660F322992BB870079CBF1 /* ProfileVM.swift in Sources */,
 				C5E9FBBF2975CF6A00121C45 /* Encryption.swift in Sources */,
 				C5E2141129F0649A00292118 /* CategoryView.swift in Sources */,
@@ -886,6 +909,7 @@
 				C5A6F1E12A2781AC0061A479 /* TagVM.swift in Sources */,
 				C56E0E072A20F79400A3DE56 /* Theme.swift in Sources */,
 				C51EA89A2A5496ED00A77F4A /* PollUpdateView.swift in Sources */,
+				C5A969E72B64101A00278669 /* ReportManager.swift in Sources */,
 				C5E9FBEE297A069800121C45 /* UserView.swift in Sources */,
 				C55233B029F99562009C3CEE /* LandingPageView.swift in Sources */,
 				C51FC403299AF03B00D7D0C6 /* AccountMenu.swift in Sources */,

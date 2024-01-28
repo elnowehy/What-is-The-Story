@@ -140,7 +140,7 @@ struct SeriesView: View {
             .frame(maxWidth: .infinity, alignment: .top)
             
             List(episodeVM.episodeList) { episode in
-                NavigationLink(destination: EpisodeView(episode: episode, mode: .update)
+                NavigationLink(destination: EpisodeView(episode: episode, mode: mode)
                     .environmentObject(episodeVM)
                     .environmentObject(seriesVM)
                 ) {

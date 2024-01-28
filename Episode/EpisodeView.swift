@@ -30,6 +30,8 @@ struct EpisodeView: View {
     @State private var isSynopsisExpanded = false
     @State private var isPollExpanded = false
     @StateObject var commentVM = CommentVM()
+    @StateObject var reportVM = ReportVM()
+    @State private var showReport = false
     @State private var isCommentsExpanded = false
     
     private func handleViewCount() {
@@ -59,16 +61,21 @@ struct EpisodeView: View {
                 
                 Text(episodeVM.episode.title)
                 
-                // PlayerView(player: $player)
                 if let player = playerVM.player {
                     PlayerView(player: .constant(player))
                 } else {
                     // Show a placeholder or alternative view when player is nil.
                     Text("No Video!!")
                 }
-                
-                ViewRatingView(episode: $episode, showRating: $showRating)
-                    .environmentObject(viewRatingVM)
+                HStack {
+                    ViewRatingView(episode: $episode, showRating: $showRating)
+                        .environmentObject(viewRatingVM)
+                    Spacer()
+                    
+                    if showReport {
+                        ReportView(reportVM: reportVM)
+                    }
+                }
                 
                 if let player = playerVM.player {
                     PlayerControlView(episodeVM: episodeVM, player: .constant(player))
@@ -76,7 +83,8 @@ struct EpisodeView: View {
                     // Show a placeholder or alternative view when player is nil.
                     Text("No Video!!")
                 }
-
+                
+                
                 Divider()
                 DisclosureGroup(isExpanded: $isSynopsisExpanded) {
                     HStack {
@@ -153,6 +161,13 @@ struct EpisodeView: View {
                     pollVM.poll.id = episodeVM.episode.id
                     await pollVM.fetch()
                 }
+            }
+            
+            if mode == .view && !userVM.user.id.isEmpty {
+                reportVM.report.userId = userVM.user.id
+                reportVM.report.contentId = episode.id
+                reportVM.report.contentType = .episode
+                showReport = true
             }
         }
         

@@ -25,6 +25,7 @@ struct Series: Identifiable, Codable, Equatable {
     var totalRatings = 0
     var numberOfRatings = 0
     var totalViews = 0
+    var isHidden: Bool = false
 
     var averageRating: Double {
         return numberOfRatings == 0 ? 0 : Double(totalRatings) / Double(numberOfRatings)

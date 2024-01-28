@@ -14,4 +14,5 @@ struct Answer: Identifiable {
     var userId: String = ""
     var text: String = ""
     var timestamp: Date = Date()
+    var isHidden: Bool = false
 }

@@ -19,6 +19,7 @@ struct Profile {
     var imgQlty = 0.2
     var seriesIds = [String]()
     var timestamp = Date()
+    var isHidden: Bool = false
 }
 
 struct ProfileInfo {

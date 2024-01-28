@@ -16,4 +16,5 @@ struct Poll: Identifiable {
     var answerIds: [String] = [] // "pollId_userId"
     var rewardTokens: Double = 0.0
     var isFinalized: Bool = false
+    var isHidden: Bool = false
 }

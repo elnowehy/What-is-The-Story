@@ -27,6 +27,7 @@ struct Episode: Identifiable {
     var nftTokenId: String? = nil
     var rewardPerViews: Int = 0
     var rewardExpiryDate: Date = Date()
+    var isHidden: Bool = false
     
     var featuredScore: Double {
         let k = 1.0
