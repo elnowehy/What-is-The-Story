@@ -11,13 +11,19 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var theme: Theme
     @EnvironmentObject var navigationManager: NavigationManager
+    @EnvironmentObject var errorHandlingVM: ErrorHandlingVM
     
     var body: some View {
-        if let episdeID = navigationManager.selectedEpisodeID {
-            EpisodeViewLink(episodeID: episdeID)
-        } else {
-            HomeTabView()
-                .background(theme.colors.primaryBackground.edgesIgnoringSafeArea(.all))
+        ZStack {
+            if let episdeID = navigationManager.selectedEpisodeID {
+                EpisodeViewLink(episodeID: episdeID)
+            } else {
+                HomeTabView()
+                    .background(theme.colors.primaryBackground.edgesIgnoringSafeArea(.all))
+            }
+            
+            ErrorView(errorHandlingVM: errorHandlingVM)
+                .zIndex(1.0)
         }
     }
 }

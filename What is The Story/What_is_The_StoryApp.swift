@@ -71,6 +71,7 @@ struct What_is_The_StoryApp: App {
     @StateObject var playerVM = PlayerVM()
     @StateObject var userVM = UserVM()
     @StateObject var themeManager = ThemeManager()
+    @StateObject var errorHandling = ErrorHandlingVM()
     @Environment(\.colorScheme) var colorScheme
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
@@ -80,6 +81,7 @@ struct What_is_The_StoryApp: App {
                 .environmentObject(appDelegate.navigationManager)
                 .environmentObject(playerVM)
                 .environmentObject(userVM)
+                .environmentObject(errorHandling)
                 .environmentObject(themeManager.current)
                 .onAppear {
                     themeManager.updateTheme(for: colorScheme)

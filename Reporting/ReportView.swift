@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ReportView: View {
     @StateObject var reportVM: ReportVM
+    @EnvironmentObject var errorHandlingVM: ErrorHandlingVM
 
     var body: some View {
         VStack {
@@ -38,6 +39,12 @@ struct ReportView: View {
         .task {
             reportVM.report.id = "\(reportVM.report.contentId)_\(reportVM.report.userId)"
             await reportVM.fetch()
+        }
+        .onReceive(reportVM.$error) { error in
+            if let error = error {
+                errorHandlingVM.handleError(error)
+                reportVM.error = nil  // Reset the error to prevent repeated handling
+            }
         }
     }
 

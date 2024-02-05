@@ -11,21 +11,27 @@ import SwiftUI
 class ReportVM: ObservableObject {
     @Published var report = Report()
     @Published var isFlagged: Bool = false
+    @Published var error: Error?
     private var reportManager = ReportManager()
+
 
     @MainActor
     func fetch() async {
         reportManager.report = report
         let result = await reportManager.fetch()
+
         switch result {
         case .success:
             report = reportManager.report
             isFlagged = true // Since a report was successfully fetched
         case .notFound:
             isFlagged = false // No report exists for this content and user
+        case .otherError(let error):
+            self.error = error
         default:
-            print("Unable to fetch report")
+            print("ReportVM.fetch(): not sure how I got here")
         }
+        
     }
 
 

@@ -96,7 +96,17 @@ class ReportManager: ObservableObject {
                 return .success
             } else {
                 // Set report to a default state indicating no existing report
-                self.report = Report(id: "", userId: report.userId, contentId: report.contentId, contentType: report.contentType, reason: .placeHolder, timestamp: Date(), reviewed: false, blocked: false, reference: "")
+                self.report = Report(
+                    id: "",
+                    userId: report.userId,
+                    contentId: report.contentId,
+                    contentType: report.contentType,
+                    reason: .placeHolder,
+                    timestamp: Date(),
+                    reviewed: false,
+                    blocked: false,
+                    reference: ""
+                )
                 return .notFound
             }
         } catch {
