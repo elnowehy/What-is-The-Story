@@ -42,40 +42,39 @@ final class AuthManager: ObservableObject {
         }
     }
     
-    func signUp (emailAddress: String, password: String) async -> String {
-        var userId: String = ""
+    func signUp (emailAddress: String, password: String) async -> Result<String, AppError> {
         do {
             let result = try await Auth.auth().createUser(withEmail: emailAddress, password: password)
-            let user = result.user
             self.isLoggedIn = true
-            userId  = user.uid
+            return .success(result.user.uid)
         }
         catch {
-            print("an error occured: \(error.localizedDescription)")
+            let appError = AppError.fromFirebaseError(error)
+            return .failure(appError)
         }
-        return userId
     }
     
-    func signIn (emailAddress: String, password: String) async -> String {
-        var userId: String = ""
+    func signIn (emailAddress: String, password: String) async -> Result<String, AppError> {
         do {
             let result = try await Auth.auth().signIn(withEmail: emailAddress, password: password)
-            userId = result.user.uid
             self.isLoggedIn = true
+            return .success(result.user.uid)
         }
         catch {
-            print("an error occured: \(error.localizedDescription)")
+            let appError = AppError.fromFirebaseError(error)
+            return .failure(appError)
         }
-        return userId
     }
     
     @MainActor
-    func signOut() async {
+    func signOut() async -> Result<Void, AppError> {
         do {
             try Auth.auth().signOut()
+            self.isLoggedIn = false
+            return .success(())
         } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
+            let appError = AppError.fromFirebaseError(signOutError)
+            return .failure(appError)
         }
-        self.isLoggedIn = false
     }
 }

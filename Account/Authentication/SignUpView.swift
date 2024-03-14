@@ -60,7 +60,8 @@ struct SignUpView: View {
                             if(!user.id.isEmpty) {
                                 userVM.user = user
                                 await userVM.create()
-                                await user.id = userVM.signIn(email: user.email, password: password)
+                                let userId = await userVM.signIn(email: userVM.user.email, password: password)
+                                userVM.user.id = userId
                                 showLogIn = false
                             } else {
                                 fatalError("we have a problem")

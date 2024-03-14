@@ -46,6 +46,5 @@ enum ReportReason: String, CaseIterable, Codable {
 enum FetchResult {
     case success
     case notFound
-    case networkError(Error)
-    case otherError(Error)
+    case error(AppError)
 }

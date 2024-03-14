@@ -10,6 +10,12 @@ import Foundation
 class ErrorHandlingVM: ObservableObject, ErrorHandling {
     @Published var showError: Bool = false
     @Published var errorMessage: String = ""
+    // private var crashlyricsManager = CrashlyticsManager()
+    private var errorReporter: ErrorReporting
+    
+    init(errorReporter: ErrorReporting) {
+        self.errorReporter = errorReporter
+    }
 
     func handleError(_ error: Error) {
         // Log the error
@@ -30,10 +36,27 @@ class ErrorHandlingVM: ObservableObject, ErrorHandling {
     func logError(_ error: Error) {
         // Implement the logging logic here, e.g., print to console, send to Crashlytics
         print(error.localizedDescription)
+        errorReporter.logError(error)
     }
     
     func UIErrorMessage(for error: Error) -> String {
-        // Translate the error into a user-friendly message
-        return "Something went wrong. Please try again."
+        switch error {
+        case let error as AppError:
+            switch error {
+            case .network(let errorCode):
+                // Handle network error codes and return specific messages
+                return "Network Error: \(errorCode)"
+            case .database(let errorCode):
+                // Handle database error codes and return specific messages
+                return "Database Error: \(errorCode)"
+            case .authentication(let errorCode):
+                // Handle authentication error codes and return specific messages
+                return "Authentication Error: \(errorCode)"
+            case .unknown:
+                return "An unknown error occurred."
+            }
+        default:
+            return "An unexpected error occurred."
+        }
     }
 }

@@ -33,6 +33,7 @@
 		C55233B229FC245E009C3CEE /* ViewRatingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55233B129FC245E009C3CEE /* ViewRatingVM.swift */; };
 		C55233B429FC2AFD009C3CEE /* ViewRatingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55233B329FC2AFD009C3CEE /* ViewRatingsManager.swift */; };
 		C552CBD22B711C1000F158F9 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C552CBD12B711C1000F158F9 /* ErrorView.swift */; };
+		C552CBD42B71223900F158F9 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = C552CBD32B71223900F158F9 /* FirebaseCrashlytics */; };
 		C55E7CA92A2E1B8200CE34FC /* TagViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55E7CA82A2E1B8200CE34FC /* TagViews.swift */; };
 		C55E7CAB2A3110C200CE34FC /* SeriesNavigationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55E7CAA2A3110C200CE34FC /* SeriesNavigationViews.swift */; };
 		C56004EA29888E8D0044A9AB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */; };
@@ -114,6 +115,7 @@
 		C5C6956E2A5F41FC00A311AC /* CommentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6956D2A5F41FC00A311AC /* CommentManager.swift */; };
 		C5CD5A0B2A43517E009A3BDA /* FireBasePagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5CD5A0A2A43517E009A3BDA /* FireBasePagination.swift */; };
 		C5D3E95D2B210DC500EAEC9C /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = C5D3E95C2B210DC500EAEC9C /* FirebaseFunctions */; };
+		C5D609832B8EB94B00C56131 /* FirebaseErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D609822B8EB94B00C56131 /* FirebaseErrors.swift */; };
 		C5E00C172A0E7C3C00E37B0D /* RandomString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E00C162A0E7C3C00E37B0D /* RandomString.swift */; };
 		C5E00C192A0E814600E37B0D /* ViewsHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E00C182A0E814600E37B0D /* ViewsHistoryView.swift */; };
 		C5E00C1B2A0EC0B500E37B0D /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E00C1A2A0EC0B500E37B0D /* Pagination.swift */; };
@@ -238,6 +240,7 @@
 		C5C6956D2A5F41FC00A311AC /* CommentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentManager.swift; sourceTree = "<group>"; };
 		C5C765C32B0EAE5100AB3995 /* processTokenClaims.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = processTokenClaims.ts; sourceTree = "<group>"; };
 		C5CD5A0A2A43517E009A3BDA /* FireBasePagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireBasePagination.swift; sourceTree = "<group>"; };
+		C5D609822B8EB94B00C56131 /* FirebaseErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseErrors.swift; sourceTree = "<group>"; };
 		C5E00C162A0E7C3C00E37B0D /* RandomString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomString.swift; sourceTree = "<group>"; };
 		C5E00C182A0E814600E37B0D /* ViewsHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewsHistoryView.swift; sourceTree = "<group>"; };
 		C5E00C1A2A0EC0B500E37B0D /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
@@ -273,6 +276,7 @@
 				C59404D8296DCA88003F0FB7 /* FirebaseAnalytics in Frameworks */,
 				C5A31656298B0DAA00D98972 /* FirebaseStorage in Frameworks */,
 				C59404E0296DCA88003F0FB7 /* FirebaseFirestore in Frameworks */,
+				C552CBD42B71223900F158F9 /* FirebaseCrashlytics in Frameworks */,
 				C5D3E95D2B210DC500EAEC9C /* FirebaseFunctions in Frameworks */,
 				C59404DA296DCA88003F0FB7 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 			);
@@ -532,11 +536,11 @@
 		C59404C9296DC637003F0FB7 /* Firebase */ = {
 			isa = PBXGroup;
 			children = (
+				C5D609812B8EB89B00C56131 /* Utilities */,
 				C56EAC932ACDE63500136B6F /* Functions */,
 				C5CD5A092A435165009A3BDA /* Abstractions */,
 				C59E4E6029D2527600D9577E /* dbManagers */,
 				C59404F0296E3FEF003F0FB7 /* Authentication */,
-				C5AFDC3B29BE7E7400B2F6E2 /* FirebaseUtils.swift */,
 			);
 			path = Firebase;
 			sourceTree = "<group>";
@@ -691,6 +695,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		C5D609812B8EB89B00C56131 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				C5AFDC3B29BE7E7400B2F6E2 /* FirebaseUtils.swift */,
+				C5D609822B8EB94B00C56131 /* FirebaseErrors.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		C5E2140829F055B300292118 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -782,6 +795,7 @@
 				C51FC3FA2996B2FE00D7D0C6 /* Algorithms */,
 				C51EA88A2A4F2FB300A77F4A /* AdvancedList */,
 				C5D3E95C2B210DC500EAEC9C /* FirebaseFunctions */,
+				C552CBD32B71223900F158F9 /* FirebaseCrashlytics */,
 			);
 			productName = "What is The Story";
 			productReference = C59404B5296DC575003F0FB7 /* What is The Story.app */;
@@ -795,7 +809,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1520;
 				TargetAttributes = {
 					C59404B4296DC575003F0FB7 = {
 						CreatedOnToolsVersion = 14.2;
@@ -910,6 +924,7 @@
 				C59404CD296DC6DE003F0FB7 /* User.swift in Sources */,
 				C58D56F32B2F5B340006195A /* UserTokenBalanceView.swift in Sources */,
 				C55233B429FC2AFD009C3CEE /* ViewRatingsManager.swift in Sources */,
+				C5D609832B8EB94B00C56131 /* FirebaseErrors.swift in Sources */,
 				C56804682A09997C00094AC3 /* RatingStartsView.swift in Sources */,
 				C58D56F72B2FA10D0006195A /* UserTokenDashboardView.swift in Sources */,
 				C5A969E32B61D83C00278669 /* ReportView.swift in Sources */,
@@ -963,6 +978,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1045,6 +1061,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				"OTHER_SWIFT_FLAGS[arch=*]" = "-D DISABLE_EMULATORS";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.elnowehy.wits.What-is-The-Story";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1058,6 +1075,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1119,6 +1137,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1179,6 +1198,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"What is The Story/Preview Content\"";
 				DEVELOPMENT_TEAM = SQNNWLK4H9;
 				ENABLE_PREVIEWS = YES;
@@ -1296,6 +1316,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C51FC3F92996B2FE00D7D0C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
 			productName = Algorithms;
+		};
+		C552CBD32B71223900F158F9 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C59404D6296DCA88003F0FB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 		C56004E929888E8D0044A9AB /* FirebaseFirestoreSwift */ = {
 			isa = XCSwiftPackageProductDependency;

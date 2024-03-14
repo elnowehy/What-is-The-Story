@@ -24,10 +24,9 @@ class ReportManager: ObservableObject {
         self.data = [:]
     }
     
-    func setRef() {
+    func setRef() throws {
         guard !report.id.isEmpty else {
-            print("Error: report id can't be empty")
-            return
+            throw AppError.database(.invalidID)
         }
         
         self.ref = self.db.collection("Reports").document(report.id)
@@ -74,20 +73,23 @@ class ReportManager: ObservableObject {
     }
     
     @MainActor
-    func add() async {
-        setRef()
-        populateData()
+    func add() async -> Result<Void, AppError> {
         do {
+            try setRef()
+            populateData()
             try await ref!.setData(self.data)
+            return .success(())
+        } catch let error as AppError {
+            return .failure(error)
         } catch {
-            print(error.localizedDescription)
+            return .failure(AppError.unknown)
         }
     }
     
     @MainActor
     func fetch() async -> FetchResult {
-        setRef()
         do {
+            try setRef()
             let document = try await ref!.getDocument()
             if document.exists {
                 let data = document.data()
@@ -109,18 +111,23 @@ class ReportManager: ObservableObject {
                 )
                 return .notFound
             }
+        } catch let error as AppError {
+            return .error(error)
         } catch {
-            return .otherError(error)
+            return .error(AppError.unknown)
         }
     }
 
     
-    func delete() async {
-        setRef()
+    func delete() async -> Result<Void, AppError> {
         do {
+            try setRef()
             try await ref!.delete()
+            return .success(())
+        } catch let error as AppError {
+            return .failure(error)
         } catch {
-            print(error.localizedDescription)
+            return .failure(AppError.unknown)
         }
     }
     

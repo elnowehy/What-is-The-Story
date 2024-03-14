@@ -38,9 +38,13 @@ struct SignInView: View {
                 HStack {
                     Button(action: {
                         Task {
-                            await userVM.user.id = userVM.signIn(email: userVM.user.email, password: password)
-                            showLogIn = false
-                            dismiss()
+                            if let userId = await userVM.signIn(email: userVM.user.email, password: password) {
+                                userVM.user.id = userId
+                                showLogIn = false
+                                dismiss()
+                            } else {
+                                // Handle error or notify the user that sign-in failed
+                            }
                         }
                     })
                     {

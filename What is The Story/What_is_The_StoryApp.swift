@@ -71,7 +71,7 @@ struct What_is_The_StoryApp: App {
     @StateObject var playerVM = PlayerVM()
     @StateObject var userVM = UserVM()
     @StateObject var themeManager = ThemeManager()
-    @StateObject var errorHandling = ErrorHandlingVM()
+    @StateObject var errorHandling = ErrorHandlingVM(errorReporter: CrashlyticsManager())
     @Environment(\.colorScheme) var colorScheme
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     

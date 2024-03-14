@@ -14,6 +14,7 @@ import CryptoKit
 class UserVM: ObservableObject{
     @Published var profile = Profile()
     @Published var user = User()
+    @Published var error: Error?
     private var userManager = UserManager()
     private var profileManager = ProfileManager()
     private var authManager = AuthManager()
@@ -96,22 +97,43 @@ class UserVM: ObservableObject{
     
     @MainActor
     func signUp(email: String, password: String) async -> String {
-        user.id = await authManager.signUp(emailAddress: email, password: password)
-        await updateUserData()
-        return user.id
+        let result = await authManager.signUp(emailAddress: email, password: password)
+        
+        switch result {
+        case .success(user.id):
+            await updateUserData()
+            return user.id
+        default:
+            self.error = error
+            return ""
+        }
     }
     
     @MainActor
     func signIn(email: String, password: String) async -> String {
-        user.id = await authManager.signIn(emailAddress: email, password: password)
-        await updateUserData()
-        return user.id
+        let result = await authManager.signIn(emailAddress: email, password: password)
+        
+        switch result {
+        case .success(user.id):
+            await updateUserData()
+            return user.id
+        default:
+            self.error = error
+            return ""
+        }
     }
     
     @MainActor
     func signOut() async {
-        await authManager.signOut()
-        user = User()
+        let result = await authManager.signOut()
+        
+        switch result {
+        case .success(()):
+            user = User()
+        default:
+            self.error = error
+        }
+
     }
     
     private func generateInvitationCode(name: String, profileId: String) -> String {

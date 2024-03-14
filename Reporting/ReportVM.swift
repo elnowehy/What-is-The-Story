@@ -26,10 +26,8 @@ class ReportVM: ObservableObject {
             isFlagged = true // Since a report was successfully fetched
         case .notFound:
             isFlagged = false // No report exists for this content and user
-        case .otherError(let error):
-            self.error = error
         default:
-            print("ReportVM.fetch(): not sure how I got here")
+            self.error = error
         }
         
     }
@@ -38,13 +36,29 @@ class ReportVM: ObservableObject {
     @MainActor
     func add() async {
         reportManager.report = report
-        await reportManager.add()
+        let result = await reportManager.add()
+        
+        switch result {
+        case .success:
+            isFlagged = true
+        case .failure(let error):
+            isFlagged = false
+            self.error = error
+        }
     }
 
     @MainActor
     func delete() async {
         reportManager.report = report
-        await reportManager.delete()
+        let result = await reportManager.delete()
+        
+        switch result {
+        case .success:
+            isFlagged = false
+        case .failure(let error):
+            isFlagged = true
+            self.error = error
+        }
     }
 }
 
