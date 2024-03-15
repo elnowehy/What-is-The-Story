@@ -16,117 +16,77 @@ import FirebaseFirestoreSwift
 
 // Firebase User data Manager. Should be called through UserVM only
 // UserVM has to populate User before calling any of the functions
-class UserManager: ObservableObject {
-    @Published var user = User()
+class UserManager {
+    var user = User()
     private var db: Firestore
     // private var uid: String
     private var ref: DocumentReference?
-    private var data: [String: Any] // dictionary
   
-    
     init() {
         self.db = AppDelegate.db
-        self.data = [:] // to be populated
     }
-    
-    // I hope I won't need this. To be removed after inspecting the deisgn
-//    init() {
-//        // self.user = User()
-//        self.db = Firestore.firestore()
-//        self.data = [:] // to be populated
-//        if let fbUser = Auth.auth().currentUser {
-//            self.ref = self.db.collection("User").document(fbUser.uid)
-//            self.user.id = fbUser.uid
-//            self.user.email = fbUser.email!
-////            Task {
-////                await fetch()
-////            }
-//        } else {
-//            self.ref = self.db.collection("User").document()
-//        }
-//    }
 
     func setRef() {
+        guard !user.id.isEmpty else {return}
+        self.ref = self.db.collection("User").document(user.id)
+    }
+
+    @MainActor
+    func fetch() async throws {
+        setRef()
+        guard let ref = self.ref else {
+            throw AppError.authentication(.userNotFound)
+        }
+        do {
+            let document = try await ref.getDocument()
+            self.user = try document.data(as: User.self)
+        } catch {
+            throw AppError.database(.fetchFailed)
+        }
+    }
+
+
+    @MainActor
+    func update() async throws {
+        setRef()
+        guard let ref = self.ref else {
+            throw AppError.authentication(.userNotFound)
+        }
+        do {
+            try ref.setData(from: user, merge: true)
+        } catch {
+            throw AppError.database(.saveFailed)
+        }
+    }
+    
+    @MainActor
+    func create() async throws {
         if user.id.isEmpty {
-            self.ref = self.db.collection("User").document()
-            self.user.id = self.ref!.documentID
-        } else {
-            self.ref = self.db.collection("User").document(user.id)
+            let newRef = self.db.collection("User").document()
+            user.id = newRef.documentID
+            self.ref = newRef
         }
-    }
-    
-    // in the future, I can make this smarter by passing updated fields only
-    // but make sure you pass the full set if it's going to be used with 'create: setData'
-    func populateData() {
-        self.data = [
-            "id": user.id,
-            "email": user.email,
-            "name": user.name,
-            "profileIds": user.profileIds,
-            "invitationCode": user.invitationCode,
-            "wallet": user.wallet,
-        ]
-    }
-    
-    func populateStruct() {
-        user.id = self.data["id"] as? String ?? ""
-        user.email = self.data["email"] as? String ?? ""
-        user.name  = self.data["name"] as? String ?? ""
-        user.profileIds =  self.data["profileIds"] as? [String] ?? []
-        user.invitationCode =  self.data["invitationCode"] as? String ?? ""
-        user.wallet = self.data["wallet"] as? String ?? ""
-    }
-
-    @MainActor
-    func fetch() async {
-        setRef()
         do {
-            let document = try await ref!.getDocument()
-            let data = document.data()
-            if data != nil {
-                self.data = data!
-                self.populateStruct()
-            }
+            try ref!.setData(from: user)
         } catch {
-            print(error.localizedDescription)
+            throw AppError.database(.saveFailed)
         }
     }
 
     @MainActor
-    func update() async {
-        setRef()
-        populateData()
-        do {
-            try await ref!.updateData(self.data)
-        } catch {
-            print(error.localizedDescription)
+    func currentUserData() async throws -> User {
+        guard let currentUser = Auth.auth().currentUser else {
+            throw AppError.authentication(.noCurrentUser)
         }
-    }
-    
-    @MainActor
-    func create() async {
-        setRef()
-        populateData()
-        do {
-            try await ref!.setData(self.data)
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-
-    @MainActor
-    func currentUserData() async -> User {
-        async let user = Auth.auth().currentUser
-        if let user = await user {
-            self.user.id = user.uid
-            self.user.email = user.email!
-            await fetch()
-            populateStruct()
-        } else {
-            self.user = User()
-        }
+        
+        self.user.id = currentUser.uid
+        self.user.email = currentUser.email ?? ""
+        
+        try await fetch()
+        
         return self.user
     }
+
     
     @MainActor
     func remove() async {

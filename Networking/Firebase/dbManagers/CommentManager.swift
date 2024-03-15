@@ -48,9 +48,13 @@ class CommentManager: ObservableObject {
         comment.editedTimestamp = data["editedTimestamp"] as? Date ?? Date()
         
         if let userId = data["userId"] as? String {
-            userManager.user.id = userId
-            await userManager.fetch()
-            comment.userName = userManager.user.name
+            do {
+                userManager.user.id = userId
+                try await userManager.fetch()
+                comment.userName = userManager.user.name
+            } catch {
+                print(error.localizedDescription)
+            }
         }
         
         return comment

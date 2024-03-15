@@ -82,7 +82,7 @@ class ReportManager: ObservableObject {
         } catch let error as AppError {
             return .failure(error)
         } catch {
-            return .failure(AppError.unknown)
+            return .failure(AppError.unknown(error.localizedDescription))
         }
     }
     
@@ -114,7 +114,7 @@ class ReportManager: ObservableObject {
         } catch let error as AppError {
             return .error(error)
         } catch {
-            return .error(AppError.unknown)
+            return .error(AppError.unknown(error.localizedDescription))
         }
     }
 
@@ -127,7 +127,7 @@ class ReportManager: ObservableObject {
         } catch let error as AppError {
             return .failure(error)
         } catch {
-            return .failure(AppError.unknown)
+            return .failure(AppError.unknown(error.localizedDescription))
         }
     }
     

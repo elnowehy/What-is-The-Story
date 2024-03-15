@@ -71,13 +71,10 @@ class VoteManager: ObservableObject {
             } else {
                 return .notFound
             }
+        } catch let error as AppError {
+            return .error(error)
         } catch {
-            let nsError = error as NSError
-            if nsError.domain == NSURLErrorDomain {
-                return .networkError(error)
-            } else {
-                return .otherError(error)
-            }
+            return .error(AppError.unknown(error.localizedDescription))
         }
     }
     

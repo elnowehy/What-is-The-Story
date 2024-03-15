@@ -36,7 +36,7 @@ class UserVM: ObservableObject{
                 self.user.id = _user.uid
                 await fetch()
             } else {
-                print("Unable to obtain user data")
+                self.error = AppError.authentication(.noCurrentUser)
             }
         }
     }
@@ -47,9 +47,13 @@ class UserVM: ObservableObject{
     // return: Void
     @MainActor
     func fetch() async {
-        userManager.user = user
-        await userManager.fetch()
-        user = userManager.user
+        do {
+            userManager.user = user
+            try await userManager.fetch()
+            user = userManager.user
+        } catch {
+            self.error = error
+        }
     }
     
     // create User document in Firebase.
@@ -58,15 +62,20 @@ class UserVM: ObservableObject{
     // output: user struct is populated
     @MainActor
     func create() async {
-        let profileVM = ProfileVM()
-        async let profileId = await profileVM.create()
-        await user.profileIds.append(profileId)
-        user.invitationCode = generateInvitationCode(name: user.name, profileId: await profileId)
-        userManager.user = user
-        await userManager.create()
-        profileVM.profile.userId = userManager.user.id
-        profileVM.profile.brand = user.name
-        await profileVM.update()
+        do {
+            let profileVM = ProfileVM()
+            async let profileId = await profileVM.create()
+            await user.profileIds.append(profileId)
+            user.invitationCode = generateInvitationCode(name: user.name, profileId: await profileId)
+            userManager.user = user
+            try await userManager.create()
+            user = userManager.user
+            profileVM.profile.userId = userManager.user.id
+            profileVM.profile.brand = user.name
+            await profileVM.update()
+        } catch {
+            self.error = error
+        }
     }
     
     // updates a user with the user data. ** this ideally shouldn't happen, but maybe if they want to change their email?
@@ -75,8 +84,13 @@ class UserVM: ObservableObject{
     // return: Void
     @MainActor
     func update() async {
-        userManager.user = user
-        await userManager.create()
+        do {
+            userManager.user = user
+            try await userManager.update()
+            user = userManager.user
+        } catch {
+            self.error = error
+        }
     }
     
     // remove a user from Firebase
@@ -92,36 +106,41 @@ class UserVM: ObservableObject{
    
     @MainActor
     func currentUserData() async {
-        user = await userManager.currentUserData()
+        do {
+            user = try await userManager.currentUserData()
+        } catch {
+            self.error = error
+        }
     }
     
     @MainActor
-    func signUp(email: String, password: String) async -> String {
+    func signUp(email: String, password: String) async -> Result<String, AppError>  {
         let result = await authManager.signUp(emailAddress: email, password: password)
         
         switch result {
-        case .success(user.id):
+        case .success(let userId):
             await updateUserData()
-            return user.id
-        default:
+            return .success(userId)
+        case .failure(let error):
             self.error = error
-            return ""
+            return .failure(error)
         }
     }
     
     @MainActor
-    func signIn(email: String, password: String) async -> String {
+    func signIn(email: String, password: String) async -> Result<String, AppError> {
         let result = await authManager.signIn(emailAddress: email, password: password)
         
         switch result {
-        case .success(user.id):
+        case .success(let userId):
             await updateUserData()
-            return user.id
-        default:
+            return .success(userId)
+        case .failure(let error):
             self.error = error
-            return ""
+            return .failure(error)
         }
     }
+
     
     @MainActor
     func signOut() async {

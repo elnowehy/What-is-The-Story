@@ -41,7 +41,7 @@ extension AppError {
         let nsError = error as NSError
 
         guard let authError = AuthErrorCode.Code(rawValue: nsError.code) else {
-            return .unknown
+            return .unknown(error.localizedDescription)
         }
         
         switch authError {
@@ -54,7 +54,7 @@ extension AppError {
         case .accountExistsWithDifferentCredential:
             return .authentication(.invalidCredentials)
         default:
-            return .unknown
+            return .unknown(error.localizedDescription)
         }
     }
 }

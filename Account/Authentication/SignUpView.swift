@@ -10,11 +10,12 @@ import Firebase
 
 struct SignUpView: View {
     @Binding var showLogIn: Bool
-    @State private var user  = User()
     @State private var password = ""
+    @State private var confPass = ""
     @ObservedObject var userVM: UserVM
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: Theme
+    @EnvironmentObject var errorHandlingVM: ErrorHandlingVM
     @State private var isSaving: Bool = false
     
     var body: some View {
@@ -28,7 +29,7 @@ struct SignUpView: View {
                             .modifier(LargeTitleStyle(theme: theme))
                         
                         
-                        TextField("Email", text: $user.email)
+                        TextField("Email", text: $userVM.user.email)
                             .textFieldStyle(TextFieldLoginStyle(theme: theme))
                             .keyboardType(.emailAddress)
                             .textInputAutocapitalization(.never)
@@ -39,8 +40,12 @@ struct SignUpView: View {
                             .textFieldStyle(TextFieldLoginStyle(theme: theme))
                             .submitLabel(.done)
                         
+                        SecureField("Password", text: $confPass)
+                            .textFieldStyle(TextFieldLoginStyle(theme: theme))
+                            .submitLabel(.done)
                         
-                        TextField("User Name", text: $user.name)
+                        
+                        TextField("User Name", text: $userVM.user.name)
                             .textFieldStyle(TextFieldLoginStyle(theme: theme))
                             .textInputAutocapitalization(.never)
                             .submitLabel(.done)
@@ -55,18 +60,29 @@ struct SignUpView: View {
                     
                     Button (action: {
                         Task {
+                            guard password == confPass else {
+                                errorHandlingVM.handleError(AppError.authentication(.passwordMismatch))
+                                return
+                            }
                             isSaving = true
-                            await user.id = userVM.signUp(email: user.email, password: password)
-                            if(!user.id.isEmpty) {
-                                userVM.user = user
+                            let signUpResult = await userVM.signUp(email: userVM.user.email, password: password)
+                            switch signUpResult {
+                            case .success:
                                 await userVM.create()
-                                let userId = await userVM.signIn(email: userVM.user.email, password: password)
-                                userVM.user.id = userId
-                                showLogIn = false
-                            } else {
-                                fatalError("we have a problem")
+                                let signInResult = await userVM.signIn(email: userVM.user.email, password: password)
+                                switch signInResult {
+                                case .success(let userId):
+                                    userVM.user.id = userId
+                                    showLogIn = false
+                                    dismiss()
+                                case .failure(let error):
+                                    errorHandlingVM.handleError(error)
+                                }
+                            case .failure(let error):
+                                errorHandlingVM.handleError(error)
                             }
                             password = ""
+                            confPass = ""
                             isSaving = false
                         }
                     }) {

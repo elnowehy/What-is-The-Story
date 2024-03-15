@@ -50,9 +50,7 @@ class AnswerVM: ObservableObject {
             await voteVM.add()
         case .success:
             await voteVM.delete()
-        case .networkError(let error):
-            print(error.localizedDescription)
-        case .otherError(let error):
+        case .error(let error):
             print(error.localizedDescription)
         }
         await answerManager.update()

@@ -10,6 +10,7 @@ import Foundation
 class VoteVM: ObservableObject {
     @Published var vote: Vote = Vote()
     @Published var isLoading = false
+    @Published var error: Error?
     private var voteManager = VoteManager()
     
     @MainActor
@@ -22,11 +23,9 @@ class VoteVM: ObservableObject {
         case .success:
             self.vote = voteManager.vote
         case .notFound:
-            print("Vote not found")
-        case .networkError(let error):
-            print(error.localizedDescription)
-        case .otherError(let error):
-            print(error.localizedDescription)
+            self.error = AppError.database(.dataNotFound)
+        default:
+            self.error = error
         }
         
         isLoading = false

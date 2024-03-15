@@ -14,7 +14,7 @@ struct SignInView: View {
     @State private var password = ""
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: Theme
-    // @EnvironmentObject var pathRouter: PathRouter
+    @EnvironmentObject var errorHandlingVM: ErrorHandlingVM
     
     var body: some View {
         NavigationStack {
@@ -38,12 +38,14 @@ struct SignInView: View {
                 HStack {
                     Button(action: {
                         Task {
-                            if let userId = await userVM.signIn(email: userVM.user.email, password: password) {
+                            let signInResult = await userVM.signIn(email: userVM.user.email, password: password)
+                            switch signInResult {
+                            case .success(let userId):
                                 userVM.user.id = userId
                                 showLogIn = false
                                 dismiss()
-                            } else {
-                                // Handle error or notify the user that sign-in failed
+                            case .failure(let error):
+                                errorHandlingVM.handleError(error)
                             }
                         }
                     })

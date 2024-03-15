@@ -50,6 +50,8 @@ enum AuthenticationErrorCode: Int {
     case invalidCredentials = 300
     case userNotFound = 301
     case accessDenied = 302
+    case noCurrentUser = 303
+    case passwordMismatch = 304
     // ... other authentication-related errors
 }
 
@@ -57,7 +59,7 @@ enum AppError: Error {
     case network(NetworkErrorCode)
     case database(DatabaseErrorCode)
     case authentication(AuthenticationErrorCode)
-    case unknown
+    case unknown(String)
 
     // Properties and methods to extract domain, code, and message can be similar to the previous example
 }
