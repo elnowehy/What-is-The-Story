@@ -10,7 +10,7 @@ import SwiftUI
 // read: pubic write: user
 // ** data model **
 
-struct Profile {
+struct Profile: Identifiable, Codable {
     var id: String = "" // profileId
     var userId: String = ""
     var brand: String = ""
@@ -22,7 +22,7 @@ struct Profile {
     var isHidden: Bool = false
 }
 
-struct ProfileInfo {
+struct ProfileInfo: Identifiable, Codable {
     var id: String = "" // profileId
     var bio: String = ""
     var photo = URL(filePath: "")

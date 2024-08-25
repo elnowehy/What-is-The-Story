@@ -163,8 +163,8 @@ class ProfileManager: ObservableObject {
 
 
 class ProfileInfoManager: ObservableObject {
-    @Published var profile = Profile()
-    @Published var info = ProfileInfo()
+    var profile = Profile()
+    var info = ProfileInfo()
     public var profileId: String = ""
     public var photo = UIImage()
     public var background = UIImage()

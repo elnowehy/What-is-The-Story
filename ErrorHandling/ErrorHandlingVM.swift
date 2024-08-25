@@ -31,6 +31,7 @@ class ErrorHandlingVM: ObservableObject, ErrorHandling {
     
     func dismissError() {
         showError = false
+        errorMessage = ""
     }
     
     func logError(_ error: Error) {
