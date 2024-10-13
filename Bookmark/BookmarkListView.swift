@@ -98,6 +98,12 @@ struct BookmarkListView: View {
     
     private func fetchAndSortBookmarks() {
         Task {
+            enum BookmarConent {
+                case episode(Episode)
+                case series(Series)
+                case none
+            }
+            
             let sortOrder = ascendingOrder ? BookmarkVM.SortOrder.timestampAscending : BookmarkVM.SortOrder.timestampDescending
             await bookmarkVM.fetchUserBookmarks(sortOrder: sortOrder)
             
@@ -116,35 +122,36 @@ struct BookmarkListView: View {
                 }
             }
             
-            await episodeVM.fetch()
-            await seriesVM.fetch()
+            _ = await episodeVM.fetch()
+            _ = await seriesVM.fetch()
 
-            let contentItems: [Any] = snapshot.map { bookmark in
+            let contentItems: [BookmarConent] = snapshot.map { bookmark in
                 switch bookmark.contentType {
                 case .episode:
-                    return episodeVM.episodeList.first(where: { $0.id == bookmark.contentId })
+                    if let episode = episodeVM.episodeList.first(where: { $0.id == bookmark.contentId }) {
+                        return .episode(episode)
+                    }
                 case .series:
-                    return seriesVM.seriesList.first(where: { $0.id == bookmark.contentId })
+                    if let series = seriesVM.seriesList.first(where: { $0.id == bookmark.contentId }) {
+                        return .series(series)
+                    }
                 default:
-                    return
+                    return .none
                 }
+                return .none
             }
 
             // bookmarkItems = zip(snapshot, contentItems).map(BookmarkItem.init)
-            
-            bookmarkItems = zip(snapshot, contentItems).map { bookmark, contentItem in
-                let contentType: Any = {
-                    switch bookmark.contentType {
-                    case .episode:
-                        return contentItem as? Episode ?? Episode()
-                    case .series:
-                        return contentItem as? Series ?? Series()
-                    default:
-                        return
-                    }
-                }()
-
-                return BookmarkItem(bookmark: bookmark, contentType: contentType)
+            bookmarkItems = zip(snapshot, contentItems).map { bookmark, content in
+                switch content {
+                case .episode(let episode):
+                    return BookmarkItem(bookmark: bookmark, contentType: episode)
+                case .series(let series):
+                    return BookmarkItem(bookmark: bookmark, contentType: series)
+                case .none:
+                    // Handle the none case if needed
+                    return BookmarkItem(bookmark: bookmark, contentType: Episode())
+                }
             }
         }
     }

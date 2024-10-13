@@ -98,7 +98,7 @@ struct SearchResultRowView: View {
             .onAppear {
                 Task {
                     seriesVM.seriesIds.append(searchResult.id)
-                    await seriesVM.fetch()
+                    _ = await seriesVM.fetch()
                 }
             }
         } else {
@@ -116,7 +116,7 @@ struct SearchResultRowView: View {
             .onAppear {
                 Task {
                     episodeVM.episodeIds.append(searchResult.id)
-                    await episodeVM.fetch()
+                    _ = await episodeVM.fetch()
                 }
             }
         }

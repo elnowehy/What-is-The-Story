@@ -14,8 +14,8 @@
 
 
 import SwiftUI
-import Firebase
-import FirebaseFirestoreSwift
+import FirebaseAuth
+// import FirebaseFireStoreSwift
 
 struct UserView: View {
     @EnvironmentObject var userVM: UserVM

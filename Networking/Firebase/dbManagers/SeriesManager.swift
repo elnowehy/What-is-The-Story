@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+// import FirebaseFireStoreSwift
 import FirebaseStorage
 import UIKit
 
@@ -181,8 +181,9 @@ class SeriesManager: ObservableObject {
     @MainActor
     func addEpisode(episodeId: String) async -> Void {
         setRef()
+        let updateData: [String: Any] = ["episodes": FieldValue.arrayUnion([episodeId])]
         do {
-            try await ref!.updateData(["episodes": FieldValue.arrayUnion([episodeId])])
+            try await ref!.updateData(updateData)
         } catch {
             print(error.localizedDescription)
         }
@@ -191,8 +192,9 @@ class SeriesManager: ObservableObject {
     @MainActor
     func removeEpisode(episodeId: String) async -> Void {
         setRef()
+        let updateData: [String: Any] = ["episodes": FieldValue.arrayRemove([episodeId])]
         do {
-            try await ref!.updateData(["episodes": FieldValue.arrayRemove([episodeId])])
+            try await ref!.updateData(updateData)
         } catch {
             print(error.localizedDescription)
         }

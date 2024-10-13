@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+// import FirebaseFireStoreSwift
 
 class ViewRatingManager: ObservableObject {
     @Published var viewRating = ViewRating()

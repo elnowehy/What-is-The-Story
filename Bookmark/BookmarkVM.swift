@@ -59,14 +59,11 @@ class BookmarkVM: ObservableObject {
     
     @MainActor
     func fetchUserBookmarks(sortOrder: SortOrder) async {
-        do {
-            await paginator.loadMoreData(fetch: { (lastDocument: DBPaginatable?) in
-                // Inside this closure, call the actual fetch method from the manager
-                return try await self.bookmarkManager.fetchUserBookmarks(userId: self.userId, sortOrder: sortOrder, startAfter: lastDocument)
-            }, appendTo: &self.bookmarks)
-        } catch {
-            print(error.localizedDescription)
-        }
+        
+        await paginator.loadMoreData(fetch: { (lastDocument: DBPaginatable?) in
+            // Inside this closure, call the actual fetch method from the manager
+            return try await self.bookmarkManager.fetchUserBookmarks(userId: self.userId, sortOrder: sortOrder, startAfter: lastDocument)
+        }, appendTo: &self.bookmarks)
     }
     
     @MainActor

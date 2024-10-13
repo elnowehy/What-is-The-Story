@@ -39,7 +39,9 @@ struct CommentView: View {
                                         await commentVM.edit(comment: commentVM.editingComment!, with: commentText)
                                         commentText = ""
                                     }
-                                } // else, show an error or truncate the text
+                                } else {
+                                    print("Exceeding the \(AppSettings.commentMax) limits")
+                                }
                             }
                         }, label: {
                             Image(systemName: "arrow.up.circle.fill")
@@ -159,7 +161,7 @@ struct CommentRowView: View {
                     Text(comment.text)
                 }
                 HStack {
-                    if let onReply = onReply, !userVM.user.id.isEmpty {
+                    if !userVM.user.id.isEmpty {
                         Button(action: { isReplying.toggle() }) {
                             Image(systemName: "arrowshape.turn.up.left")
                         }

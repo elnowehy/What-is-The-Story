@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+// import FirebaseFireStoreSwift
 import FirebaseStorage
 
 
@@ -143,8 +143,10 @@ class ProfileManager: ObservableObject {
     @MainActor
     func addSeries(seriesId: String) async -> Void {
         setRef()
+        let updateData: [String: Any] = ["seriesIds": FieldValue.arrayUnion([seriesId])]
+        
         do {
-            try await ref!.updateData(["seriesIds": FieldValue.arrayUnion([seriesId])])
+            try await ref!.updateData(updateData)
         } catch {
             print(error.localizedDescription)
         }
@@ -153,8 +155,10 @@ class ProfileManager: ObservableObject {
     @MainActor
     func removeSeries(seriesId: String) async -> Void {
         setRef()
+        let updateData: [String: Any] = ["seriesIds": FieldValue.arrayRemove([seriesId])]
+        
         do {
-            try await ref!.updateData(["seriesIds": FieldValue.arrayRemove([seriesId])])
+            try await ref!.updateData(updateData)
         } catch {
             print(error.localizedDescription)
         }

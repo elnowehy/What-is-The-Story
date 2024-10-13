@@ -13,6 +13,7 @@ class Paginator<T, PaginatableItem: Paginatable>: ObservableObject {
 
     private var lastItem: PaginatableItem? = nil
 
+    @MainActor
     func loadMoreData(fetch: @escaping (PaginatableItem?) async throws -> PaginatedResult<T, PaginatableItem>, appendTo data: inout [T]) async {
         guard !isLoading, hasMoreData else { return }
 

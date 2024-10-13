@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+// import FirebaseFireStoreSwift
 
 class BookmarkManager: ObservableObject {
     @Published var bookmark = Bookmark()

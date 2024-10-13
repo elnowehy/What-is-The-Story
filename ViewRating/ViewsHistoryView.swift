@@ -23,8 +23,10 @@ struct ViewsHistoryView: View {
         NavigationStack {
             VStack {
                 Picker("Sort by", selection: $sortOption) {
-                    ForEach(0..<sortOptions.count) {
-                        Text(self.sortOptions[$0])
+                    // ForEach(0..<sortOptions.count) {
+                        // Text(self.sortOptions[$0])
+                    ForEach(Array(sortOptions.enumerated()), id: \.offset) { index, option in
+                        Text(option)
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
@@ -95,7 +97,7 @@ struct ViewsHistoryView: View {
             })
 
             episodeVM.episodeIds = snapshot.map { $0.episodeId }
-            await episodeVM.fetch()
+            _ = await episodeVM.fetch()
             viewHistoryItems = zip(snapshot, episodeVM.episodeList).map(ViewHistoryItem.init)
         }
     }

@@ -6,28 +6,59 @@
 //
 // A class that handles singning, creating and logging out users in Firebase
 
-import SwiftUI
+// import SwiftUI
 import FirebaseAuth
-import FirebaseFirestoreSwift
+// import //  FirebaseFireStoreSwift
+import KeychainAccess
 
 
 typealias FireBaseUser = FirebaseAuth.User
 
 final class AuthManager: ObservableObject {
+    private let keychain = Keychain(service: "com.elnowehy.wits.What-is-The-Story")
+    @Published var isLoggedIn: Bool  = false {
+        didSet {
+            storeSessionState()
+        }
+    }
+    
     var fbUser: FireBaseUser? {
         didSet {
             objectWillChange.send()
         }
     }
-    @Published var isLoggedIn: Bool = false
+   
 
     init()  {
+        self.isLoggedIn = loadSessionState()
         self.listenToAuthState()
     }
     
+    // MARK: - Keychain Storage for User Session
+    private func storeSessionState() {
+        do {
+            try keychain.set(isLoggedIn ? "true" : "false", key: "isLoggedIn")
+            if let uid = fbUser?.uid {
+                try keychain.set(uid, key: "firebaseUID")
+            }
+        } catch {
+            print("Error storing session state in Keychain: \(error)")
+        }
+    }
+
+    private func loadSessionState() -> Bool {
+        do {
+            if let isLoggedInValue = try keychain.get("isLoggedIn") {
+                return isLoggedInValue == "true"
+            }
+        } catch {
+            print("Error loading session state from Keychain: \(error)")
+        }
+        return false
+    }
+    
     func listenToAuthState() {
-         
-        Auth.auth().addStateDidChangeListener { [weak self] _, user in
+        _ = Auth.auth().addStateDidChangeListener { [weak self] _, user in
             guard let self = self else {
                 return
             }

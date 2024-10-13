@@ -86,7 +86,7 @@ struct CreateView: View {
         await profileVM.fetch()
         if !profileVM.profile.seriesIds.isEmpty {
             seriesVM.seriesIds = profileVM.profile.seriesIds
-            await seriesVM.fetch()
+            _ = await seriesVM.fetch()
         }
     }
 }

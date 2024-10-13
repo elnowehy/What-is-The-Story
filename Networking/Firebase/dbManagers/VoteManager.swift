@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+// import FirebaseFireStoreSwift
 
 class VoteManager: ObservableObject {
     @Published var vote = Vote()

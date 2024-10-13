@@ -175,7 +175,7 @@ struct EpisodeView: View {
             if seriesVM.series.id.isEmpty {
                 seriesVM.series.id = episode.series
                 seriesVM.seriesIds.append(episode.series)
-                await seriesVM.fetch()
+                _ = await seriesVM.fetch()
             }
         }
         

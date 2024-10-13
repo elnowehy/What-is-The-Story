@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+// import FirebaseFireStoreSwift
 
 class PollManager: ObservableObject {
     @Published var poll = Poll()

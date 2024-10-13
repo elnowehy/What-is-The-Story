@@ -105,13 +105,21 @@ struct PlayerControlView: View {
                 Image(systemName: "square.and.arrow.up")
             }
             .sheet(isPresented: $showingShareSheet, content: {
-                ShareSheet(items: [generateShareLink()])
+                if let shareLInk = generateShareLink() {
+                    ShareSheet(items: [shareLInk])
+                } else {
+                    Text("Error: Failed to generate share link")
+                }
             })
             
             Spacer()
         }
         .sheet(isPresented: $showingShareSheet, content: {
-            ShareSheet(items: [generateShareLink()])
+            if let shareLink = generateShareLink() {
+                ShareSheet(items: [shareLink])
+            } else {
+                Text("Error: Failed to generate share link")
+            }
         })
         .buttonStyle(ButtonBaseStyle(theme: theme))
         .background(theme.colors.tertiaryBackground)

@@ -40,7 +40,7 @@ extension AppError {
     static func fromFirebaseError(_ error: Error) -> AppError {
         let nsError = error as NSError
 
-        guard let authError = AuthErrorCode.Code(rawValue: nsError.code) else {
+        guard let authError = AuthErrorCode(rawValue: nsError.code) else {
             return .unknown(error.localizedDescription)
         }
         

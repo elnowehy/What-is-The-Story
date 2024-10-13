@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+// import FirebaseFireStoreSwift
 
 class TagManager {
     private let db = AppDelegate.db
@@ -97,10 +97,6 @@ class TagManager {
     }
     
     func deleteTag(tagId: String) throws -> Void {
-        do {
-            try ref.document(tagId).delete()
-        } catch {
-            throw error
-        }
+        ref.document(tagId).delete()
     }
 }

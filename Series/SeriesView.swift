@@ -157,7 +157,7 @@ struct SeriesView: View {
             playerVM.preparePlayer(with: seriesVM.series.trailer)
             if !seriesVM.series.episodes.isEmpty {
                 episodeVM.episodeIds = seriesVM.series.episodes
-                await episodeVM.fetch()
+                _ = await episodeVM.fetch()
             }
             
             if(!userVM.user.id.isEmpty) {

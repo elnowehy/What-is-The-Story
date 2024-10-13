@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+import //  FirebaseFireStoreSwift
 
 class TokenManager {
     private let db = AppDelegate.db

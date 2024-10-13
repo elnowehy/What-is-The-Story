@@ -24,7 +24,7 @@ struct TagSearchBarView: View {
                     } else {
                         Task {
                             do {
-                                try await searchVM.fetchTagSuggestions(tagPrefix: newValue)
+                                _ = try await searchVM.fetchTagSuggestions(tagPrefix: newValue)
                                 showSuggestions = !searchVM.tagSuggestions.isEmpty
                             } catch {
                                 print(error.localizedDescription)

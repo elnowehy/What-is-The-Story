@@ -93,10 +93,11 @@ struct SeriesListView: View {
                     fetchSeries = landingPageVM.fetchTrendingSeries
                 }
                 
-                if paginator.hasMoreData &&
-                    !paginator.isLoading {
+                if paginator.hasMoreData && !paginator.isLoading {
                     ProgressView() // Show a loading indicator while loading more data
-                        .task{ await fetchSeries() }
+                        .task {
+                            _ = await fetchSeries()
+                        }
                 }
             }
         }

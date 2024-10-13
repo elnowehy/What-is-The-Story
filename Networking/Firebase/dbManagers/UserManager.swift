@@ -12,7 +12,8 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+import FirebaseAuth
+// import FirebaseFireStoreSwift
 
 // Firebase User data Manager. Should be called through UserVM only
 // UserVM has to populate User before calling any of the functions

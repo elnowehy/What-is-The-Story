@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+// import FirebaseFireStoreSwift
 
 class CommentManager: ObservableObject {
     private var db: Firestore
@@ -67,7 +67,7 @@ class CommentManager: ObservableObject {
         let querySnapshot = try await db.collection("Comment").whereField("contentId", isEqualTo: contentId).getDocuments()
         var comments = [Comment]()
         for document in querySnapshot.documents {
-            var data = document.data()
+            let data = document.data()
             var comment = await populateStruct(data: data)
             comment.id = document.documentID
             comments.append(comment)
